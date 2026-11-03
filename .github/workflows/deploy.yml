@@ -1,0 +1,17 @@
+name: Deploy to Hostinger
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Hostinger Git deploy
+        env:
+          DEPLOY_URL: ${{ secrets.HOSTINGER_DEPLOY_URL }}
+        run: |
+          if [ -z "$DEPLOY_URL" ]; then echo "Add the HOSTINGER_DEPLOY_URL repository secret first."; exit 1; fi
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$DEPLOY_URL")
+          echo "Hostinger responded $code"
+          test "$code" -lt 400
