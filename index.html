@@ -84,7 +84,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .sig{margin-top:36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .dish{background:var(--card);border:1px solid var(--rule);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
 .dish img{width:100%;aspect-ratio:4/3;object-fit:cover}
-.dish .b{padding:16px 18px 18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline}
+.dish .b{padding:16px 18px 18px;display:grid;grid-template-columns:minmax(0,1fr);gap:2px 12px;align-items:baseline}
 .dish h3{font:700 18px/1.3 var(--f-sans)}
 .dish .p{font:700 17px var(--f-sans);font-variant-numeric:tabular-nums}
 .dish .k{grid-column:1/-1;font:500 14px var(--f-kr);color:var(--muted)}
@@ -93,14 +93,18 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 @media (max-width:900px){.sig{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.sig{grid-template-columns:1fr}}
 
+.sub{margin-top:36px;font:800 22px var(--f-sans);display:flex;gap:12px;align-items:baseline}
+.sub .kr{font:700 17px var(--f-krs);color:var(--ember)}
+.sig.sm{margin-top:16px}
+.sig.sm .dish img{aspect-ratio:16/10}
 /* menu boards */
-.boards{margin-top:36px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.boards{margin-top:36px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
 .board{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:26px 26px 22px;min-width:0}
 .board h3{font:800 22px var(--f-sans);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .board h3 .kr{font:700 17px var(--f-krs);color:var(--ember)}
 .board .note{font-size:13px;color:var(--muted);margin-top:4px}
 .board ul{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:12px}
-.board li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 14px;padding-bottom:12px;border-bottom:1px dashed var(--rule)}
+.board li{display:grid;grid-template-columns:minmax(0,1fr);gap:0 14px;padding-bottom:12px;border-bottom:1px dashed var(--rule)}
 .board li:last-child{border-bottom:0;padding-bottom:0}
 .board .n{font:600 16px/1.35 var(--f-sans)}
 .board .n .kr{font-weight:500;color:var(--muted);font-size:14px;margin-left:6px}
@@ -195,7 +199,7 @@ footer small{font-size:13px;opacity:.8}
       </div>
       <div class="hero-photo">
         <img src="img/m_la_galbi.jpg" width="895" height="718" alt="LA galbi, marinated beef short ribs on a sizzling cast-iron plate">
-        <div class="tag"><b>LA Galbi · $34.99</b><span>Chef's choice · LA 갈비</span></div>
+        <div class="tag"><b>LA Galbi</b><span>Chef's choice · LA 갈비</span></div>
       </div>
     </div>
   </div>
@@ -203,6 +207,7 @@ footer small{font-size:13px;opacity:.8}
     <div class="wrap">
       <a href="#breakfast">Mornings 7–10 AM: K-JjamBab tray breakfast, $13.99, no tip</a>
       <a href="#visit">4215 Tom Davis Dr, Annandale</a>
+      <span>Open 10 AM–10 PM, 365 days</span>
       <span>(703) 914-4600</span>
     </div>
   </div>
@@ -213,12 +218,12 @@ footer small{font-size:13px;opacity:.8}
       <h2 class="h2">What people come back for.</h2>
       <p class="h2-kr">아난골 특선요리</p>
       <div class="sig">
-        <article class="dish"><img src="img/m_galbi_tongs.jpg" loading="lazy" alt="Marinated beef galbi lifted with tongs"><div class="b"><h3>Yangnyum Wang Galbi</h3><span class="p">$48.99</span><span class="k">양념 왕갈비</span><p class="d">Grilled beef prime ribs marinated in soy sauce.</p></div></article>
-        <article class="dish"><img src="img/m_jokbal.jpg" loading="lazy" alt="Sliced braised pig's trotter"><div class="b"><h3>Mr. Jok Bal</h3><span class="p">$38.99</span><span class="k">Mr. 족발</span><p class="d">Braised pig's trotter with soy sauce and spices.</p></div></article>
-        <article class="dish"><img src="img/m_buljokbal.jpg" loading="lazy" alt="Spicy braised pig's trotter on a griddle"><div class="b"><h3>Bul Jok Bal <span class="hot">🌶🌶🌶</span></h3><span class="p">$38.99</span><span class="k">불족발</span><p class="d">Spicy braised pig's trotter.</p></div></article>
-        <article class="dish"><img src="img/m_agujjim.jpg" loading="lazy" alt="Braised monkfish with bean sprouts in spicy sauce"><div class="b"><h3>Ah Gwi Jjim <span class="hot">🌶</span></h3><span class="p">$42.99</span><span class="k">아귀찜</span><p class="d">Braised monkfish in spicy sauce with bean sprouts.</p></div></article>
-        <article class="dish"><img src="img/m_buldakbal.jpg" loading="lazy" alt="Spicy stir-fried chicken feet with chili and sesame"><div class="b"><h3>Bul Dak Bal <span class="hot">🌶🌶🌶</span></h3><span class="p">$26.99</span><span class="k">불닭발</span><p class="d">Spicy stir-fried chicken feet.</p></div></article>
-        <article class="dish"><img src="img/m_gamjatang.jpg" loading="lazy" alt="Pork backbone soup with perilla seed powder"><div class="b"><h3>Gamja Tang <span class="hot">🌶</span></h3><span class="p">$15.99</span><span class="k">감자탕</span><p class="d">Pork backbone soup with potatoes, cabbage and wild sesame.</p></div></article>
+        <article class="dish"><img src="img/m_galbi_tongs.jpg" loading="lazy" alt="Marinated beef galbi lifted with tongs"><div class="b"><h3>Yangnyum Wang Galbi</h3><span class="k">양념 왕갈비</span><p class="d">Grilled beef prime ribs marinated in soy sauce.</p></div></article>
+        <article class="dish"><img src="img/m_jokbal.jpg" loading="lazy" alt="Sliced braised pig's trotter"><div class="b"><h3>Mr. Jok Bal</h3><span class="k">Mr. 족발</span><p class="d">Braised pig's trotter with soy sauce and spices.</p></div></article>
+        <article class="dish"><img src="img/m_buljokbal.jpg" loading="lazy" alt="Spicy braised pig's trotter on a griddle"><div class="b"><h3>Bul Jok Bal <span class="hot">🌶🌶🌶</span></h3><span class="k">불족발</span><p class="d">Spicy braised pig's trotter.</p></div></article>
+        <article class="dish"><img src="img/m_agujjim.jpg" loading="lazy" alt="Braised monkfish with bean sprouts in spicy sauce"><div class="b"><h3>Ah Gwi Jjim <span class="hot">🌶</span></h3><span class="k">아귀찜</span><p class="d">Braised monkfish in spicy sauce with bean sprouts.</p></div></article>
+        <article class="dish"><img src="img/m_buldakbal.jpg" loading="lazy" alt="Spicy stir-fried chicken feet with chili and sesame"><div class="b"><h3>Bul Dak Bal <span class="hot">🌶🌶🌶</span></h3><span class="k">불닭발</span><p class="d">Spicy stir-fried chicken feet.</p></div></article>
+        <article class="dish"><img src="img/m_gamjatang.jpg" loading="lazy" alt="Pork backbone soup with perilla seed powder"><div class="b"><h3>Gamja Tang <span class="hot">🌶</span></h3><span class="k">감자탕</span><p class="d">Pork backbone soup with potatoes, cabbage and wild sesame.</p></div></article>
       </div>
     </div>
   </section>
@@ -227,82 +232,32 @@ footer small{font-size:13px;opacity:.8}
     <div class="wrap">
       <p class="eyebrow">Menu</p>
       <h2 class="h2">The full board.</h2>
-      <p class="h2-kr">메뉴 · 런치와 디너 가격이 다른 메뉴는 두 가지로 표시합니다.</p>
+      <p class="h2-kr">메뉴 · 가격은 온라인 주문 페이지에서 확인하세요.</p>
+      <h3 class="sub">Soups &amp; hot pots <span class="kr">국물 요리</span></h3>
+      <div class="sig sm"><article class="dish"><img src="img/m_galbitang.jpg" loading="lazy" alt="Galbi Tang, 갈비탕"><div class="b"><h3>Galbi Tang</h3><span class="k">갈비탕</span><p class="d">Beef short rib soup with glass noodles.</p></div></article><article class="dish"><img src="img/m_soontofu.jpg" loading="lazy" alt="Soon Tofu, 순두부"><div class="b"><h3>Soon Tofu</h3><span class="k">순두부</span><p class="d">Spicy soft tofu stew, beef or seafood.</p></div></article><article class="dish"><img src="img/m_yukgaejang.jpg" loading="lazy" alt="Yuk Gae Jang, 육개장"><div class="b"><h3>Yuk Gae Jang</h3><span class="k">육개장</span><p class="d">Spicy shredded beef and vegetable soup.</p></div></article><article class="dish"><img src="img/m_siraegi.jpg" loading="lazy" alt="Siraegi Doenjang Guk, 시래기 된장국"><div class="b"><h3>Siraegi Doenjang Guk</h3><span class="k">시래기 된장국</span><p class="d">Dried radish greens in soybean paste broth.</p></div></article><article class="dish"><img src="img/m_kimchijjigae.jpg" loading="lazy" alt="Kongchi Kimchi Jjigae, 꽁치 김치찌개"><div class="b"><h3>Kongchi Kimchi Jjigae</h3><span class="k">꽁치 김치찌개</span><p class="d">Aged kimchi stew with saury and tofu.</p></div></article><article class="dish"><img src="img/m_saengtae.jpg" loading="lazy" alt="Saengtae Tang, 생태탕"><div class="b"><h3>Saengtae Tang</h3><span class="k">생태탕</span><p class="d">Spicy fresh pollack soup.</p></div></article></div>
       <div class="boards">
         <div class="board">
-          <h3>Beef BBQ <span class="kr">소고기</span></h3>
-          <p class="note">Minimum of two people for BBQ menus · 2인분 이상 주문</p>
-          <ul>
-            <li><span class="n">LA Galbi<span class="kr">LA 갈비</span></span><span class="pr">$34.99</span><span class="ds">Beef short rib marinated in soy sauce · Chef's choice</span></li>
-            <li><span class="n">Yangnyum Wang Galbi<span class="kr">양념 왕갈비</span></span><span class="pr">$48.99</span><span class="ds">Grilled beef prime ribs marinated in soy sauce</span></li>
-            <li><span class="n">Galbi Jumulleok<span class="kr">갈비 주물럭</span></span><span class="pr">$32.99</span><span class="ds">Beef prime rib in special sauce</span></li>
-            <li><span class="n">Bul Pan Bulgogi<span class="kr">불판 불고기</span></span><span class="pr">$26.99</span><span class="ds">Thinly sliced marinated prime rib on the griddle</span></li>
-            <li><span class="n">Yuk Soo Bulgogi<span class="kr">육수 불고기</span></span><span class="pr">$26.99</span><span class="ds">Marinated prime rib in a light broth</span></li>
-          </ul>
-        </div>
-        <div class="board">
-          <h3>Pork BBQ <span class="kr">돼지고기</span></h3>
-          <p class="note">Minimum of two people for BBQ menus · 2인분 이상 주문</p>
-          <ul>
-            <li><span class="n">Motnani Pork Galbi <span class="hot">🌶</span><span class="kr">못난이 돼지갈비</span></span><span class="pr">$24.99</span><span class="ds">Tender pork in our special spicy sauce</span></li>
-            <li><span class="n">Taereung Pork Galbi<span class="kr">태능 돼지갈비</span></span><span class="pr">$24.99</span><span class="ds">Tender pork in our special sauce</span></li>
-            <li><span class="n">Saeng Samgyeopsal<span class="kr">생 삼겹살</span></span><span class="pr">$24.99</span><span class="ds">Sliced fresh pork belly</span></li>
-            <li><span class="n">Spicy Samgyeopsal <span class="hot">🌶</span><span class="kr">못난이 삼겹살</span></span><span class="pr">$24.99</span><span class="ds">Spicy sliced pork belly</span></li>
-          </ul>
-          <p class="combo"><b>Pork Combo Lunch Special:</b> Motnani pork galbi + naengmyeon, <s>$36.98</s> <b>$32.99</b></p>
+          <h3>BBQ <span class="kr">숯불구이</span></h3><p class="note">Minimum of two people for BBQ · 2인분 이상 주문</p>
+          <ul><li><span class="n">Motnani Pork Galbi <span class="hot">🌶</span><span class="kr">못난이 돼지갈비</span></span><span class="ds">Pork in our special spicy sauce</span></li><li><span class="n">Taereung Pork Galbi<span class="kr">태능 돼지갈비</span></span><span class="ds">Pork in our special sauce</span></li><li><span class="n">Saeng Samgyeopsal<span class="kr">생삼겹살</span></span><span class="ds">Fresh sliced pork belly</span></li><li><span class="n">Spicy Motnani Samgyeopsal <span class="hot">🌶</span><span class="kr">매운 못난이 삼겹살</span></span><span class="ds">Spicy sliced pork belly</span></li><li><span class="n">Bulpan Bulgogi<span class="kr">불판 불고기</span></span><span class="ds">Marinated prime rib on the griddle</span></li><li><span class="n">Yuksoo Bulgogi<span class="kr">육수 불고기</span></span><span class="ds">Marinated prime rib in a light broth</span></li><li><span class="n">Galbi Jumulleok<span class="kr">갈비 주물럭</span></span></li><li><span class="n">Yangnyum Wang Galbi<span class="kr">양념 왕갈비</span></span><span class="ds">Beef prime ribs marinated in soy sauce</span></li><li><span class="n">LA Galbi<span class="kr">LA 갈비</span></span><span class="ds">Beef short rib marinated in soy sauce</span></li></ul>
+        </div><div class="board">
+          <h3>Lunch Specials <span class="kr">런치 스페셜</span></h3>
+          <ul><li><span class="n">Motnani Pork Ssambap<span class="kr">못난이 쌈밥</span></span></li><li><span class="n">Taereung Ssambap<span class="kr">태능 쌈밥</span></span></li><li><span class="n">Beef Jumulleok Ssambap<span class="kr">주물럭 쌈밥</span></span></li><li><span class="n">Mak Naengmyeon <span class="hot">🌶</span><span class="kr">막냉면</span></span></li><li><span class="n">Mul Naengmyeon<span class="kr">물냉면</span></span></li><li><span class="n">Bibim Naengmyeon <span class="hot">🌶</span><span class="kr">비빔 냉면</span></span></li></ul>
+        </div><div class="board wide">
+          <h3>Meals &amp; Hot Pots <span class="kr">식사 및 탕류</span></h3>
+          <ul><li><span class="n">So Meori Gukbap<span class="kr">소머리 국밥</span></span></li><li><span class="n">Dogani Tang<span class="kr">도가니탕</span></span></li><li><span class="n">So Meori + Dogani<span class="kr">소머리+도가니탕</span></span></li><li><span class="n">Grilled Mackerel<span class="kr">고등어구이</span></span></li><li><span class="n">Grilled Hairtail<span class="kr">갈치구이</span></span></li><li><span class="n">Soon Tofu <span class="hot">🌶</span><span class="kr">순두부</span></span></li><li><span class="n">AnnanGol Janggook<span class="kr">아난골 장국</span></span></li><li><span class="n">Hae Jang Guk<span class="kr">해장국</span></span></li><li><span class="n">Pork Gochujang Tofu Jjigae <span class="hot">🌶</span><span class="kr">돼지 고추장 두부찌개</span></span></li><li><span class="n">Anchovy Siraegi Doenjang Guk<span class="kr">멸치 시래기 된장국</span></span></li><li><span class="n">Yanggu Siraegi Doenjang Guk<span class="kr">양구 시래기 된장국</span></span></li><li><span class="n">Gamja Tang <span class="hot">🌶</span><span class="kr">감자탕</span></span></li><li><span class="n">Yuk Gae Jang <span class="hot">🌶</span><span class="kr">육개장</span></span></li><li><span class="n">Galbi Tang<span class="kr">갈비탕</span></span></li><li><span class="n">Ugeoji Galbi Tang<span class="kr">우거지 갈비탕</span></span></li><li><span class="n">Galbi Dolsot Bibimbap<span class="kr">갈비 돌솥 비빔밥</span></span></li><li><span class="n">Kongchi Kimchi Jjigae <span class="hot">🌶</span><span class="kr">꽁치 김치찌개</span></span></li><li><span class="n">Mukeunji Kimchi Jjigae <span class="hot">🌶</span><span class="kr">묵은지 김치찌개</span></span></li><li><span class="n">Hwangtae Kongnamul Haejangguk<span class="kr">황태 콩나물 해장국</span></span></li><li><span class="n">Ojingeo Jjigae <span class="hot">🌶</span><span class="kr">오징어 찌개</span></span></li><li><span class="n">Saengtae Tang <span class="hot">🌶</span><span class="kr">생태탕</span></span></li><li><span class="n">Saengtae Jiri<span class="kr">생태 지리</span></span><span class="ds">Clear, mild pollack soup</span></li><li><span class="n">Bulgogi Deopbap<span class="kr">불고기 덮밥</span></span></li><li><span class="n">Jeyuk Deopbap <span class="hot">🌶</span><span class="kr">제육 덮밥</span></span></li><li><span class="n">Samgye Tang<span class="kr">삼계탕</span></span></li></ul>
+        </div><div class="board">
+          <h3>Chef Specials <span class="kr">특선요리</span></h3>
+          <ul><li><span class="n">Dogani Muchim <span class="hot">🌶</span><span class="kr">도가니 무침</span></span></li><li><span class="n">Ojingeo Bokkeum <span class="hot">🌶</span><span class="kr">오징어 볶음</span></span></li><li><span class="n">Jeyuk Bokkeum <span class="hot">🌶</span><span class="kr">제육볶음</span></span></li><li><span class="n">Mr. Jok Bal<span class="kr">Mr. 족발</span></span></li><li><span class="n">Bul Jok Bal <span class="hot">🌶</span><span class="kr">불족발</span></span></li><li><span class="n">LA Galbi<span class="kr">LA 갈비</span></span></li><li><span class="n">Ah Gwi Jjim <span class="hot">🌶</span><span class="kr">아귀찜</span></span></li><li><span class="n">Bul Dak Bal <span class="hot">🌶</span><span class="kr">불닭발</span></span></li></ul>
+        </div><div class="board">
+          <h3>Casseroles <span class="kr">전골</span></h3>
+          <ul><li><span class="n">Gamja Tang Jeongol <span class="hot">🌶</span><span class="kr">감자탕 전골</span></span></li><li><span class="n">Gopchang Jeongol <span class="hot">🌶</span><span class="kr">곱창 전골</span></span></li><li><span class="n">Saengtae Tang Jeongol <span class="hot">🌶</span><span class="kr">생태탕 전골</span></span></li><li><span class="n">Budae Jjigae <span class="hot">🌶</span><span class="kr">부대찌개</span></span></li></ul>
         </div>
         <div class="board wide">
-          <h3>Soups &amp; Hot Pots <span class="kr">식사 및 탕류</span></h3>
-          <p class="note">Lunch / Dinner prices</p>
-          <ul>
-            <li><span class="n">Soon Tofu, beef or seafood <span class="hot">🌶</span><span class="kr">순두부</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">AnnanGol Hae Jang Guk<span class="kr">아난골 해장국</span></span><span class="pr">$14.99 / 17.99</span><span class="ds">Spicy or not spicy</span></li>
-            <li><span class="n">Pork Gochujang Tofu Jjigae <span class="hot">🌶</span><span class="kr">돼지 고추장 두부찌개</span></span><span class="pr">$14.99 / 17.99</span></li>
-            <li><span class="n">Anchovy Siraegi Doenjang Guk<span class="kr">멸치 시래기 된장국</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">Gamja Tang <span class="hot">🌶</span><span class="kr">감자탕</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">Yuk Gae Jang <span class="hot">🌶</span><span class="kr">육개장</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">Galbi Tang<span class="kr">갈비탕</span></span><span class="pr">$16.99 / 19.99</span></li>
-            <li><span class="n">Ugeoji Galbi Tang<span class="kr">우거지 갈비탕</span></span><span class="pr">$16.99 / 19.99</span></li>
-            <li><span class="n">Galbi Dolsot Bibimbap<span class="kr">갈비 돌솥 비빔밥</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">So Meori Gukbap<span class="kr">소머리 국밥</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">Dogani Tang<span class="kr">도가니탕</span></span><span class="pr">$16.99 / 19.99</span></li>
-            <li><span class="n">Ojingeo Jjigae <span class="hot">🌶</span><span class="kr">오징어 찌개</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">Saengtae Tang <span class="hot">🌶</span><span class="kr">생태탕</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">Daegu Tang <span class="hot">🌶</span><span class="kr">대구탕</span></span><span class="pr">$16.99 / 19.99</span></li>
-            <li><span class="n">Mukeunji Kimchi Jjigae <span class="hot">🌶</span><span class="kr">묵은지 김치찌개</span></span><span class="pr">$15.99 / 18.99</span></li>
-            <li><span class="n">Bulgogi Deopbap<span class="kr">불고기 덮밥</span></span><span class="pr">$17.99 / 19.99</span></li>
-            <li><span class="n">Jeyuk Deopbap <span class="hot">🌶</span><span class="kr">제육 덮밥</span></span><span class="pr">$17.99 / 19.99</span></li>
-          </ul>
-        </div>
-        <div class="board">
-          <h3>Casseroles <span class="kr">전골</span></h3>
-          <ul>
-            <li><span class="n">Gamja Tang Jeongol <span class="hot">🌶</span><span class="kr">감자탕 전골</span></span><span class="pr">$38.99</span></li>
-            <li><span class="n">Gopchang Jeongol <span class="hot">🌶</span><span class="kr">곱창 전골</span></span><span class="pr">$38.99</span></li>
-            <li><span class="n">Saengtae Tang Jeongol <span class="hot">🌶</span><span class="kr">생태탕 전골</span></span><span class="pr">$38.99</span></li>
-          </ul>
-          <h3 style="margin-top:26px">Chef Specials <span class="kr">특선요리</span></h3>
-          <ul>
-            <li><span class="n">Dogani Muchim <span class="hot">🌶</span><span class="kr">도가니 무침</span></span><span class="pr">$28.99</span></li>
-            <li><span class="n">Ojingeo Bokkeum <span class="hot">🌶🌶</span><span class="kr">오징어 볶음</span></span><span class="pr">$28.99</span></li>
-            <li><span class="n">Jeyuk Bokkeum <span class="hot">🌶</span><span class="kr">제육볶음</span></span><span class="pr">$28.99</span></li>
-            <li><span class="n">Mr. Jok Bal / Bul Jok Bal<span class="kr">족발 / 불족발</span></span><span class="pr">$38.99</span></li>
-            <li><span class="n">Ah Gwi Jjim <span class="hot">🌶</span><span class="kr">아귀찜</span></span><span class="pr">$42.99</span></li>
-            <li><span class="n">Bul Dak Bal <span class="hot">🌶🌶🌶</span><span class="kr">불닭발</span></span><span class="pr">$26.99</span></li>
-          </ul>
-        </div>
-        <div class="board">
-          <h3>Noodles &amp; Appetizers <span class="kr">분식</span></h3>
-          <ul>
-            <li><span class="n">Mak Naengmyeon <span class="hot">🌶</span><span class="kr">막냉면</span></span><span class="pr">$12.99 / 14.99<small>lunch / dinner</small></span></li>
-            <li><span class="n">Naengmyeon, bibim or mul<span class="kr">냉면</span></span><span class="pr">$12.99 / 14.99<small>lunch / dinner</small></span></li>
-            <li><span class="n">Kun Mandu<span class="kr">군만두</span></span><span class="pr">$15.99 / 20.99<small>8 / 12 pcs</small></span></li>
-            <li><span class="n">Pajeon<span class="kr">파전</span></span><span class="pr">$20.99</span><span class="ds">Green onion pancake</span></li>
-          </ul>
-          <p class="combo"><b>Extras:</b> rice $2 · naengmyeon noodles $5 · vegetables $5</p>
+          <h3>Appetizers <span class="kr">분식</span></h3>
+          <ul><li><span class="n">Kun Mandu, 8 pcs<span class="kr">군만두</span></span></li><li><span class="n">Kun Mandu, 12 pcs<span class="kr">군만두</span></span></li><li><span class="n">Pajeon<span class="kr">파전</span></span><span class="ds">Green onion pancake</span></li><li><span class="n">Yuk Jeon<span class="kr">육전</span></span><span class="ds">Pan-fried beef slices</span></li></ul>
         </div>
       </div>
-      <p class="fine">Prices may change; the online order page has today's menu. All BBQ pork and beef items may be served undercooked. Consuming raw or undercooked meat, poultry, seafood, shellfish or eggs may increase your risk of foodborne illness.</p>
+      <p class="fine">For prices and today's menu, see <a href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">our online order page</a>. All BBQ pork and beef items may be served undercooked. Consuming raw or undercooked meat, poultry, seafood, shellfish or eggs may increase your risk of foodborne illness.</p>
     </div>
   </section>
 
@@ -356,7 +311,7 @@ footer small{font-size:13px;opacity:.8}
           <div class="rows">
             <div class="r"><div class="l">Address</div><div class="v">4215 Tom Davis Dr, Annandale, VA 22003</div></div>
             <div class="r"><div class="l">Phone</div><div class="v"><span id="phone">(703) 914-4600</span><button class="copy" type="button" data-copy="phone">Copy</button></div></div>
-            <div class="r"><div class="l">Hours</div><div class="v">K-JjamBab breakfast 7–10 AM<br>Lunch &amp; dinner: call or check Google for today's hours</div></div>
+            <div class="r"><div class="l">Hours</div><div class="v">K-JjamBab breakfast 7–10 AM<br>Regular hours 10 AM–10 PM, 365 days a year</div></div>
             <div class="r"><div class="l">Good to know</div><div class="svc"><span>Vegan options</span><span>High chairs</span><span>On-site parking</span><span>Group party room</span></div></div>
           </div>
           <div class="links">
