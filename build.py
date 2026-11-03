@@ -29,6 +29,9 @@ PICKER_CSS = """
 .lang{position:relative}
 .lang summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;opacity:.9;padding:6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px}
 .lang summary::-webkit-details-marker{display:none}
+.lang summary{white-space:nowrap}
+.lang .lcode{display:none}
+@media (max-width:600px){.lang .lname{display:none}.lang .lcode{display:inline}.lang ul{grid-template-columns:repeat(2,minmax(110px,1fr))}}
 .lang ul{position:absolute;inset-inline-end:0;top:calc(100% + 8px);margin:0;padding:8px;list-style:none;background:var(--card);color:var(--ink);border:1px solid var(--rule);border-radius:12px;box-shadow:0 18px 40px -12px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:2px;z-index:20;max-height:70vh;overflow:auto}
 .lang li a{display:block;padding:7px 10px;border-radius:8px;text-decoration:none;font-size:14px}
 .lang li a:hover,.lang li a[aria-current]{background:var(--steel)}
@@ -72,7 +75,7 @@ def build():
             items = ''.join(
                 f'<li><a href="{pre}{c}/" hreflang="{c}" lang="{c}"' + (' aria-current="true"' if c == code else '') + f'>{n}</a></li>'
                 for c, n, *_ in avail)
-            picker = (f'<details class="lang"><summary aria-label="{d["lang_label"]}">🌐 {name}</summary>'
+            picker = (f'<details class="lang"><summary aria-label="{d["lang_label"]}: {name}">🌐 <span class="lname">{name}</span><span class="lcode">{code.upper()}</span></summary>'
                       f'<ul>{items}</ul></details>\n    ')
             html = html.replace('<a class="btn" href="https://annangol.menu11.com', picker + '<a class="btn" href="https://annangol.menu11.com', 1)
             out = 'index.html' if root else f'{code}/index.html'

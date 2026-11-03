@@ -188,6 +188,9 @@ footer small{font-size:13px;opacity:.8}
 .lang{position:relative}
 .lang summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;opacity:.9;padding:6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px}
 .lang summary::-webkit-details-marker{display:none}
+.lang summary{white-space:nowrap}
+.lang .lcode{display:none}
+@media (max-width:600px){.lang .lname{display:none}.lang .lcode{display:inline}.lang ul{grid-template-columns:repeat(2,minmax(110px,1fr))}}
 .lang ul{position:absolute;inset-inline-end:0;top:calc(100% + 8px);margin:0;padding:8px;list-style:none;background:var(--card);color:var(--ink);border:1px solid var(--rule);border-radius:12px;box-shadow:0 18px 40px -12px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:2px;z-index:20;max-height:70vh;overflow:auto}
 .lang li a{display:block;padding:7px 10px;border-radius:8px;text-decoration:none;font-size:14px}
 .lang li a:hover,.lang li a[aria-current]{background:var(--steel)}
@@ -210,7 +213,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <a href="#inside">ভেতরে</a>
       <a href="#visit">আসুন</a>
     </nav>
-    <details class="lang"><summary aria-label="ভাষা">🌐 বাংলা</summary><ul><li><a href="../en/" hreflang="en" lang="en">English</a></li><li><a href="../ko/" hreflang="ko" lang="ko">한국어</a></li><li><a href="../es/" hreflang="es" lang="es">Español</a></li><li><a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li><li><a href="../zh/" hreflang="zh" lang="zh">中文</a></li><li><a href="../mn/" hreflang="mn" lang="mn">Монгол</a></li><li><a href="../tl/" hreflang="tl" lang="tl">Filipino</a></li><li><a href="../ar/" hreflang="ar" lang="ar">العربية</a></li><li><a href="../fr/" hreflang="fr" lang="fr">Français</a></li><li><a href="../am/" hreflang="am" lang="am">አማርኛ</a></li><li><a href="../fa/" hreflang="fa" lang="fa">فارسی</a></li><li><a href="../bn/" hreflang="bn" lang="bn" aria-current="true">বাংলা</a></li><li><a href="../ht/" hreflang="ht" lang="ht">Kreyòl</a></li><li><a href="../pt/" hreflang="pt" lang="pt">Português</a></li><li><a href="../ru/" hreflang="ru" lang="ru">Русский</a></li></ul></details>
+    <details class="lang"><summary aria-label="ভাষা: বাংলা">🌐 <span class="lname">বাংলা</span><span class="lcode">BN</span></summary><ul><li><a href="../en/" hreflang="en" lang="en">English</a></li><li><a href="../ko/" hreflang="ko" lang="ko">한국어</a></li><li><a href="../es/" hreflang="es" lang="es">Español</a></li><li><a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li><li><a href="../zh/" hreflang="zh" lang="zh">中文</a></li><li><a href="../mn/" hreflang="mn" lang="mn">Монгол</a></li><li><a href="../tl/" hreflang="tl" lang="tl">Filipino</a></li><li><a href="../ar/" hreflang="ar" lang="ar">العربية</a></li><li><a href="../fr/" hreflang="fr" lang="fr">Français</a></li><li><a href="../am/" hreflang="am" lang="am">አማርኛ</a></li><li><a href="../fa/" hreflang="fa" lang="fa">فارسی</a></li><li><a href="../bn/" hreflang="bn" lang="bn" aria-current="true">বাংলা</a></li><li><a href="../ht/" hreflang="ht" lang="ht">Kreyòl</a></li><li><a href="../pt/" hreflang="pt" lang="pt">Português</a></li><li><a href="../ru/" hreflang="ru" lang="ru">Русский</a></li></ul></details>
     <a class="btn" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">অনলাইনে অর্ডার করুন</a>
   </div>
 </header>
