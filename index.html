@@ -8,6 +8,10 @@
 <meta property="og:title" content="AnnanGol Korean BBQ · Annandale, VA">
 <meta property="og:description" content="Korean BBQ, stews and chef specials. Plus K-JjamBab breakfast, 7–10 AM, $13.99, no tip.">
 <meta property="og:image" content="https://annangol.com/img/m_la_galbi.jpg">
+<link rel="canonical" href="https://annangol.com/">
+<link rel="alternate" hreflang="en" href="https://annangol.com/en/">
+<link rel="alternate" hreflang="ko" href="https://annangol.com/ko/">
+<link rel="alternate" hreflang="x-default" href="https://annangol.com/">
 <link rel="icon" href="img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@900&family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@700;900&display=swap">
@@ -167,6 +171,19 @@ footer{background:var(--char);color:var(--char-ink)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:center;justify-content:space-between;padding-block:26px}
 footer img{height:32px;width:auto}
 footer small{font-size:13px;opacity:.8}
+
+.lang{position:relative}
+.lang summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;opacity:.9;padding:6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px}
+.lang summary::-webkit-details-marker{display:none}
+.lang ul{position:absolute;inset-inline-end:0;top:calc(100% + 8px);margin:0;padding:8px;list-style:none;background:var(--card);color:var(--ink);border:1px solid var(--rule);border-radius:12px;box-shadow:0 18px 40px -12px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:2px;z-index:20;max-height:70vh;overflow:auto}
+.lang li a{display:block;padding:7px 10px;border-radius:8px;text-decoration:none;font-size:14px}
+.lang li a:hover,.lang li a[aria-current]{background:var(--steel)}
+.lang li a[aria-current]{font-weight:700}
+html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
+[dir=rtl] .hero-photo .tag{left:auto;right:-14px}
+@media (max-width:860px){[dir=rtl] .hero-photo .tag{right:12px}}
+[dir=rtl] .board .n .kr{margin-left:0;margin-right:6px}
+[dir=rtl] .copy{margin-left:0;margin-right:10px}
 </style>
 </head>
 <body>
@@ -180,6 +197,7 @@ footer small{font-size:13px;opacity:.8}
       <a href="#inside">Inside</a>
       <a href="#visit">Visit</a>
     </nav>
+    <details class="lang"><summary aria-label="Language">🌐 English</summary><ul><li><a href="en/" hreflang="en" lang="en" aria-current="true">English</a></li><li><a href="ko/" hreflang="ko" lang="ko">한국어</a></li></ul></details>
     <a class="btn" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Order online</a>
   </div>
 </header>
@@ -191,7 +209,7 @@ footer small{font-size:13px;opacity:.8}
         <p class="kname">아난골 · 원조 BBQ</p>
         <h1>Korean BBQ, <span>done the old way.</span></h1>
         <p class="lede">Marinated LA galbi, pork galbi, braised jokbal and bubbling hot pots, in Annandale, Virginia.</p>
-        <p class="lede-kr">한국식 숯불구이와 정갈한 한식, 애난데일 아난골.</p>
+        <p class="lede-kr" >한국식 숯불구이와 정갈한 한식, 애난데일 아난골.</p>
         <div class="cta">
           <a class="btn" href="#menu">See the menu</a>
           <a class="btn ghost" href="#visit">Get directions</a>
@@ -216,7 +234,7 @@ footer small{font-size:13px;opacity:.8}
     <div class="wrap">
       <p class="eyebrow">Chef specials</p>
       <h2 class="h2">What people come back for.</h2>
-      <p class="h2-kr">아난골 특선요리</p>
+      <p class="h2-kr" >아난골 특선요리</p>
       <div class="sig">
         <article class="dish"><img src="img/m_galbi_tongs.jpg" loading="lazy" alt="Marinated beef galbi lifted with tongs"><div class="b"><h3>Yangnyum Wang Galbi</h3><span class="k">양념 왕갈비</span><p class="d">Grilled beef prime ribs marinated in soy sauce.</p></div></article>
         <article class="dish"><img src="img/m_jokbal.jpg" loading="lazy" alt="Sliced braised pig's trotter"><div class="b"><h3>Mr. Jok Bal</h3><span class="k">Mr. 족발</span><p class="d">Braised pig's trotter with soy sauce and spices.</p></div></article>
@@ -232,7 +250,7 @@ footer small{font-size:13px;opacity:.8}
     <div class="wrap">
       <p class="eyebrow">Menu</p>
       <h2 class="h2">The full board.</h2>
-      <p class="h2-kr">메뉴 · 가격은 온라인 주문 페이지에서 확인하세요.</p>
+      <p class="h2-kr">Prices are on our online order page.</p>
       <h3 class="sub">Soups &amp; hot pots <span class="kr">국물 요리</span></h3>
       <div class="sig sm"><article class="dish"><img src="img/m_galbitang.jpg" loading="lazy" alt="Galbi Tang, 갈비탕"><div class="b"><h3>Galbi Tang</h3><span class="k">갈비탕</span><p class="d">Beef short rib soup with glass noodles.</p></div></article><article class="dish"><img src="img/m_soontofu.jpg" loading="lazy" alt="Soon Tofu, 순두부"><div class="b"><h3>Soon Tofu</h3><span class="k">순두부</span><p class="d">Spicy soft tofu stew, beef or seafood.</p></div></article><article class="dish"><img src="img/m_yukgaejang.jpg" loading="lazy" alt="Yuk Gae Jang, 육개장"><div class="b"><h3>Yuk Gae Jang</h3><span class="k">육개장</span><p class="d">Spicy shredded beef and vegetable soup.</p></div></article><article class="dish"><img src="img/m_siraegi.jpg" loading="lazy" alt="Siraegi Doenjang Guk, 시래기 된장국"><div class="b"><h3>Siraegi Doenjang Guk</h3><span class="k">시래기 된장국</span><p class="d">Dried radish greens in soybean paste broth.</p></div></article><article class="dish"><img src="img/m_kimchijjigae.jpg" loading="lazy" alt="Kongchi Kimchi Jjigae, 꽁치 김치찌개"><div class="b"><h3>Kongchi Kimchi Jjigae</h3><span class="k">꽁치 김치찌개</span><p class="d">Aged kimchi stew with saury and tofu.</p></div></article><article class="dish"><img src="img/m_saengtae.jpg" loading="lazy" alt="Saengtae Tang, 생태탕"><div class="b"><h3>Saengtae Tang</h3><span class="k">생태탕</span><p class="d">Spicy fresh pollack soup.</p></div></article></div>
       <div class="boards">
@@ -267,7 +285,7 @@ footer small{font-size:13px;opacity:.8}
         <p class="eyebrow">Mornings only · 7–10 AM</p>
         <h2 class="h2">Burger NO. Omelet NO. <span>It's K-JjamBab!</span></h2>
         <p>Before lunch, AnnanGol serves K-JjamBab, a Korean military-style tray breakfast: rice with a fried egg, a warm soup, three side dishes and a main that changes every day. Roasted gim on the side.</p>
-        <p class="kr">당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
+        <p class="kr" >당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
         <div class="row"><span class="price">$13.99</span><span class="stamp">NO TIP</span><span>Every morning, 7–10 AM</span></div>
       </div>
       <div class="trays">
@@ -333,10 +351,11 @@ footer small{font-size:13px;opacity:.8}
 </footer>
 
 <script>
+const T={"copy": "Copy", "copied": "Copied", "selected": "Selected"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
-  const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected'};
-  try{navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)},sel)}catch(e){sel()}
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
+  try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
 }));
 </script>
 </body>
