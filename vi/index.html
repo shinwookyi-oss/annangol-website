@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AnnanGol – Thịt nướng Hàn Quốc</title>
+<meta name="description" content="AnnanGol (아난골), thịt nướng than hoa Hàn Quốc và món Hàn kiểu nhà làm tại Annandale, VA. LA galbi, galbi heo, jokbal, món hầm và lẩu. Bữa sáng khay K-JjamBab mỗi sáng 7–10 giờ.">
+<meta property="og:title" content="AnnanGol Korean BBQ · Annandale, VA">
+<meta property="og:description" content="Thịt nướng Hàn Quốc, món hầm và món đặc biệt của đầu bếp. Thêm bữa sáng K-JjamBab, 7–10 giờ sáng, $13.99, không cần tip.">
+<meta property="og:image" content="https://annangol.com/img/m_la_galbi.jpg">
+<link rel="canonical" href="https://annangol.com/vi/">
+<link rel="alternate" hreflang="en" href="https://annangol.com/en/">
+<link rel="alternate" hreflang="ko" href="https://annangol.com/ko/">
+<link rel="alternate" hreflang="es" href="https://annangol.com/es/">
+<link rel="alternate" hreflang="vi" href="https://annangol.com/vi/">
+<link rel="alternate" hreflang="zh" href="https://annangol.com/zh/">
+<link rel="alternate" hreflang="mn" href="https://annangol.com/mn/">
+<link rel="alternate" hreflang="tl" href="https://annangol.com/tl/">
+<link rel="alternate" hreflang="ar" href="https://annangol.com/ar/">
+<link rel="alternate" hreflang="fr" href="https://annangol.com/fr/">
+<link rel="alternate" hreflang="am" href="https://annangol.com/am/">
+<link rel="alternate" hreflang="fa" href="https://annangol.com/fa/">
+<link rel="alternate" hreflang="bn" href="https://annangol.com/bn/">
+<link rel="alternate" hreflang="ht" href="https://annangol.com/ht/">
+<link rel="alternate" hreflang="pt" href="https://annangol.com/pt/">
+<link rel="alternate" hreflang="ru" href="https://annangol.com/ru/">
+<link rel="alternate" hreflang="x-default" href="https://annangol.com/">
+<link rel="icon" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@900&family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@700;900&display=swap">
+<style>
+/* Layout: a restaurant site. Charcoal-and-ember hero for the BBQ house, menu boards set like a printed price list, one olive "mess hall" band for the morning K-JjamBab, then the room and the visit card. */
+:root{
+  --paper:#F6F2EA; --card:#FFFFFF; --ink:#211A17; --muted:#5C524C; --rule:#E2D9CC;
+  --ember:#B3262A; --ember-ink:#FFFFFF; --char:#1B1513; --char-ink:#F3EBDF; --gold:#C69B54;
+  --olive:#4A5226; --olive-ink:#ECEAD8; --steel:#E3E6E1;
+  --f-sans:'Montserrat','Noto Sans KR','Helvetica Neue',Arial,sans-serif;
+  --f-kr:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --f-krs:'Noto Serif KR','Nanum Myeongjo',serif;
+  --f-stencil:'Big Shoulders Stencil Display',Impact,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#151110; --card:#1E1816; --ink:#F1E9DE; --muted:#B9ADA2; --rule:#342A26;
+  --ember:#E0474A; --gold:#D8B06A; --olive:#3C4320; --steel:#22201E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#151110; --card:#1E1816; --ink:#F1E9DE; --muted:#B9ADA2; --rule:#342A26;
+  --ember:#E0474A; --gold:#D8B06A; --olive:#3C4320; --steel:#22201E; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--f-sans);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:4px}
+.kr{font-family:var(--f-kr)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+section{padding-block:76px}
+.eyebrow{font:600 14px var(--f-sans);color:var(--ember)}
+.h2{font:800 clamp(30px,4vw,46px)/1.08 var(--f-sans);letter-spacing:-.025em;margin-top:8px}
+.h2-kr{font:500 17px var(--f-kr);color:var(--muted);margin-top:8px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--ember);color:var(--ember-ink);text-decoration:none;font-weight:700;font-size:15px;padding:12px 20px;border-radius:999px;white-space:nowrap}
+.btn.ghost{background:transparent;color:inherit;border:1.5px solid currentColor}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--char)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--char);color:var(--char-ink)}
+.bar{display:flex;align-items:center;gap:24px;padding-block:12px}
+.bar img{height:34px;width:auto}
+.bar nav{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:14px}
+.bar nav a{text-decoration:none;opacity:.8}
+.bar nav a:hover{opacity:1}
+.bar .btn{padding:9px 16px;font-size:14px}
+@media (max-width:820px){.bar nav{display:none}.bar .btn{margin-left:auto}}
+
+/* hero */
+.hero{background:var(--char);color:var(--char-ink);overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:48px;align-items:center;padding-block:56px 64px}
+.hero .kname{font:900 22px var(--f-krs);color:var(--gold);letter-spacing:.04em}
+.hero h1{margin-top:10px;font:800 clamp(40px,6vw,76px)/1 var(--f-sans);letter-spacing:-.035em}
+.hero h1 span{color:var(--ember)}
+.hero .lede{margin-top:20px;font-size:18px;max-width:38ch;opacity:.85}
+.hero .lede-kr{margin-top:6px;font:500 16px var(--f-kr);opacity:.75}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero-photo{position:relative;min-width:0}
+.hero-photo img{width:100%;height:auto;border-radius:18px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.hero-photo .tag{position:absolute;left:-14px;bottom:24px;background:var(--paper);color:var(--ink);border-radius:14px;padding:12px 18px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5)}
+.tag b{display:block;font:800 18px var(--f-sans)}
+.tag span{font:500 14px var(--f-kr);color:var(--muted)}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr;gap:36px;padding-block:36px 48px}.hero-photo .tag{left:12px}}
+
+/* quick strip */
+.quick{background:var(--ember);color:var(--ember-ink)}
+.quick .wrap{display:flex;flex-wrap:wrap;gap:10px 36px;padding-block:16px;font-weight:600;font-size:15px}
+.quick a{text-decoration:none}
+
+/* signature grid */
+.sig{margin-top:36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.dish{background:var(--card);border:1px solid var(--rule);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.dish img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.dish .b{padding:16px 18px 18px;display:grid;grid-template-columns:minmax(0,1fr);gap:2px 12px;align-items:baseline}
+.dish h3{font:700 18px/1.3 var(--f-sans)}
+.dish .p{font:700 17px var(--f-sans);font-variant-numeric:tabular-nums}
+.dish .k{grid-column:1/-1;font:500 14px var(--f-kr);color:var(--muted)}
+.dish .d{grid-column:1/-1;font-size:14px;color:var(--muted);margin-top:4px}
+.hot{color:var(--ember);font-weight:700}
+@media (max-width:900px){.sig{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.sig{grid-template-columns:1fr}}
+
+.sub{margin-top:36px;font:800 22px var(--f-sans);display:flex;gap:12px;align-items:baseline}
+.sub .kr{font:700 17px var(--f-krs);color:var(--ember)}
+.sig.sm{margin-top:16px}
+.sig.sm .dish img{aspect-ratio:16/10}
+/* menu boards */
+.boards{margin-top:36px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.board{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:26px 26px 22px;min-width:0}
+.board h3{font:800 22px var(--f-sans);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.board h3 .kr{font:700 17px var(--f-krs);color:var(--ember)}
+.board .note{font-size:13px;color:var(--muted);margin-top:4px}
+.board ul{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:12px}
+.board li{display:grid;grid-template-columns:minmax(0,1fr);gap:0 14px;padding-bottom:12px;border-bottom:1px dashed var(--rule)}
+.board li:last-child{border-bottom:0;padding-bottom:0}
+.board .n{font:600 16px/1.35 var(--f-sans)}
+.board .n .kr{font-weight:500;color:var(--muted);font-size:14px;margin-left:6px}
+.board .pr{font:600 15px var(--f-sans);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.board .pr small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.board .ds{grid-column:1/-1;font-size:13.5px;color:var(--muted)}
+.board.wide{grid-column:1/-1}
+.board.wide ul{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px}
+.combo{margin-top:18px;background:var(--steel);border-radius:12px;padding:14px 16px;font-size:14.5px}
+.combo b{font-weight:700}
+.combo s{color:var(--muted)}
+@media (max-width:860px){.boards{grid-template-columns:1fr}.board.wide ul{grid-template-columns:1fr}}
+.fine{margin-top:22px;font-size:13px;color:var(--muted);max-width:90ch}
+
+/* breakfast band */
+.am{background:var(--olive);color:var(--olive-ink)}
+.am .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:44px;align-items:center}
+.am .eyebrow{color:var(--gold)}
+.am .h2 span{color:#F2D28E}
+.am p{margin-top:14px;max-width:46ch;opacity:.9}
+.am .row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:24px}
+.am .price{font:900 60px/.9 var(--f-stencil)}
+.am .stamp{font:900 30px/1 var(--f-stencil);border:3px solid currentColor;border-radius:8px;padding:4px 12px 6px;transform:rotate(-5deg)}
+.am .trays{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.am .trays img{border-radius:12px;aspect-ratio:4/3;object-fit:cover;width:100%}
+.am .trays img:first-child{grid-column:1/-1;aspect-ratio:auto}
+@media (max-width:860px){.am .wrap{grid-template-columns:1fr}}
+
+/* room */
+.room{margin-top:36px;display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:auto auto;gap:16px}
+.room figure{margin:0;min-width:0}
+.room img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px}
+.room .big img{aspect-ratio:auto;height:calc(100% - 30px)}
+.room .big{display:flex;flex-direction:column}
+.room .big{grid-row:1/3}
+.room figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
+@media (max-width:760px){.room{grid-template-columns:1fr}.room .big{grid-row:auto}.room .big img{aspect-ratio:16/9;height:auto}}
+.revs{margin-top:32px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.rev{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:22px 22px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.rev .st{color:var(--gold);letter-spacing:2px;font-size:15px}
+.rev q{font:500 17px/1.55 var(--f-sans);quotes:none}
+.rev q.kr{font-family:var(--f-kr)}
+.rev .who{margin-top:auto;font-size:14px;color:var(--muted)}
+@media (max-width:860px){.revs{grid-template-columns:1fr}}
+
+/* visit */
+.visit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;margin-top:36px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:28px;min-width:0}
+.rows{display:grid;gap:18px}
+.r .l{font:600 13px var(--f-sans);color:var(--muted)}
+.r .v{font:600 18px/1.45 var(--f-sans);margin-top:2px}
+.svc{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.svc span{background:var(--steel);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:500}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.copy{font:600 13px var(--f-sans);background:none;border:1.5px solid var(--rule);color:var(--ink);border-radius:999px;padding:4px 12px;margin-left:10px;cursor:pointer;vertical-align:middle}
+.store img{border-radius:18px;width:100%}
+@media (max-width:860px){.visit{grid-template-columns:1fr}}
+
+footer{background:var(--char);color:var(--char-ink)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:center;justify-content:space-between;padding-block:26px}
+footer img{height:32px;width:auto}
+footer small{font-size:13px;opacity:.8}
+
+.lang{position:relative}
+.lang summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;opacity:.9;padding:6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px}
+.lang summary::-webkit-details-marker{display:none}
+.lang ul{position:absolute;inset-inline-end:0;top:calc(100% + 8px);margin:0;padding:8px;list-style:none;background:var(--card);color:var(--ink);border:1px solid var(--rule);border-radius:12px;box-shadow:0 18px 40px -12px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:2px;z-index:20;max-height:70vh;overflow:auto}
+.lang li a{display:block;padding:7px 10px;border-radius:8px;text-decoration:none;font-size:14px}
+.lang li a:hover,.lang li a[aria-current]{background:var(--steel)}
+.lang li a[aria-current]{font-weight:700}
+html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
+[dir=rtl] .hero-photo .tag{left:auto;right:-14px}
+@media (max-width:860px){[dir=rtl] .hero-photo .tag{right:12px}}
+[dir=rtl] .board .n .kr{margin-left:0;margin-right:6px}
+[dir=rtl] .copy{margin-left:0;margin-right:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a href="#top" aria-label="AnnanGol home"><img src="../img/annangol_cream.png" alt="AnnanGol"></a>
+    <nav aria-label="Sections">
+      <a href="#signature">Món đặc trưng</a>
+      <a href="#menu">Thực đơn</a>
+      <a href="#breakfast">Bữa sáng</a>
+      <a href="#inside">Không gian</a>
+      <a href="#visit">Ghé thăm</a>
+    </nav>
+    <details class="lang"><summary aria-label="Ngôn ngữ">🌐 Tiếng Việt</summary><ul><li><a href="../en/" hreflang="en" lang="en">English</a></li><li><a href="../ko/" hreflang="ko" lang="ko">한국어</a></li><li><a href="../es/" hreflang="es" lang="es">Español</a></li><li><a href="../vi/" hreflang="vi" lang="vi" aria-current="true">Tiếng Việt</a></li><li><a href="../zh/" hreflang="zh" lang="zh">中文</a></li><li><a href="../mn/" hreflang="mn" lang="mn">Монгол</a></li><li><a href="../tl/" hreflang="tl" lang="tl">Filipino</a></li><li><a href="../ar/" hreflang="ar" lang="ar">العربية</a></li><li><a href="../fr/" hreflang="fr" lang="fr">Français</a></li><li><a href="../am/" hreflang="am" lang="am">አማርኛ</a></li><li><a href="../fa/" hreflang="fa" lang="fa">فارسی</a></li><li><a href="../bn/" hreflang="bn" lang="bn">বাংলা</a></li><li><a href="../ht/" hreflang="ht" lang="ht">Kreyòl</a></li><li><a href="../pt/" hreflang="pt" lang="pt">Português</a></li><li><a href="../ru/" hreflang="ru" lang="ru">Русский</a></li></ul></details>
+    <a class="btn" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Đặt món online</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <p class="kname">아난골 · 원조 BBQ</p>
+        <h1>Thịt nướng Hàn Quốc, <span>đúng kiểu xưa.</span></h1>
+        <p class="lede">LA galbi tẩm ướp, galbi heo, jokbal om và lẩu sôi sùng sục, ngay tại Annandale, Virginia.</p>
+        <p class="lede-kr" >한국식 숯불구이와 정갈한 한식, 애난데일 아난골.</p>
+        <div class="cta">
+          <a class="btn" href="#menu">Xem thực đơn</a>
+          <a class="btn ghost" href="#visit">Chỉ đường</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="../img/m_la_galbi.jpg" width="895" height="718" alt="LA galbi, marinated beef short ribs on a sizzling cast-iron plate">
+        <div class="tag"><b>LA Galbi</b><span>Đầu bếp gợi ý · LA 갈비</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="quick">
+    <div class="wrap">
+      <a href="#breakfast">Buổi sáng 7–10 giờ: bữa sáng khay K-JjamBab, $13.99, không cần tip</a>
+      <a href="#visit">4215 Tom Davis Dr, Annandale</a>
+      <span>Mở cửa 10 giờ sáng–10 giờ tối, 365 ngày</span>
+      <span>(703) 914-4600</span>
+    </div>
+  </div>
+
+  <section id="signature">
+    <div class="wrap">
+      <p class="eyebrow">Món đặc biệt của đầu bếp</p>
+      <h2 class="h2">Những món khiến khách quay lại.</h2>
+      <p class="h2-kr" >아난골 특선요리</p>
+      <div class="sig">
+        <article class="dish"><img src="../img/m_galbi_tongs.jpg" loading="lazy" alt="Marinated beef galbi lifted with tongs"><div class="b"><h3>Yangnyum Wang Galbi</h3><span class="k">양념 왕갈비</span><p class="d">Sườn bò nướng ướp nước tương.</p></div></article>
+        <article class="dish"><img src="../img/m_jokbal.jpg" loading="lazy" alt="Sliced braised pig's trotter"><div class="b"><h3>Mr. Jok Bal</h3><span class="k">Mr. 족발</span><p class="d">Chân giò heo om nước tương và gia vị.</p></div></article>
+        <article class="dish"><img src="../img/m_buljokbal.jpg" loading="lazy" alt="Spicy braised pig's trotter on a griddle"><div class="b"><h3>Bul Jok Bal <span class="hot">🌶🌶🌶</span></h3><span class="k">불족발</span><p class="d">Chân giò heo om cay.</p></div></article>
+        <article class="dish"><img src="../img/m_agujjim.jpg" loading="lazy" alt="Braised monkfish with bean sprouts in spicy sauce"><div class="b"><h3>Ah Gwi Jjim <span class="hot">🌶</span></h3><span class="k">아귀찜</span><p class="d">Cá monkfish om sốt cay với giá đỗ.</p></div></article>
+        <article class="dish"><img src="../img/m_buldakbal.jpg" loading="lazy" alt="Spicy stir-fried chicken feet with chili and sesame"><div class="b"><h3>Bul Dak Bal <span class="hot">🌶🌶🌶</span></h3><span class="k">불닭발</span><p class="d">Chân gà xào cay.</p></div></article>
+        <article class="dish"><img src="../img/m_gamjatang.jpg" loading="lazy" alt="Pork backbone soup with perilla seed powder"><div class="b"><h3>Gamja Tang <span class="hot">🌶</span></h3><span class="k">감자탕</span><p class="d">Canh xương sống heo với khoai tây, cải thảo và hạt tía tô.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Thực đơn</p>
+      <h2 class="h2">Thực đơn đầy đủ.</h2>
+      <p class="h2-kr">Giá có trên trang đặt món online của chúng tôi.</p>
+      <h3 class="sub">Canh &amp; lẩu <span class="kr">국물 요리</span></h3>
+      <div class="sig sm"><article class="dish"><img src="../img/m_galbitang.jpg" loading="lazy" alt="Galbi Tang, 갈비탕"><div class="b"><h3>Galbi Tang</h3><span class="k">갈비탕</span><p class="d">Canh sườn bò với miến.</p></div></article><article class="dish"><img src="../img/m_soontofu.jpg" loading="lazy" alt="Soon Tofu, 순두부"><div class="b"><h3>Soon Tofu</h3><span class="k">순두부</span><p class="d">Canh đậu hũ non cay, bò hoặc hải sản.</p></div></article><article class="dish"><img src="../img/m_yukgaejang.jpg" loading="lazy" alt="Yuk Gae Jang, 육개장"><div class="b"><h3>Yuk Gae Jang</h3><span class="k">육개장</span><p class="d">Canh bò xé cay với rau củ.</p></div></article><article class="dish"><img src="../img/m_siraegi.jpg" loading="lazy" alt="Siraegi Doenjang Guk, 시래기 된장국"><div class="b"><h3>Siraegi Doenjang Guk</h3><span class="k">시래기 된장국</span><p class="d">Lá củ cải khô nấu canh tương đậu.</p></div></article><article class="dish"><img src="../img/m_kimchijjigae.jpg" loading="lazy" alt="Kongchi Kimchi Jjigae, 꽁치 김치찌개"><div class="b"><h3>Kongchi Kimchi Jjigae</h3><span class="k">꽁치 김치찌개</span><p class="d">Canh kimchi lâu năm với cá thu đao và đậu hũ.</p></div></article><article class="dish"><img src="../img/m_saengtae.jpg" loading="lazy" alt="Saengtae Tang, 생태탕"><div class="b"><h3>Saengtae Tang</h3><span class="k">생태탕</span><p class="d">Canh cá minh thái tươi nấu cay.</p></div></article></div>
+      <div class="boards">
+        <div class="board">
+          <h3>BBQ <span class="kr">숯불구이</span></h3><p class="note">BBQ tối thiểu hai người · 2인분 이상 주문</p>
+          <ul><li><span class="n">Motnani Pork Galbi <span class="hot">🌶</span><span class="kr">못난이 돼지갈비</span></span><span class="ds">Thịt heo sốt cay đặc biệt của quán</span></li><li><span class="n">Taereung Pork Galbi<span class="kr">태능 돼지갈비</span></span><span class="ds">Thịt heo sốt đặc biệt của quán</span></li><li><span class="n">Saeng Samgyeopsal<span class="kr">생삼겹살</span></span><span class="ds">Ba chỉ heo tươi thái lát</span></li><li><span class="n">Spicy Motnani Samgyeopsal <span class="hot">🌶</span><span class="kr">매운 못난이 삼겹살</span></span><span class="ds">Ba chỉ heo cay thái lát</span></li><li><span class="n">Bulpan Bulgogi<span class="kr">불판 불고기</span></span><span class="ds">Sườn bò ướp nướng trên chảo</span></li><li><span class="n">Yuksoo Bulgogi<span class="kr">육수 불고기</span></span><span class="ds">Sườn bò ướp trong nước dùng thanh nhẹ</span></li><li><span class="n">Galbi Jumulleok<span class="kr">갈비 주물럭</span></span></li><li><span class="n">Yangnyum Wang Galbi<span class="kr">양념 왕갈비</span></span><span class="ds">Sườn bò ướp nước tương</span></li><li><span class="n">LA Galbi<span class="kr">LA 갈비</span></span><span class="ds">Sườn non bò ướp nước tương</span></li></ul>
+        </div><div class="board">
+          <h3>Món trưa đặc biệt <span class="kr">런치 스페셜</span></h3>
+          <ul><li><span class="n">Motnani Pork Ssambap<span class="kr">못난이 쌈밥</span></span></li><li><span class="n">Taereung Ssambap<span class="kr">태능 쌈밥</span></span></li><li><span class="n">Beef Jumulleok Ssambap<span class="kr">주물럭 쌈밥</span></span></li><li><span class="n">Mak Naengmyeon <span class="hot">🌶</span><span class="kr">막냉면</span></span></li><li><span class="n">Mul Naengmyeon<span class="kr">물냉면</span></span></li><li><span class="n">Bibim Naengmyeon <span class="hot">🌶</span><span class="kr">비빔 냉면</span></span></li></ul>
+        </div><div class="board wide">
+          <h3>Cơm phần &amp; lẩu <span class="kr">식사 및 탕류</span></h3>
+          <ul><li><span class="n">So Meori Gukbap<span class="kr">소머리 국밥</span></span></li><li><span class="n">Dogani Tang<span class="kr">도가니탕</span></span></li><li><span class="n">So Meori + Dogani<span class="kr">소머리+도가니탕</span></span></li><li><span class="n">Cá thu nướng<span class="kr">고등어구이</span></span></li><li><span class="n">Cá hố nướng<span class="kr">갈치구이</span></span></li><li><span class="n">Soon Tofu <span class="hot">🌶</span><span class="kr">순두부</span></span></li><li><span class="n">AnnanGol Janggook<span class="kr">아난골 장국</span></span></li><li><span class="n">Hae Jang Guk<span class="kr">해장국</span></span></li><li><span class="n">Pork Gochujang Tofu Jjigae <span class="hot">🌶</span><span class="kr">돼지 고추장 두부찌개</span></span></li><li><span class="n">Anchovy Siraegi Doenjang Guk<span class="kr">멸치 시래기 된장국</span></span></li><li><span class="n">Yanggu Siraegi Doenjang Guk<span class="kr">양구 시래기 된장국</span></span></li><li><span class="n">Gamja Tang <span class="hot">🌶</span><span class="kr">감자탕</span></span></li><li><span class="n">Yuk Gae Jang <span class="hot">🌶</span><span class="kr">육개장</span></span></li><li><span class="n">Galbi Tang<span class="kr">갈비탕</span></span></li><li><span class="n">Ugeoji Galbi Tang<span class="kr">우거지 갈비탕</span></span></li><li><span class="n">Galbi Dolsot Bibimbap<span class="kr">갈비 돌솥 비빔밥</span></span></li><li><span class="n">Kongchi Kimchi Jjigae <span class="hot">🌶</span><span class="kr">꽁치 김치찌개</span></span></li><li><span class="n">Mukeunji Kimchi Jjigae <span class="hot">🌶</span><span class="kr">묵은지 김치찌개</span></span></li><li><span class="n">Hwangtae Kongnamul Haejangguk<span class="kr">황태 콩나물 해장국</span></span></li><li><span class="n">Ojingeo Jjigae <span class="hot">🌶</span><span class="kr">오징어 찌개</span></span></li><li><span class="n">Saengtae Tang <span class="hot">🌶</span><span class="kr">생태탕</span></span></li><li><span class="n">Saengtae Jiri<span class="kr">생태 지리</span></span><span class="ds">Canh cá minh thái thanh, vị nhẹ</span></li><li><span class="n">Bulgogi Deopbap<span class="kr">불고기 덮밥</span></span></li><li><span class="n">Jeyuk Deopbap <span class="hot">🌶</span><span class="kr">제육 덮밥</span></span></li><li><span class="n">Samgye Tang<span class="kr">삼계탕</span></span></li></ul>
+        </div><div class="board">
+          <h3>Món đặc biệt của đầu bếp <span class="kr">특선요리</span></h3>
+          <ul><li><span class="n">Dogani Muchim <span class="hot">🌶</span><span class="kr">도가니 무침</span></span></li><li><span class="n">Ojingeo Bokkeum <span class="hot">🌶</span><span class="kr">오징어 볶음</span></span></li><li><span class="n">Jeyuk Bokkeum <span class="hot">🌶</span><span class="kr">제육볶음</span></span></li><li><span class="n">Mr. Jok Bal<span class="kr">Mr. 족발</span></span></li><li><span class="n">Bul Jok Bal <span class="hot">🌶</span><span class="kr">불족발</span></span></li><li><span class="n">LA Galbi<span class="kr">LA 갈비</span></span></li><li><span class="n">Ah Gwi Jjim <span class="hot">🌶</span><span class="kr">아귀찜</span></span></li><li><span class="n">Bul Dak Bal <span class="hot">🌶</span><span class="kr">불닭발</span></span></li></ul>
+        </div><div class="board">
+          <h3>Món nồi hầm <span class="kr">전골</span></h3>
+          <ul><li><span class="n">Gamja Tang Jeongol <span class="hot">🌶</span><span class="kr">감자탕 전골</span></span></li><li><span class="n">Gopchang Jeongol <span class="hot">🌶</span><span class="kr">곱창 전골</span></span></li><li><span class="n">Saengtae Tang Jeongol <span class="hot">🌶</span><span class="kr">생태탕 전골</span></span></li><li><span class="n">Budae Jjigae <span class="hot">🌶</span><span class="kr">부대찌개</span></span></li></ul>
+        </div>
+        <div class="board wide">
+          <h3>Món khai vị <span class="kr">분식</span></h3>
+          <ul><li><span class="n">Kun Mandu, 8 cái<span class="kr">군만두</span></span></li><li><span class="n">Kun Mandu, 12 cái<span class="kr">군만두</span></span></li><li><span class="n">Pajeon<span class="kr">파전</span></span><span class="ds">Bánh hành lá chiên</span></li><li><span class="n">Yuk Jeon<span class="kr">육전</span></span><span class="ds">Thịt bò lát áp chảo</span></li></ul>
+        </div>
+      </div>
+      <p class="fine">Để xem giá và thực đơn hôm nay, vui lòng truy cập <a href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">trang đặt món online của chúng tôi</a>. Tất cả các món BBQ thịt heo và thịt bò có thể được phục vụ chưa chín kỹ. Ăn thịt, gia cầm, hải sản, động vật có vỏ hoặc trứng sống hay chưa nấu chín có thể làm tăng nguy cơ ngộ độc thực phẩm.</p>
+    </div>
+  </section>
+
+  <section id="breakfast" class="am">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Chỉ buổi sáng · 7–10 giờ</p>
+        <h2 class="h2">Bánh burger NO. Trứng ốp la NO. <span>Là K-JjamBab đây!</span></h2>
+        <p>Trước giờ trưa, AnnanGol phục vụ K-JjamBab, bữa sáng khay kiểu quân đội Hàn Quốc: cơm với trứng ốp la, một bát canh nóng, ba món phụ và một món chính thay đổi mỗi ngày. Kèm gim nướng.</p>
+        <p class="kr" >당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
+        <div class="row"><span class="price">$13.99</span><span class="stamp">NO TIP</span><span>Mỗi sáng, 7–10 giờ</span></div>
+      </div>
+      <div class="trays">
+        <img src="../img/tray_bulgogi.jpg" loading="lazy" alt="K-JjamBab tray with bulgogi, kkakdugi, rice and fried egg, and stew">
+        <img src="../img/tray_shrimp.jpg" loading="lazy" alt="K-JjamBab tray with shrimp stew">
+        <img src="../img/tray_fish.jpg" loading="lazy" alt="K-JjamBab tray with braised fish and potato stew">
+      </div>
+    </div>
+  </section>
+
+  <section id="inside">
+    <div class="wrap">
+      <p class="eyebrow">Không gian</p>
+      <h2 class="h2">Bàn thiết kế riêng để nướng, và đủ chỗ cho cả nhóm.</h2>
+      <div class="room">
+        <figure class="big"><img src="../img/p_dining.jpg" loading="lazy" alt="AnnanGol dining room with grill tables"><figcaption>Phòng ăn chính</figcaption></figure>
+        <figure><img src="../img/p_room.jpg" loading="lazy" alt="Long party tables in the back room"><figcaption>Phòng tiệc cho nhóm</figcaption></figure>
+        <figure><img src="../img/m_banchan.jpg" loading="lazy" alt="Banchan side dishes in small white bowls"><figcaption>Banchan đi kèm mọi bữa ăn</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Đánh giá</p>
+      <h2 class="h2">Thực khách nói gì.</h2>
+      <div class="revs">
+        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Hidden gem in Annandale! This restaurant reminds me of a traditional Korean food when I was a child. I recommend any of the soups with rice!</q><figcaption class="who">Joon Y. · Đánh giá Google</figcaption></figure>
+        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q class="kr">소머리+도가니 국밥 너무 맛있어요!</q><figcaption class="who">Janice K. · Đánh giá Google</figcaption></figure>
+        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Nice food, nice service, nice price.</q><figcaption class="who">Dae Hyun K. · Đánh giá Google</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Ghé thăm</p>
+      <h2 class="h2">Tìm biển hiệu màu hồng trên Tom Davis Drive.</h2>
+      <div class="visit">
+        <div class="card">
+          <div class="rows">
+            <div class="r"><div class="l">Địa chỉ</div><div class="v">4215 Tom Davis Dr, Annandale, VA 22003</div></div>
+            <div class="r"><div class="l">Điện thoại</div><div class="v"><span id="phone">(703) 914-4600</span><button class="copy" type="button" data-copy="phone">Sao chép</button></div></div>
+            <div class="r"><div class="l">Giờ mở cửa</div><div class="v">Bữa sáng K-JjamBab 7–10 giờ sáng<br>Giờ thường 10 giờ sáng–10 giờ tối, 365 ngày trong năm</div></div>
+            <div class="r"><div class="l">Thông tin hữu ích</div><div class="svc"><span>Có món thuần chay</span><span>Ghế cao cho trẻ em</span><span>Bãi đậu xe tại chỗ</span><span>Phòng tiệc cho nhóm</span></div></div>
+          </div>
+          <div class="links">
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=AnnanGol+4215+Tom+Davis+Dr+Annandale+VA+22003" target="_blank" rel="noopener">Mở trong Google Maps</a>
+            <a class="btn ghost" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Đặt món online</a>
+          </div>
+        </div>
+        <div class="store"><img src="../img/p_store.jpg" loading="lazy" alt="AnnanGol storefront with its pink Korean BBQ Restaurant sign"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="../img/annangol_cream.png" alt="AnnanGol">
+    <small>아난골 Korean BBQ Restaurant · 4215 Tom Davis Dr, Annandale, VA 22003 · (703) 914-4600</small>
+  </div>
+</footer>
+
+<script>
+const T={"copy": "Sao chép", "copied": "Đã sao chép", "selected": "Đã chọn"};
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
+  try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
+}));
+</script>
+</body>
+</html>
