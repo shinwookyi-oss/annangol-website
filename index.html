@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="K-JjamBab at AnnanGol, Annandale VA: a Korean tray-meal breakfast, every morning 7–10 AM. $13.99, no tip.">
+<meta property="og:title" content="AnnanGol K-JjamBab">
+<meta property="og:description" content="Burger NO. Omelet NO. It's K-JjamBab! Korean tray-meal breakfast, 7–10 AM, $13.99, no tip.">
+<meta property="og:image" content="https://annangol.com/img/tray_bulgogi.jpg">
+<link rel="icon" href="img/favicon.png">
+<title>AnnanGol K-JjamBab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@800;900&family=Montserrat:wght@400;500;600;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: mess-hall tray — one big tray hero, a compartment-style info grid, a quiet day-by-day strip, a stamped NO TIP band, then the visit card. */
+:root{
+  --mess:#F2F3EF; --tray:#E3E6E1; --ink:#202528; --muted:#4F585D; --steel:#7D868C;
+  --olive:#4A5226; --olive-ink:#ECEAD8; --chili:#C42B26; --rule:#D3D8D1; --card:#FFFFFF;
+  --f-stencil:'Big Shoulders Stencil Display','Impact',sans-serif;
+  --f-sans:'Montserrat','Noto Sans KR','Helvetica Neue',Arial,sans-serif;
+  --f-kr:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --mess:#16191A; --tray:#202426; --ink:#EEF0EC; --muted:#AEB6B9; --steel:#8C969B;
+  --olive:#3C4320; --olive-ink:#ECEAD8; --chili:#E5483F; --rule:#2E3436; --card:#1C2022; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --mess:#16191A; --tray:#202426; --ink:#EEF0EC; --muted:#AEB6B9; --steel:#8C969B;
+  --olive:#3C4320; --olive-ink:#ECEAD8; --chili:#E5483F; --rule:#2E3436; --card:#1C2022; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--mess);color:var(--ink);font:400 16px/1.6 var(--f-sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--chili);outline-offset:3px;border-radius:4px}
+.kr{font-family:var(--f-kr)}
+img.dark-only{display:none!important}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) img.dark-only{display:inline-block!important}:root:not([data-theme="light"]) img.light-only{display:none!important}}
+:root[data-theme="dark"] img.dark-only{display:inline-block!important}:root[data-theme="dark"] img.light-only{display:none!important}
+:root[data-theme="light"] img.light-only{display:inline-block!important}:root[data-theme="light"] img.dark-only{display:none!important}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--mess)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--mess) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.bar{display:flex;align-items:center;gap:24px;padding-block:14px}
+.bar .logo img{height:34px;width:auto}
+.bar .logo{display:flex}
+.bar nav{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:14px}
+.bar nav a{text-decoration:none;color:var(--muted)}
+.bar nav a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--chili);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 20px;border-radius:999px;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.bar .btn{padding:9px 16px;font-size:14px}
+@media (max-width:760px){.bar nav{display:none}.bar .btn{margin-left:auto}}
+
+/* hero */
+.hero{padding-block:56px 40px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:48px;align-items:center}
+.set{font:800 clamp(34px,4.6vw,58px)/1.02 var(--f-sans);letter-spacing:-.03em}
+.set .x{color:var(--steel);text-decoration:line-through;text-decoration-thickness:.09em;text-decoration-color:var(--chili)}
+.punch{margin-top:10px;font:800 clamp(46px,7.4vw,96px)/.98 var(--f-sans);letter-spacing:-.04em;color:var(--chili)}
+.lede{margin-top:22px;font-size:18px;color:var(--muted);max-width:34ch}
+.lede-kr{margin-top:6px;font:500 16px/1.6 var(--f-kr);color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:28px;align-items:baseline}
+.price{font:900 64px/0.9 var(--f-stencil);letter-spacing:.01em}
+.facts .when{font-weight:700;font-size:17px}
+.facts .when small{display:block;font:400 14px var(--f-kr);color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero-photo{position:relative;min-width:0}
+.hero-photo img{width:100%;height:auto;display:block;border-radius:18px;box-shadow:0 28px 50px -18px rgba(30,36,40,.45)}
+.stamp{position:absolute;right:-10px;top:-26px;transform:rotate(-8deg);border:5px solid var(--chili);color:var(--chili);background:color-mix(in srgb,var(--mess) 90%,transparent);border-radius:10px;padding:8px 18px 10px;text-align:center}
+.stamp b{display:block;font:900 64px/.9 var(--f-stencil)}
+.stamp span{display:block;font:700 12px var(--f-kr);margin-top:4px}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr;gap:40px}.hero{padding-block:36px 24px}.stamp{right:6px;top:-22px}.stamp b{font-size:48px}}
+
+/* tray anatomy */
+section{padding-block:72px}
+.eyebrow{font:600 14px var(--f-sans);color:var(--chili)}
+.h2{font:800 clamp(30px,4vw,46px)/1.08 var(--f-sans);letter-spacing:-.025em;margin-top:8px}
+.h2-kr{font:500 17px var(--f-kr);color:var(--muted);margin-top:8px}
+.tray{margin-top:36px;background:var(--tray);border-radius:26px;padding:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"s1 s2 s3" "rice soup soup";gap:14px}
+.cell{background:var(--card);border-radius:16px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.cell .n{font:900 34px/1 var(--f-stencil);color:var(--steel)}
+.cell h3{font:700 20px/1.25 var(--f-sans)}
+.cell .k{font:500 14px var(--f-kr);color:var(--muted)}
+.cell p{color:var(--muted);font-size:15px;margin-top:4px}
+.cell.main{outline:2px solid var(--chili);outline-offset:-2px}
+.cell.main .n{color:var(--chili)}
+.a-s1{grid-area:s1}.a-s2{grid-area:s2}.a-s3{grid-area:s3}.a-rice{grid-area:rice}.a-soup{grid-area:soup}
+.gim{margin-top:14px;color:var(--muted);font-size:15px}
+@media (max-width:760px){.tray{grid-template-columns:1fr;grid-template-areas:"s2" "s1" "s3" "rice" "soup"}}
+
+/* days */
+.days{background:var(--tray)}
+.strip{margin-top:36px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.strip figure{margin:0;min-width:0}
+.strip img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;display:block}
+.strip figcaption{margin-top:10px;font-size:14px;color:var(--muted)}
+.strip figcaption b{display:block;color:var(--ink);font-size:15px}
+@media (max-width:860px){.strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rotates{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px}
+.rotates span{border:1.5px solid var(--rule);background:var(--card);border-radius:999px;padding:6px 14px;font:500 14px var(--f-kr)}
+
+/* film */
+.film-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:44px;align-items:center}
+.film-grid video{width:100%;height:auto;border-radius:16px;display:block;background:#000}
+@media (max-width:860px){.film-grid{grid-template-columns:1fr}}
+
+/* no tip band */
+.notip{background:var(--chili);color:#fff}
+.notip .wrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:40px;align-items:center;padding-block:56px}
+.notip .big{font:900 clamp(72px,12vw,150px)/.85 var(--f-stencil);border:6px solid #fff;border-radius:14px;padding:10px 26px 16px;transform:rotate(-4deg)}
+.notip h2{font:800 clamp(26px,3.4vw,38px)/1.15 var(--f-sans);letter-spacing:-.02em}
+.notip p{margin-top:12px;font-size:17px;max-width:52ch;opacity:.92}
+.notip p.kr{font:500 16px var(--f-kr)}
+@media (max-width:760px){.notip .wrap{grid-template-columns:1fr;gap:28px}.notip .big{justify-self:start}}
+
+/* visit */
+.visit-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;margin-top:36px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:28px;min-width:0}
+.rows{display:grid;gap:20px}
+.row .l{font:600 13px var(--f-sans);color:var(--muted)}
+.row .v{font:600 19px/1.4 var(--f-sans);margin-top:2px;user-select:all}
+.row .v.kr{font-family:var(--f-kr)}
+.svc{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.svc span{background:var(--tray);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:500}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.about{display:flex;flex-direction:column;gap:16px}
+.about img.mascot{width:150px;height:auto}
+.about p{color:var(--muted)}
+.copy{font:600 13px var(--f-sans);background:none;border:1.5px solid var(--rule);color:var(--ink);border-radius:999px;padding:4px 12px;margin-left:10px;cursor:pointer;vertical-align:middle}
+@media (max-width:860px){.visit-grid{grid-template-columns:1fr}}
+
+footer{background:var(--olive);color:var(--olive-ink)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;padding-block:28px}
+footer img{height:34px;width:auto;display:block}
+footer small{font-size:13px;opacity:.85}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="AnnanGol home">
+      <img class="light-only" src="img/annangol.png" alt="AnnanGol">
+      <img class="dark-only" src="img/annangol_cream.png" alt="AnnanGol">
+    </a>
+    <nav aria-label="Sections">
+      <a href="#tray">What's on the tray</a>
+      <a href="#days">Daily mains</a>
+      <a href="#film">Watch</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <a class="btn" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Order online</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="hero-grid">
+      <div>
+        <h1>
+          <span class="set">Burger <span class="x">NO.</span><br>Omelet <span class="x">NO.</span></span>
+          <span class="punch" style="display:block">It's <span style="white-space:nowrap">K-JjamBab!</span></span>
+        </h1>
+        <p class="lede">Korea's famous military-style tray meal, now served every morning in Annandale.</p>
+        <p class="lede-kr">당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
+        <div class="facts">
+          <span class="price">$13.99</span>
+          <span class="when">Every morning, 7–10 AM<small>매일 아침 7시–10시 · 팁 없음</small></span>
+        </div>
+        <div class="cta">
+          <a class="btn" href="#visit">Get directions</a>
+          <a class="btn ghost" href="#tray">See what's on the tray</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="img/tray_bulgogi.jpg" width="1400" height="1052" alt="A K-JjamBab steel tray: kkakdugi, beef bulgogi and fish cake on top; rice with a fried egg and a spicy stew below">
+        <div class="stamp" aria-label="No tip">
+          <b>NO TIP</b><span class="kr">짬밥에는 팁을 받지 않습니다</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="tray">
+    <div class="wrap">
+      <p class="eyebrow">One tray, five compartments</p>
+      <h2 class="h2">A complete Korean breakfast.</h2>
+      <p class="h2-kr">밥, 국, 반찬 세 가지, 그리고 오늘의 메인.</p>
+      <div class="tray">
+        <div class="cell a-s1"><span class="n">1</span><h3>Kimchi</h3><span class="k">김치 · 깍두기</span><p>Napa cabbage or radish kimchi, every day.</p></div>
+        <div class="cell a-s2 main"><span class="n">★</span><h3>Today's main</h3><span class="k">오늘의 메인</span><p>Bulgogi, spicy pork, jumulleok and more. It changes daily.</p></div>
+        <div class="cell a-s3"><span class="n">2</span><h3>Side dish</h3><span class="k">반찬</span><p>Fish cake, pan-fried zucchini, kimchi jeon, tofu, sausage.</p></div>
+        <div class="cell a-rice"><span class="n">3</span><h3>Rice &amp; fried egg</h3><span class="k">밥 · 계란후라이</span><p>Fresh steamed rice topped with a sunny-side egg.</p></div>
+        <div class="cell a-soup"><span class="n">4</span><h3>A light, warm soup</h3><span class="k">국 · 찌개</span><p>Rotates through napa cabbage, seaweed, bean sprout and kimchi soup, plus heartier stews.</p></div>
+      </div>
+      <p class="gim">Roasted seaweed (gim) comes on the side. <span class="kr">김은 따로 곁들여 드립니다.</span></p>
+    </div>
+  </section>
+
+  <section id="days" class="days">
+    <div class="wrap">
+      <p class="eyebrow">Menu changes daily</p>
+      <h2 class="h2">A new main, every single day.</h2>
+      <p class="h2-kr">매일매일 새로운 메인 요리.</p>
+      <div class="strip">
+        <figure><img src="img/tray_shrimp.jpg" loading="lazy" alt="Tray with shrimp stew, spicy pork, sausages and kkakdugi"><figcaption><b>Shrimp stew tray</b>with spicy stir-fried pork</figcaption></figure>
+        <figure><img src="img/tray_tofu.jpg" loading="lazy" alt="Tray with tofu stew, braised tofu and radish kimchi"><figcaption><b>Tofu stew tray</b>with braised tofu</figcaption></figure>
+        <figure><img src="img/tray_fish.jpg" loading="lazy" alt="Tray with potato stew, braised fish and kimchi"><figcaption><b>Potato stew tray</b>with braised fish</figcaption></figure>
+        <figure><img src="img/tray_yuk.jpg" loading="lazy" alt="Tray with spicy beef soup, bulgogi and mushrooms"><figcaption><b>Spicy beef soup tray</b>with bulgogi</figcaption></figure>
+      </div>
+      <div class="rotates" aria-label="Mains in rotation">
+        <span>불고기 백반 · Bulgogi</span><span>제육 백반 · Spicy pork</span><span>주물럭 백반 · Jumulleok</span><span>못난이 백반</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="film">
+    <div class="wrap film-grid">
+      <div>
+        <p class="eyebrow">Watch</p>
+        <h2 class="h2">The Korean Morning Ritual.</h2>
+        <p class="h2-kr">30초 영상으로 보는 K-짬밥.</p>
+      </div>
+      <video controls playsinline preload="metadata" poster="img/film_poster.jpg">
+        <source src="img/film.mp4" type="video/mp4">
+      </video>
+    </div>
+  </section>
+
+  <div class="notip">
+    <div class="wrap">
+      <div class="big" aria-hidden="true">NO TIP</div>
+      <div>
+        <h2>$13.99 is the whole price.</h2>
+        <p>We don't take tips on K-JjamBab. One tray, one price. Keep your change.</p>
+        <p class="kr">짬밥에는 팁을 받지 않습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="visit">
+    <div class="wrap">
+      <p class="eyebrow">Visit</p>
+      <h2 class="h2">See you tomorrow morning.</h2>
+      <div class="visit-grid">
+        <div class="card">
+          <div class="rows">
+            <div class="row"><div class="l">Address</div><div class="v" id="addr">4215 Tom Davis Dr, Annandale, VA 22003</div></div>
+            <div class="row"><div class="l">Phone</div><div class="v"><span id="phone">(703) 914-4600</span><button class="copy" type="button" data-copy="phone">Copy</button></div></div>
+            <div class="row"><div class="l">K-JjamBab breakfast</div><div class="v">Every morning, 7–10 AM · $13.99, no tip</div></div>
+            <div class="row"><div class="l">Good to know</div><div class="svc"><span>Vegan options</span><span>High chairs</span><span>On-site parking</span></div></div>
+          </div>
+          <div class="links">
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=AnnanGol+4215+Tom+Davis+Dr+Annandale+VA+22003" target="_blank" rel="noopener">Open in Google Maps</a>
+            <a class="btn ghost" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Full menu &amp; online order</a>
+          </div>
+        </div>
+        <div class="about">
+          <img class="mascot" src="img/mascot.png" alt="AnnanGol mascot holding a pan" loading="lazy">
+          <h3 style="font:700 22px/1.3 var(--f-sans)">Korean charcoal BBQ in Annandale for nearly 20 years.</h3>
+          <p>AnnanGol is an informal strip-mall restaurant known for barbecued meats and other Korean specialties. K-JjamBab is our morning tray meal: the same home-style cooking, served fast.</p>
+          <p class="kr">아난골은 애난데일에서 20년 가까이 숯불구이와 한식을 내 온 식당입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="img/annangol_cream.png" alt="AnnanGol">
+    <small>4215 Tom Davis Dr, Annandale, VA 22003 · (703) 914-4600 · annangol.com</small>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
+  const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected'};
+  try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
+}));
+</script>
+
+</body>
+</html>
