@@ -1,0 +1,5 @@
+Options -Indexes
+<FilesMatch "^(lib\.php|\.data)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /api/\.data

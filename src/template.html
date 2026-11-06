@@ -340,5 +340,28 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
 }));
 </script>
+<script>
+/* AnnanGol first-party analytics (no cookies, no IPs stored). Dashboard: /stats/ */
+(function(){
+  if(navigator.doNotTrack==='1'||/(^|; )ag_notrack=/.test(document.cookie))return;
+  var E='/api/t.php',P=location.pathname;
+  function send(o){o.p=P;var b=JSON.stringify(o);
+    if(navigator.sendBeacon){navigator.sendBeacon(E,new Blob([b],{type:'text/plain'}))}
+    else{fetch(E,{method:'POST',body:b,keepalive:true})}}
+  function ga(n,x){if(window.gtag)gtag('event',n,{link_url:x||''})}
+  send({t:'pv',r:document.referrer,q:location.search,l:navigator.language});
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a,button.copy');if(!a)return;
+    var h=a.getAttribute('href')||'',n=null;
+    if(a.matches('button.copy'))n='phone_copy';
+    else if(/^tel:/.test(h))n='phone_call';
+    else if(/menu11\.com/.test(h))n='order_click';
+    else if(/google\.[^/]+\/maps|maps\.app|maps\.google/.test(h))n='directions_click';
+    else if(a.closest('.lang'))n='lang_switch';
+    else if(/^https?:/.test(h)&&a.host!==location.host)n='outbound_click';
+    if(n){send({t:'ev',n:n,x:h});ga(n,h)}
+  },true);
+})();
+</script>
 </body>
 </html>

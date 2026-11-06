@@ -6,6 +6,12 @@ Run:  python3 build.py
 import json, os, re
 
 SITE = 'https://annangol.com'
+# Google Analytics 4 measurement ID (e.g. 'G-ABC123XYZ'). Leave '' to skip GA4;
+# the first-party counter (/api/t.php, dashboard /stats/) runs either way.
+GA_ID = ''
+GA_SNIPPET = """<script async src="https://www.googletagmanager.com/gtag/js?id={id}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('js',new Date());gtag('config','{id}');</script>
+</head>"""
 LANGS = [  # code, native name, rtl, extra Google font family (or None)
     ('en', 'English', False, None),
     ('ko', '한국어', False, None),
@@ -71,6 +77,8 @@ def build():
             canon = SITE + '/' if root else f'{SITE}/{code}/'
             html = html.replace('<link rel="icon"', f'<link rel="canonical" href="{canon}">\n{alts}\n<link rel="icon"', 1)
             html = html.replace('</style>', PICKER_CSS + '</style>', 1)
+            if GA_ID:
+                html = html.replace('</head>', GA_SNIPPET.format(id=GA_ID), 1)
             # language picker, placed before the Order button in the header
             items = ''.join(
                 f'<li><a href="{pre}{c}/" hreflang="{c}" lang="{c}"' + (' aria-current="true"' if c == code else '') + f'>{n}</a></li>'
