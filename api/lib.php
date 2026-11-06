@@ -7,7 +7,7 @@ date_default_timezone_set('America/New_York');
 
 // Dashboard password hash (bcrypt). Change by replacing this hash, or by putting
 // {"password_hash":"..."} in <data dir>/config.json (that file wins).
-const AG_DEFAULT_PASSWORD_HASH = '$2y$10$nNQr7rrOqNV3L8JKEQqt7uNwAH7IENM5xmnytLQ3QaGY6bcWbBEYa';
+const AG_DEFAULT_PASSWORD_HASH = '$2y$12$2ygWlK9HubwAvjyiTaA0B.8M6CvlXYrF9gJ1gPaThcxCLSEBvn8KW';
 
 function ag_data_dir(): string {
     static $dir = null;
