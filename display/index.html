@@ -541,6 +541,27 @@
           try { var pl = player.getPlaylist() || [], ix = player.getPlaylistIndex(); return { len: pl.length, ix: ix }; }
           catch (e) { return { len: 0, ix: 0 }; }
         }
+        // 영상 하나가 끝났을 때. 쇼츠는 플레이어 안에서 저절로 반복되어 "끝남" 신호가 오지 않으므로,
+        // 재생 위치를 직접 지켜보다가 끝에 닿거나 처음으로 되돌아가면 끝난 것으로 본다.
+        var armed = false, lastT = 0, poll = null;
+        function ended() {
+          if (!armed) return;
+          armed = false; lastT = 0;
+          delete resume[item.id];
+          if (multi) { if (!multiNext()) next(); return; }
+          if (!isList) { next(); return; }
+          var s = listEnd();
+          if (oneEach) { plIndex[item.id] = s.len ? (s.ix + 1) % s.len : 0; next(); }
+          else if (!s.len || s.ix >= s.len - 1) next();
+          else { try { player.nextVideo(); } catch (x) {} after(25000, my); }
+        }
+        poll = setInterval(function () {
+          if (my !== token) { clearInterval(poll); return; }
+          if (!armed) return;
+          var t = 0, d = 0; try { t = player.getCurrentTime(); d = player.getDuration(); } catch (x) { return; }
+          if (d > 0 && (t >= d - 0.35 || (lastT - t > 1 && lastT >= d - 1.5))) { ended(); return; }
+          lastT = t;
+        }, 300);
         cfg.events = {
           onReady: function (e) {
             if (my !== token) return;
@@ -560,7 +581,7 @@
           onStateChange: function (e) {
             if (my !== token) return;
             if (e.data === 1) {
-              started = true; clearTimeout(timer);
+              started = true; armed = true; clearTimeout(timer);
               if (cut && !cutTimer) cutTimer = setTimeout(function () {
                 if (my !== token) return;
                 var t = 0; try { t = player.getCurrentTime(); } catch (x) {}
@@ -569,15 +590,7 @@
                 next();
               }, cut);
             }
-            if (e.data === 0) {
-              delete resume[item.id];
-              if (multi) { if (!multiNext()) next(); return; }
-              if (!isList) { next(); return; }
-              var s = listEnd();
-              if (oneEach) { plIndex[item.id] = s.len ? (s.ix + 1) % s.len : 0; next(); }
-              else if (!s.len || s.ix >= s.len - 1) next();
-              else after(25000, my);   // 다음 영상이 이어서 시작되지 않으면 넘어감
-            }
+            if (e.data === 0) ended();
           },
           onError: function () {
             if (my !== token) return;
@@ -589,7 +602,7 @@
           }
         };
         player = new YT.Player(target, cfg);
-        el._cleanup = function () { clearTimeout(cutTimer); try { player.destroy(); } catch (e) {} };
+        el._cleanup = function () { clearTimeout(cutTimer); clearInterval(poll); try { player.destroy(); } catch (e) {} };
       });
       return;
     }
