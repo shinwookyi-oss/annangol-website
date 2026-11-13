@@ -141,6 +141,8 @@
   .c12 { grid-column:span 12; } .c6 { grid-column:span 6; } .c4 { grid-column:span 4; } .c3 { grid-column:span 3; } .c2 { grid-column:span 2; }
   @media (max-width:700px) { .c6,.c4,.c3,.c2 { grid-column:span 12; } }
   .note { font-size:13px; color:#6b6359; }
+  .ytrow { display:flex; gap:6px; margin-bottom:6px; }
+  .ytrow button { flex:none; }
   .warn { font-size:13px; color:#b3261e; }
   .thumb { max-height:90px; max-width:160px; border-radius:6px; border:1px solid #d9d2c6; display:block; }
   .sched .drow { display:grid; grid-template-columns:90px 1.2fr 1fr 1.6fr; gap:8px; align-items:center; margin-bottom:8px; }
@@ -744,12 +746,15 @@
     h += '<label class="c4">이름 (목록 표시용)<input type="text" data-f="label" value="' + esc(it.label) + '"></label>';
     h += '<label class="c2">나올 화면<select data-f="screens">' + opt('all', '모든 화면', it.screens) + opt('board', '보드만 (세로)', it.screens) + opt('tv', 'TV만 (가로)', it.screens) + '</select></label>';
     if (it.type === 'youtube') {
-      var y = ytParse(it.src);
-      h += '<label class="c6">유튜브 주소 (영상 여러 개는 한 줄에 하나씩 · 재생목록 주소도 가능)<textarea data-f="src" placeholder="https://www.youtube.com/watch?v=...">' + esc(it.src) + '</textarea></label>';
-      if (!y.list && y.videos.length > 1) h += '<div class="c6 note">영상 ' + y.videos.length + '개를 인식했습니다.</div>';
-      if ((y.list || y.videos.length > 1) && !(every(it) > 0)) h += '<label class="c6">여러 영상 재생 방식<select data-f="plMode">' + opt('all', '전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
-      if (it.src && !y.video && !y.list) h += '<div class="c12 warn">유튜브 주소를 인식하지 못했습니다.</div>';
-      else if (y.list) h += '<div class="c6 note">재생목록으로 인식했습니다. 재생목록은 "공개" 또는 "일부 공개"여야 재생됩니다.' + (every(it) > 0 ? ' 사이사이 끼워 넣을 때는 차례마다 한 곡씩 이어서 재생합니다.' : '') + '</div>';
+      var lines = String(it.src || '').split('\n');
+      h += '<div class="c6"><div class="note" style="margin-bottom:4px">유튜브 주소 (영상 또는 재생목록)</div>';
+      lines.forEach(function (ln, n) {
+        h += '<div class="ytrow"><input type="text" data-yt="' + n + '" placeholder="https://www.youtube.com/watch?v=..." value="' + esc(ln) + '">' +
+          (lines.length > 1 ? '<button data-ytdel="' + n + '" title="이 주소 빼기">✕</button>' : '') + '</div>';
+      });
+      h += '<button data-ytadd>+ 영상 주소 추가</button></div>';
+      h += '<label class="c6">영상이 여러 개일 때 재생 방식<select data-f="plMode">' + opt('all', '전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
+      h += '<div class="c12 note" data-ythint>' + ytHint(it) + '</div>';
     } else if (it.type === 'image' || it.type === 'video') {
       var up = it.src && it.src.indexOf('up:') === 0;
       h += '<label class="c6">파일 올리기' + (it.type === 'image' ? ' (JPG · PNG · WEBP · GIF)' : ' (MP4 · WEBM · MOV)') +
@@ -772,6 +777,13 @@
     return h + '</div></div>';
   }
 
+  function ytHint(it) {
+    var y = ytParse(it.src), has = String(it.src || '').trim();
+    if (has && !y.list && !y.videos.length) return '<span class="warn">유튜브 주소를 인식하지 못했습니다.</span>';
+    if (y.list) return '재생목록으로 인식했습니다. 재생목록은 "공개" 또는 "일부 공개"여야 재생됩니다.';
+    if (y.videos.length > 1) return '영상 ' + y.videos.length + '개를 인식했습니다.';
+    return y.videos.length ? '영상 1개를 인식했습니다. 더 넣으려면 "+ 영상 주소 추가"를 누르세요.' : '';
+  }
   function schedHtml() {
     var today = new Date(), mon = addDays(mondayOf(today), schedWeek * 7), tkey = ymd(today);
     var name = schedWeek === 0 ? '이번 주' : schedWeek === 1 ? '다음 주' : schedWeek === -1 ? '지난 주' : (schedWeek > 0 ? schedWeek + '주 뒤' : (-schedWeek) + '주 전');
@@ -838,6 +850,13 @@
     if (t.id === 'btnBack' || t.id === 'btnDone') { if (t.id === 'btnDone') { clearTimeout(saveTimer); pushState(); } showStart(false); return; }
     if (t.id === 'btnLogout') { postJson('logout', {}).then(function () { showStart(false); }).catch(function () { showStart(false); }); return; }
     if (t.dataset.add) { state.items.push(newItem(t.dataset.add)); renderAdmin(); dirty(); return; }
+    if (t.hasAttribute('data-ytadd') || t.dataset.ytdel) {
+      var ci = +t.closest('.card').dataset.i, yi = state.items[ci], ls = String(yi.src || '').split('\n');
+      if (t.dataset.ytdel) ls.splice(+t.dataset.ytdel, 1); else ls.push('');
+      yi.src = ls.join('\n'); renderAdmin(); dirty();
+      if (!t.dataset.ytdel) { var ins = adminEl.querySelectorAll('.card[data-i="' + ci + '"] [data-yt]'); if (ins.length) ins[ins.length - 1].focus(); }
+      return;
+    }
     if (t.dataset.wk) { schedWeek += +t.dataset.wk; document.getElementById('sched').innerHTML = schedHtml(); return; }
     if (t.dataset.wkset) { schedWeek = +t.dataset.wkset; document.getElementById('sched').innerHTML = schedHtml(); return; }
     if (t.id === 'btnCopyWeek' || t.id === 'btnClearWeek') {
@@ -865,7 +884,11 @@
 
   adminEl.addEventListener('input', function (e) {
     var t = e.target;
-    if (t.dataset.f) {
+    if (t.dataset.yt) {
+      var yc = t.closest('.card'), yit = state.items[+yc.dataset.i], yl = String(yit.src || '').split('\n');
+      yl[+t.dataset.yt] = t.value.trim(); yit.src = yl.join('\n');
+      var hint = yc.querySelector('[data-ythint]'); if (hint) hint.innerHTML = ytHint(yit);
+    } else if (t.dataset.f) {
       var it = state.items[+t.closest('.card').dataset.i];
       if (t.dataset.f === 'src' && it.src && it.src.indexOf('up:') === 0 && !t.value) return;
       if (t.dataset.f === 'src' && it.src && it.src.indexOf('up:') === 0) { dropFile(it); delete it.fileName; }
@@ -890,7 +913,6 @@
       renderAdmin(); dirty(); return;
     }
     if (t.tagName === 'SELECT' && t.dataset.f) { renderAdmin(); return; }
-    if (t.dataset.f === 'src' || t.dataset.f === 'every') { renderAdmin(); return; }
     if (t.hasAttribute('data-file') && t.files && t.files[0]) {
       var card = t.closest('.card'), it = state.items[+card.dataset.i], f = t.files[0], msg = card.querySelector('[data-upmsg]');
       var fd = new FormData(); fd.append('file', f);
