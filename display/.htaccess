@@ -1,3 +1,4 @@
+DirectoryIndex index.html
 # Never serve the fallback data folder or dotfiles.
 RedirectMatch 404 /\.data(/|$)
 <IfModule mod_headers.c>
