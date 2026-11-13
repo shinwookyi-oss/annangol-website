@@ -89,7 +89,8 @@ try {
         $f = display_dir() . '/state.json';
         $raw = is_file($f) ? (string)file_get_contents($f) : '';
         $state = $raw !== '' ? json_decode($raw, true) : null;
-        out(['state' => $state, 'version' => $raw !== '' ? (string)filemtime($f) . '-' . strlen($raw) : '0']);
+        out(['state' => $state, 'version' => $raw !== '' ? (string)filemtime($f) . '-' . strlen($raw) : '0',
+             'app' => (string)@filemtime(__DIR__ . '/index.html')]);   // lets open screens notice a new page version
     }
 
     if ($a === 'me') { start_session(); out(['authed' => !empty($_SESSION['ok'])]); }

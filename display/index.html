@@ -286,7 +286,7 @@
     return d;
   }
 
-  var state = defaults(), version = null, online = false;
+  var state = defaults(), version = null, online = false, appVer = null, stale = false;
   try { var c = JSON.parse(localStorage.getItem(CACHE_KEY)); if (c && c.state) { state = normalize(c.state); version = c.version; } } catch (e) {}
 
   function call(action, opts) {
@@ -301,6 +301,8 @@
     return call('state', { cache: 'no-store' }).then(function (r) {
       online = r.ok;
       if (!r.ok) return false;
+      // 페이지 자체가 새 버전으로 바뀌면, 켜져 있는 화면이 스스로 새로고침한다
+      if (r.data.app) { if (appVer === null) appVer = r.data.app; else if (appVer !== r.data.app) stale = true; }
       if (r.data.version !== version) {
         version = r.data.version;
         state = normalize(r.data.state);
@@ -425,7 +427,7 @@
   function next() {
     if (!running) return;
     var h = new Date().getHours();
-    if (Date.now() - bootedAt > 20 * 3600 * 1000 && h >= 3 && h < 5) { location.reload(); return; }
+    if (stale || (Date.now() - bootedAt > 20 * 3600 * 1000 && h >= 3 && h < 5)) { location.reload(); return; }
     var my = ++token;
     clearTimeout(timer);
     media = null; badge.classList.add('hidden');
