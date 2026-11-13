@@ -755,6 +755,7 @@
       h += '<button data-ytadd>+ 영상 주소 추가</button></div>';
       h += '<label class="c6">영상이 여러 개일 때 재생 방식<select data-f="plMode">' + opt('all', '전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
       h += '<div class="c12 note" data-ythint>' + ytHint(it) + '</div>';
+      h += '<div class="c12"><button data-yttest>▶ 재생 테스트</button> <span class="note" data-ytmsg>이 주소가 실제로 재생되는지 여기서 바로 확인할 수 있습니다.</span><div data-ytbox style="margin-top:8px"></div></div>';
     } else if (it.type === 'image' || it.type === 'video') {
       var up = it.src && it.src.indexOf('up:') === 0;
       h += '<label class="c6">파일 올리기' + (it.type === 'image' ? ' (JPG · PNG · WEBP · GIF)' : ' (MP4 · WEBM · MOV)') +
@@ -780,6 +781,7 @@
   function ytHint(it) {
     var y = ytParse(it.src), has = String(it.src || '').trim();
     if (has && !y.list && !y.videos.length) return '<span class="warn">유튜브 주소를 인식하지 못했습니다.</span>';
+    if (y.list && /^PL/.test(y.list) && y.list.length !== 34 && y.list.length !== 18) return '<span class="warn">재생목록 주소가 완전하지 않아 보입니다 (list= 뒤가 ' + y.list.length + '자, 보통 34자). 유튜브에서 재생목록 주소 전체를 다시 복사해 주세요.</span>';
     if (y.list) return '재생목록으로 인식했습니다. 재생목록은 "공개" 또는 "일부 공개"여야 재생됩니다.';
     if (y.videos.length > 1) return '영상 ' + y.videos.length + '개를 인식했습니다.';
     return y.videos.length ? '영상 1개를 인식했습니다. 더 넣으려면 "+ 영상 주소 추가"를 누르세요.' : '';
@@ -850,6 +852,38 @@
     if (t.id === 'btnBack' || t.id === 'btnDone') { if (t.id === 'btnDone') { clearTimeout(saveTimer); pushState(); } showStart(false); return; }
     if (t.id === 'btnLogout') { postJson('logout', {}).then(function () { showStart(false); }).catch(function () { showStart(false); }); return; }
     if (t.dataset.add) { state.items.push(newItem(t.dataset.add)); renderAdmin(); dirty(); return; }
+    if (t.hasAttribute('data-yttest')) {
+      var tc = t.closest('.card'), tm = tc.querySelector('[data-ytmsg]'), tb = tc.querySelector('[data-ytbox]');
+      var ty = ytParse(state.items[+tc.dataset.i].src), say = function (cls, txt) { tm.className = cls; tm.textContent = txt; };
+      if (!ty.list && !ty.videos.length) { say('warn', '먼저 유튜브 주소를 넣어 주세요.'); return; }
+      tb.innerHTML = '<div></div>'; say('note', '불러오는 중…');
+      loadYt().then(function (ok) {
+        if (!ok) { say('warn', '유튜브에 연결하지 못했습니다. 인터넷 연결을 확인해 주세요.'); return; }
+        var played = false, vars = { autoplay: 1, mute: 1, controls: 1, playsinline: 1, origin: location.origin };
+        var cfg = { width: 320, height: 180, playerVars: vars };
+        if (ty.list) { vars.listType = 'playlist'; vars.list = ty.list; } else cfg.videoId = ty.videos[0];
+        var tp, slow = setTimeout(function () { if (!played) say('warn', '재생이 시작되지 않았습니다. 주소가 완전한지, 재생목록이 "공개" 또는 "일부 공개"인지 확인해 주세요.'); }, 15000);
+        cfg.events = {
+          onReady: function (ev) { try { ev.target.mute(); ev.target.playVideo(); } catch (x) {} },
+          onStateChange: function (ev) {
+            if (ev.data !== 1 || played) return;
+            played = true; clearTimeout(slow);
+            var n = 0; try { n = (tp.getPlaylist() || []).length; } catch (x) {}
+            say('note', '✔ 재생됩니다.' + (ty.list ? ' 재생목록 영상 ' + n + '개.' : ty.videos.length > 1 ? ' (첫 번째 영상으로 확인)' : ''));
+          },
+          onError: function (ev) {
+            clearTimeout(slow);
+            var c = ev.data;
+            say('warn', (c === 101 || c === 150) ? '✘ 이 영상은 소유자가 다른 사이트에서의 재생을 막아 두었습니다. 공식 뮤직비디오에 흔합니다. 다른 영상을 써 주세요. (오류 ' + c + ')'
+              : c === 100 ? '✘ 영상을 찾을 수 없거나 비공개입니다. (오류 100)'
+              : c === 2 ? '✘ 주소가 올바르지 않습니다. 주소 전체를 다시 복사해 주세요. (오류 2)'
+              : '✘ 재생할 수 없습니다. (오류 ' + c + ')');
+          }
+        };
+        tp = new YT.Player(tb.firstChild, cfg);
+      });
+      return;
+    }
     if (t.hasAttribute('data-ytadd') || t.dataset.ytdel) {
       var ci = +t.closest('.card').dataset.i, yi = state.items[ci], ls = String(yi.src || '').split('\n');
       if (t.dataset.ytdel) ls.splice(+t.dataset.ytdel, 1); else ls.push('');
