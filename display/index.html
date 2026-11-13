@@ -371,7 +371,8 @@
 
   /* ---------- 재생 ---------- */
   var stage = document.getElementById('stage');
-  var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now(), plIndex = {};
+  var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now(), plIndex = {}, gap = {}, lastNormal = false;
+  function every(i) { return (i.type === 'youtube' || i.type === 'video') ? (parseInt(i.every, 10) || 0) : 0; }
 
   function clearLayer(el) {
     if (!el) return;
@@ -397,12 +398,23 @@
     if (Date.now() - bootedAt > 20 * 3600 * 1000 && h >= 3 && h < 5) { location.reload(); return; }
     var my = ++token;
     clearTimeout(timer);
-    var list = eligible(screenKind());
-    if (!list.length) { showIdle(); after(30000, my); return; }
-    var pos = -1;
-    for (var i = 0; i < list.length; i++) if (list[i].id === currentId) pos = i;
-    var item = list[(pos + 1) % list.length];
-    currentId = item.id;
+    var all = eligible(screenKind());
+    if (!all.length) { showIdle(); after(30000, my); return; }
+    // "사이사이" 항목은 목록 순서에서 빼 두었다가, 일반 항목 N개가 지나갈 때마다 하나씩 끼워 넣는다
+    var inters = all.filter(function (i) { return every(i) > 0; });
+    var list = all.filter(function (i) { return !(every(i) > 0); });
+    var item = null;
+    if (list.length) {
+      if (lastNormal) inters.forEach(function (i) { gap[i.id] = (gap[i.id] || 0) + 1; });
+      for (var k = 0; k < inters.length && !item; k++) if (gap[inters[k].id] >= every(inters[k])) item = inters[k];
+    } else { list = inters; }
+    if (item) { gap[item.id] = 0; lastNormal = false; }
+    else {
+      var pos = -1;
+      for (var i = 0; i < list.length; i++) if (list[i].id === currentId) pos = i;
+      item = list[(pos + 1) % list.length];
+      currentId = item.id; lastNormal = true;
+    }
     try { show(item, my); } catch (e) { after(1500, my); }
   }
 
@@ -446,7 +458,7 @@
       return;
     }
     if (item.type === 'youtube') {
-      var y = ytParse(item.src), isList = !!y.list, oneEach = isList && item.plMode === 'one';
+      var y = ytParse(item.src), isList = !!y.list, oneEach = isList && (item.plMode === 'one' || every(item) > 0);
       var holder = document.createElement('div'); holder.className = 'yt';
       var target = document.createElement('div'); holder.appendChild(target);
       el.appendChild(holder); swapIn(el);
@@ -566,7 +578,7 @@
     if (viaTouch) { try { var p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
     try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {}
     root.classList.add('playing');
-    running = true; currentId = null; next();
+    running = true; currentId = null; lastNormal = false; next();
   }
   document.getElementById('btnStart').addEventListener('click', function () { begin(true); });
   document.getElementById('btnBoard').addEventListener('click', function () { clearInterval(autoTimer); openBoard(); });
@@ -699,9 +711,9 @@
     if (it.type === 'youtube') {
       var y = ytParse(it.src);
       h += '<label class="c6">유튜브 주소 (영상 또는 재생목록)<input type="text" data-f="src" placeholder="https://www.youtube.com/watch?v=... 또는 playlist?list=..." value="' + esc(it.src) + '"></label>';
-      if (y.list) h += '<label class="c6">재생목록 재생 방식<select data-f="plMode">' + opt('all', '재생목록 전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
+      if (y.list && !(every(it) > 0)) h += '<label class="c6">재생목록 재생 방식<select data-f="plMode">' + opt('all', '재생목록 전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
       if (it.src && !y.video && !y.list) h += '<div class="c12 warn">유튜브 주소를 인식하지 못했습니다.</div>';
-      else if (y.list) h += '<div class="c6 note">재생목록으로 인식했습니다. 재생목록은 "공개" 또는 "일부 공개"여야 재생됩니다.</div>';
+      else if (y.list) h += '<div class="c6 note">재생목록으로 인식했습니다. 재생목록은 "공개" 또는 "일부 공개"여야 재생됩니다.' + (every(it) > 0 ? ' 사이사이 끼워 넣을 때는 차례마다 한 곡씩 이어서 재생합니다.' : '') + '</div>';
     } else if (it.type === 'image' || it.type === 'video') {
       var up = it.src && it.src.indexOf('up:') === 0;
       h += '<label class="c6">파일 올리기' + (it.type === 'image' ? ' (JPG · PNG · WEBP · GIF)' : ' (MP4 · WEBM · MOV)') +
@@ -715,7 +727,7 @@
     } else if (it.type === 'menu') {
       h += '<label class="c6">보여줄 내용<select data-f="view">' + opt('today', '오늘의 메뉴', it.view || 'today') + opt('week', '이번 주 메뉴표', it.view || 'today') + opt('next', '다음 주 메뉴표', it.view || 'today') + '</select></label>';
     }
-    if (it.type === 'youtube' || it.type === 'video') h += '<div class="c4 note">영상은 끝까지 재생한 뒤 다음으로 넘어갑니다.</div>';
+    if (it.type === 'youtube' || it.type === 'video') h += '<label class="c4">사이사이 끼워 넣기 (다른 항목 몇 개마다 · 비우면 목록 순서대로)<input type="number" min="0" data-f="every" placeholder="예: 3" value="' + esc(it.every || '') + '"></label>';
     else h += '<label class="c4">표시 시간 (초)<input type="number" min="3" data-f="seconds" value="' + esc(it.seconds) + '"></label>';
     h += '<label class="c4">시작 시각 (비우면 종일)<input type="time" data-f="from" value="' + esc(it.from) + '"></label>';
     h += '<label class="c4">종료 시각<input type="time" data-f="to" value="' + esc(it.to) + '"></label>';
@@ -752,7 +764,7 @@
       '<label class="c4" style="grid-column:span 5">문구<input type="text" data-menu="tagline" value="' + esc(m.tagline) + '"></label></div>';
 
     h += '<h2>재생 목록</h2><div class="addrow">' +
-      '<button data-add="youtube">+ 유튜브 (영상 · 재생목록)</button><button data-add="image">+ 이미지 · 포스터</button>' +
+      '<button data-add="youtube">+ 유튜브 (영상 · 재생목록)</button><button data-add="music">+ 사이사이 음악 영상 (유튜브)</button><button data-add="image">+ 이미지 · 포스터</button>' +
       '<button data-add="video">+ 동영상 파일</button><button data-add="menu">+ 짬밥 메뉴</button><button data-add="text">+ 안내 문구</button></div><div id="items">';
     state.items.forEach(function (it, i) { h += itemCard(it, i); });
     h += '</div><p class="note">지금 시간대 재생 항목 — 보드(세로): ' + eligible('board').length + '개 · TV(가로): ' + eligible('tv').length + '개</p>';
@@ -769,7 +781,9 @@
   }
 
   function newItem(type) {
-    var it = { id: uid(), type: type, label: TYPE_NAME[type], from: '', to: '', screens: 'all', on: true };
+    var music = type === 'music'; if (music) type = 'youtube';
+    var it = { id: uid(), type: type, label: music ? '음악 영상' : TYPE_NAME[type], from: '', to: '', screens: 'all', on: true };
+    if (music) it.every = 3;
     if (type === 'youtube' || type === 'image' || type === 'video') it.src = '';
     if (type === 'image') it.seconds = 10;
     if (type === 'menu') { it.seconds = 15; it.view = 'today'; }
@@ -828,7 +842,7 @@
     var t = e.target;
     if (t.dataset.set && t.type === 'checkbox') { state.settings[t.dataset.set] = t.checked; dirty(); return; }
     if (t.tagName === 'SELECT' && t.dataset.f) { renderAdmin(); return; }
-    if (t.dataset.f === 'src') { renderAdmin(); return; }
+    if (t.dataset.f === 'src' || t.dataset.f === 'every') { renderAdmin(); return; }
     if (t.hasAttribute('data-file') && t.files && t.files[0]) {
       var card = t.closest('.card'), it = state.items[+card.dataset.i], f = t.files[0], msg = card.querySelector('[data-upmsg]');
       var fd = new FormData(); fd.append('file', f);
