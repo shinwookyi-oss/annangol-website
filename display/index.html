@@ -40,6 +40,10 @@
   .m-sub { margin-top:calc(2 * var(--u)); font-size:calc(3.2 * var(--u)); color:var(--muted); }
   .m-price { margin-top:calc(3.5 * var(--u)); display:inline-block; background:var(--red); color:#fff; font-weight:900;
     font-size:calc(8 * var(--u)); padding:calc(.6 * var(--u)) calc(3 * var(--u)); border-radius:calc(1.2 * var(--u)); }
+  .m-was { font-size:calc(4 * var(--u)); color:var(--muted); text-decoration:line-through; font-weight:700; margin-left:calc(2 * var(--u)); vertical-align:middle; }
+  .m-deal { margin-top:calc(3.5 * var(--u)); margin-bottom:calc(-2.5 * var(--u)); font-size:calc(2.8 * var(--u)); font-weight:900; color:var(--gold); letter-spacing:.04em; }
+  .w-foot .was { text-decoration:line-through; margin-right:calc(1.5 * var(--u)); }
+  .w-foot .deal { color:var(--gold); font-weight:900; margin-right:calc(1.5 * var(--u)); }
   .m-tag { margin-top:calc(3.5 * var(--u)); font-size:calc(3.2 * var(--u)); opacity:.85; }
   .m-week { flex:1; min-width:0; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
     border-radius:calc(2 * var(--u)); padding:calc(3 * var(--u)); }
@@ -117,7 +121,7 @@
   #admin h1 { font-size:26px; margin-bottom:4px; }
   #admin h2 { font-size:19px; margin:30px 0 10px; padding-top:18px; border-top:1px solid #d9d2c6; }
   #admin p.help { color:#6b6359; font-size:14px; line-height:1.5; margin-bottom:10px; }
-  #admin input[type=text], #admin input[type=password], #admin input[type=number], #admin input[type=time], #admin textarea, #admin select {
+  #admin input[type=text], #admin input[type=password], #admin input[type=number], #admin input[type=time], #admin input[type=date], #admin textarea, #admin select {
     font:inherit; padding:9px 10px; border:1px solid #c9c1b4; border-radius:8px; background:#fff; width:100%; color:#1b1815; }
   #admin textarea { min-height:70px; resize:vertical; }
   #admin button { font:inherit; padding:9px 14px; border-radius:8px; border:1px solid #c9c1b4; background:#fff; cursor:pointer; color:#1b1815; }
@@ -245,7 +249,7 @@
   function defaults() {
     return {
       settings: { sound: true, showBar: true, barText: 'Open 7 AM – 10 PM Daily · (703) 914-4600' },
-      menu: { price: '$13.99', note: '매일 아침 7–10 AM', tagline: '한국인의 힘은 든든한 아침 짬밥에서' },
+      menu: { price: '$13.99', special: '', specialLabel: '특가', specialUntil: '', note: '매일 아침 7–10 AM', tagline: '한국인의 힘은 든든한 아침 짬밥에서' },
       schedule: {},
       items: [
         { id: uid(), type: 'menu', view: 'today', label: '오늘의 K-JjamBab', seconds: 15, from: '07:00', to: '10:00', screens: 'all', on: true },
@@ -513,8 +517,16 @@
   /* ---------- 짬밥 메뉴 슬라이드 ---------- */
   function dayEntry(d) { var e = state.schedule[ymd(d)] || {}; return { main: (e.main || '').trim(), soup: (e.soup || '').trim(), sides: (e.sides || '').trim() }; }
   function weekHasAny(mon) { for (var i = 0; i < 7; i++) { var e = dayEntry(addDays(mon, i)); if (e.main || e.soup || e.sides) return true; } return false; }
+  // 특가가 있고 종료일이 지나지 않았으면 특가를 크게, 정가는 취소선으로
+  function deal() {
+    var m = state.menu, sp = (m.special || '').trim();
+    if (!sp || (m.specialUntil && ymd(new Date()) > m.specialUntil)) return null;
+    var label = (m.specialLabel || '').trim(), u = m.specialUntil ? m.specialUntil.split('-') : null;
+    if (u) label += (label ? ' · ' : '') + (+u[1]) + '/' + (+u[2]) + '까지';
+    return { price: sp, was: (m.price || '').trim(), label: label };
+  }
   function menuHtml(view) {
-    var m = state.menu, today = new Date(), tkey = ymd(today), mon, i, d, e, h;
+    var m = state.menu, today = new Date(), tkey = ymd(today), mon, i, d, e, h, dl = deal();
     if (view === 'week' || view === 'next') {
       mon = addDays(mondayOf(today), view === 'next' ? 7 : 0);
       h = '<div class="slide week"><div class="w-head"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
@@ -525,7 +537,8 @@
         h += '<div class="w-row' + (ymd(d) === tkey ? ' today' : '') + '"><span class="d">' + DAY_KO[d.getDay()] + ' ' + md(d) + '</span>' +
           '<span class="mn">' + esc(e.main || '—') + '</span>' + (ex ? '<span class="ex">' + esc(ex) + '</span>' : '') + '</div>';
       }
-      return h + '</div><div class="w-foot"><span>' + esc(m.note || '') + '</span>' + (m.price ? '<span class="p">' + esc(m.price) + '</span>' : '') + '</div></div>';
+      return h + '</div><div class="w-foot"><span>' + esc(m.note || '') + '</span>' + '<span>' + (dl ? (dl.label ? '<span class="deal">' + esc(dl.label) + '</span>' : '') + (dl.was ? '<span class="was">' + esc(dl.was) + '</span>' : '') + '<span class="p">' + esc(dl.price) + '</span>'
+        : (m.price ? '<span class="p">' + esc(m.price) + '</span>' : '')) + '</span></div></div>';
     }
     e = dayEntry(today); mon = mondayOf(today);
     h = '<div class="slide menu"><div class="m-left"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
@@ -533,7 +546,8 @@
       '<div class="m-dish">' + esc(e.main || '오늘의 백반') + '</div>' +
       ((e.soup || e.sides) ? '<div class="m-extra">' + (e.soup ? '<div><b>국</b>' + esc(e.soup) + '</div>' : '') + (e.sides ? '<div><b>반찬</b>' + esc(e.sides) + '</div>' : '') + '</div>' : '') +
       (m.note ? '<div class="m-sub">' + esc(m.note) + '</div>' : '') +
-      (m.price ? '<div class="m-price">' + esc(m.price) + '</div>' : '') +
+      (dl ? (dl.label ? '<div class="m-deal">' + esc(dl.label) + '</div>' : '') + '<div><span class="m-price">' + esc(dl.price) + '</span>' + (dl.was ? '<span class="m-was">' + esc(dl.was) + '</span>' : '') + '</div>'
+          : (m.price ? '<div class="m-price">' + esc(m.price) + '</div>' : '')) +
       (m.tagline ? '<div class="m-tag">' + esc(m.tagline) + '</div>' : '') + '</div>';
     if (weekHasAny(mon)) {
       h += '<div class="m-week"><h3>THIS WEEK</h3>';
@@ -758,9 +772,12 @@
       '<p class="help">여기서 바꾼 내용은 자동 저장되고, 매장의 보드와 TV에 1분 안에 반영됩니다. 위에서 아래 순서대로 반복 재생됩니다.</p>';
 
     h += '<h2>K-JjamBab 주간 스케줄</h2><p class="help">날짜별로 메뉴를 넣어 두면 "짬밥 메뉴" 항목이 오늘의 메뉴와 주간 메뉴표를 자동으로 보여줍니다.</p><div id="sched">' + schedHtml() + '</div>' +
-      '<div class="grid" style="margin-top:6px"><label class="c3">가격<input type="text" data-menu="price" value="' + esc(m.price) + '"></label>' +
+      '<div class="grid" style="margin-top:6px"><label class="c3">정가<input type="text" data-menu="price" value="' + esc(m.price) + '"></label>' +
+      '<label class="c3">특가 (비우면 정가만 표시)<input type="text" data-menu="special" placeholder="예: $12.99" value="' + esc(m.special) + '"></label>' +
+      '<label class="c3">특가 문구<input type="text" data-menu="specialLabel" placeholder="예: 특가, Grand Opening" value="' + esc(m.specialLabel) + '"></label>' +
+      '<label class="c3">특가 종료일 (지나면 자동으로 정가)<input type="date" data-menu="specialUntil" value="' + esc(m.specialUntil) + '"></label>' +
       '<label class="c4">안내 한 줄<input type="text" data-menu="note" value="' + esc(m.note) + '"></label>' +
-      '<label class="c4" style="grid-column:span 5">문구<input type="text" data-menu="tagline" value="' + esc(m.tagline) + '"></label></div>';
+      '<label class="c4" style="grid-column:span 8">문구<input type="text" data-menu="tagline" value="' + esc(m.tagline) + '"></label></div>';
 
     h += '<h2>재생 목록</h2><div class="addrow">' +
       '<button data-add="youtube">+ 유튜브 (영상 · 재생목록)</button><button data-add="music">+ 사이사이 음악 영상 (유튜브)</button><button data-add="image">+ 이미지 · 포스터</button>' +
