@@ -1,12 +1,13 @@
 <?php
 // AnnanGol in-store display: state, admin login and media uploads.
 // Data (state.json, uploaded media) lives OUTSIDE public_html when possible so a
-// Git deploy never touches it. The admin password is the stats dashboard password
+// Git deploy never touches it. The admin password hash is DISPLAY_PASSWORD_HASH below
 // unless <display data dir>/config.json holds its own {"password_hash":"..."}.
 declare(strict_types=1);
 define('AG_ANALYTICS', 1);
 require __DIR__ . '/../api/lib.php';
 
+const DISPLAY_PASSWORD_HASH = '$2y$12$OF0WDJgnFaZxD4H1ZCrZQukwA5j6auIYFXmlAaO3EmfSWFIw1EDry';
 const DISPLAY_MAX_STATE_BYTES = 600000;
 const DISPLAY_EXT = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp',
                      'gif' => 'image/gif', 'mp4' => 'video/mp4', 'webm' => 'video/webm', 'mov' => 'video/quicktime'];
@@ -25,7 +26,7 @@ function display_dir(): string {
 function display_hash(): string {
     $f = display_dir() . '/config.json';
     $cfg = is_file($f) ? (json_decode((string)file_get_contents($f), true) ?: []) : [];
-    return (string)($cfg['password_hash'] ?? ag_config()['password_hash']);
+    return (string)($cfg['password_hash'] ?? DISPLAY_PASSWORD_HASH);
 }
 function out($data, int $code = 200): void {
     http_response_code($code);

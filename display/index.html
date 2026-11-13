@@ -669,7 +669,6 @@
   }
   function renderLogin(msg) {
     adminEl.innerHTML = '<form class="login" id="loginForm"><h1>아난골 디스플레이 관리자</h1>' +
-      '<p class="help">방문 통계 페이지와 같은 비밀번호를 사용합니다.</p>' +
       '<input type="password" id="pw" placeholder="비밀번호" autocomplete="current-password">' +
       (msg ? '<p class="warn">' + esc(msg) + '</p>' : '') +
       '<button class="primary" type="submit">로그인</button><button type="button" id="btnBack">돌아가기</button></form>';
