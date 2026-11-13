@@ -229,6 +229,11 @@
   var CACHE_KEY = 'annangol-display-state', DEV_KEY = 'annangol-display-device';
   var DAY_KO = ['일', '월', '화', '수', '목', '금', '토'];
   var DAY_EN = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  var BUILTIN = [   // 사이트에 미리 올려 둔 포스터: [주소, 이름, 나올 화면]
+    ['media/kjjambab-special.jpg', 'K-JjamBab 특가 포스터 (세로)', 'board'], ['media/hero-price.jpg', 'HERO PRICE 포스터 (세로)', 'board'],
+    ['media/dosirock-portrait.jpg', 'K-DosiRock Coming Soon (세로)', 'board'], ['media/dosirock-landscape.jpg', 'K-DosiRock Coming Soon (가로)', 'tv'],
+    ['media/annangol-portrait.jpg', '아난골 포스터 (세로)', 'board'], ['media/annangol-landscape.jpg', '아난골 포스터 (가로)', 'tv']
+  ];
   var TYPE_NAME = { youtube: '유튜브', image: '이미지', video: '동영상 파일', menu: '짬밥 메뉴', text: '안내 문구' };
   var root = document.getElementById('root');
 
@@ -256,6 +261,10 @@
         { id: uid(), type: 'menu', view: 'week', label: '이번 주 K-JjamBab', seconds: 15, from: '', to: '', screens: 'all', on: true },
         { id: uid(), type: 'image', label: 'K-JjamBab 포스터', src: 'media/kjjambab-special.jpg', seconds: 12, from: '', to: '', screens: 'board', on: true },
         { id: uid(), type: 'image', label: 'HERO PRICE 포스터', src: 'media/hero-price.jpg', seconds: 12, from: '', to: '', screens: 'board', on: true },
+        { id: uid(), type: 'image', label: 'K-DosiRock Coming Soon (세로)', src: 'media/dosirock-portrait.jpg', seconds: 12, from: '', to: '', screens: 'board', on: true },
+        { id: uid(), type: 'image', label: '아난골 포스터 (세로)', src: 'media/annangol-portrait.jpg', seconds: 12, from: '', to: '', screens: 'board', on: true },
+        { id: uid(), type: 'image', label: 'K-DosiRock Coming Soon (가로)', src: 'media/dosirock-landscape.jpg', seconds: 12, from: '', to: '', screens: 'tv', on: true },
+        { id: uid(), type: 'image', label: '아난골 포스터 (가로)', src: 'media/annangol-landscape.jpg', seconds: 12, from: '', to: '', screens: 'tv', on: true },
         { id: uid(), type: 'text', label: '영업 안내', seconds: 12, from: '', to: '', screens: 'all', on: true,
           title: 'AnnanGol 아난골', body: '30년 전통\nOpen 7 AM – 10 PM Daily\nK-JjamBab 7–10 AM · Full menu from 10 AM' }
       ]
@@ -749,6 +758,8 @@
       h += '<label class="c6">파일 올리기' + (it.type === 'image' ? ' (JPG · PNG · WEBP · GIF)' : ' (MP4 · WEBM · MOV)') +
         '<input type="file" data-file accept="' + (it.type === 'image' ? 'image/*' : 'video/*') + '"></label>';
       h += '<label class="c6">또는 파일 주소<input type="text" data-f="src" placeholder="https://..." value="' + esc(up ? '' : it.src) + '"></label>';
+      if (it.type === 'image') h += '<label class="c6">또는 준비된 포스터에서 고르기<select data-builtin><option value="">선택…</option>' +
+        BUILTIN.map(function (b, n) { return '<option value="' + n + '"' + (b[0] === it.src ? ' selected' : '') + '>' + b[1] + '</option>'; }).join('') + '</select></label>';
       h += '<div class="c6 note" data-upmsg>' + (up ? '올린 파일: ' + esc(it.fileName || it.src.slice(3)) : '') + '</div>';
       if (it.type === 'image' && it.src) h += '<div class="c6"><img class="thumb" src="' + esc(srcUrl(it.src)) + '" alt=""></div>';
     } else if (it.type === 'text') {
@@ -874,6 +885,13 @@
   adminEl.addEventListener('change', function (e) {
     var t = e.target;
     if (t.dataset.set && t.type === 'checkbox') { state.settings[t.dataset.set] = t.checked; dirty(); return; }
+    if (t.hasAttribute('data-builtin')) {
+      var bi = BUILTIN[+t.value], bit = state.items[+t.closest('.card').dataset.i];
+      if (t.value === '' || !bi) return;
+      dropFile(bit); delete bit.fileName;
+      bit.src = bi[0]; bit.label = bi[1]; bit.screens = bi[2];
+      renderAdmin(); dirty(); return;
+    }
     if (t.tagName === 'SELECT' && t.dataset.f) { renderAdmin(); return; }
     if (t.dataset.f === 'src' || t.dataset.f === 'every') { renderAdmin(); return; }
     if (t.hasAttribute('data-file') && t.files && t.files[0]) {
