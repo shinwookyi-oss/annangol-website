@@ -1,0 +1,10 @@
+# Never serve the fallback data folder or dotfiles.
+RedirectMatch 404 /\.data(/|$)
+<IfModule mod_headers.c>
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+<Files ".user.ini">
+  Require all denied
+</Files>

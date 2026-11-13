@@ -10,13 +10,15 @@
 <style>
   :root { --red:#d7262c; --ink:#14110f; --cream:#f6efe4; --gold:#e0b354; --muted:#a79d90; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  html, body { width:100%; height:100%; overflow:hidden; background:#000; color:var(--cream);
-    font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif; }
-  body.playing { cursor:none; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#000; }
+  #root { position:fixed; left:0; top:0; transform-origin:top left; overflow:hidden; background:#000; color:var(--cream);
+    --u:10px; font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif; }
+  #root.playing { cursor:none; }
+  .hidden { display:none !important; }
 
   /* ---------- stage ---------- */
-  #stage { position:fixed; inset:0; background:#000; }
-  body.bar-on #stage { bottom:6vh; }
+  #stage { position:absolute; inset:0; background:#000; }
+  #root.bar-on #stage { bottom:calc(6 * var(--u)); }
   .layer { position:absolute; inset:0; opacity:0; transition:opacity .8s ease; background:#000;
     display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .layer.on { opacity:1; }
@@ -24,66 +26,105 @@
   .layer .yt, .layer .yt iframe { width:100%; height:100%; border:0; pointer-events:none; }
 
   /* ---------- built-in slides ---------- */
-  .slide { width:100%; height:100%; padding:6vh 6vw; display:flex; gap:5vw; align-items:center;
+  .slide { width:100%; height:100%; padding:calc(6 * var(--u)); display:flex; gap:calc(5 * var(--u)); align-items:center;
     background:radial-gradient(120% 120% at 15% 10%, #3a2418 0%, var(--ink) 60%); }
-  .kj { font-weight:900; font-size:9vh; letter-spacing:-.02em; line-height:1; }
+  .portrait .slide { flex-direction:column; justify-content:center; align-items:stretch; }
+  .kj { font-weight:900; font-size:calc(9 * var(--u)); letter-spacing:-.02em; line-height:1; }
   .kj .k { color:var(--red); }
   .m-left { flex:1.3; min-width:0; }
-  .m-day { margin-top:4vh; font-size:3.4vh; color:var(--gold); font-weight:700; letter-spacing:.08em; }
-  .m-dish { margin-top:1.5vh; font-size:11vh; font-weight:900; line-height:1.1; word-break:keep-all; }
-  .m-sub { margin-top:2.5vh; font-size:3.2vh; color:var(--muted); }
-  .m-price { margin-top:4vh; display:inline-block; background:var(--red); color:#fff; font-weight:900;
-    font-size:8vh; padding:.6vh 2.4vw; border-radius:1.2vh; }
-  .m-tag { margin-top:4vh; font-size:3.2vh; color:var(--cream); opacity:.85; }
-  .m-week { flex:1; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
-    border-radius:2vh; padding:3vh 2.5vw; }
-  .m-week h3 { font-size:2.6vh; color:var(--gold); letter-spacing:.15em; margin-bottom:2vh; }
-  .m-week .row { display:flex; gap:1.5vw; font-size:3.3vh; padding:1.3vh 1vw; border-radius:1vh; }
-  .m-week .row .d { width:3.2em; color:var(--muted); font-weight:700; }
+  .portrait .m-left { flex:none; }
+  .m-day { margin-top:calc(4 * var(--u)); font-size:calc(3.4 * var(--u)); color:var(--gold); font-weight:700; letter-spacing:.08em; }
+  .m-dish { margin-top:calc(1.5 * var(--u)); font-size:calc(11 * var(--u)); font-weight:900; line-height:1.1; word-break:keep-all; }
+  .m-extra { margin-top:calc(2 * var(--u)); font-size:calc(3.6 * var(--u)); line-height:1.5; word-break:keep-all; }
+  .m-extra b { color:var(--gold); font-weight:700; margin-right:.5em; }
+  .m-sub { margin-top:calc(2 * var(--u)); font-size:calc(3.2 * var(--u)); color:var(--muted); }
+  .m-price { margin-top:calc(3.5 * var(--u)); display:inline-block; background:var(--red); color:#fff; font-weight:900;
+    font-size:calc(8 * var(--u)); padding:calc(.6 * var(--u)) calc(3 * var(--u)); border-radius:calc(1.2 * var(--u)); }
+  .m-tag { margin-top:calc(3.5 * var(--u)); font-size:calc(3.2 * var(--u)); opacity:.85; }
+  .m-week { flex:1; min-width:0; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+    border-radius:calc(2 * var(--u)); padding:calc(3 * var(--u)); }
+  .portrait .m-week { flex:none; }
+  .m-week h3 { font-size:calc(2.6 * var(--u)); color:var(--gold); letter-spacing:.15em; margin-bottom:calc(2 * var(--u)); }
+  .m-week .row { display:flex; gap:calc(2 * var(--u)); font-size:calc(3.3 * var(--u)); padding:calc(1.3 * var(--u)) calc(1.5 * var(--u)); border-radius:calc(1 * var(--u)); }
+  .m-week .row .d { width:2.2em; flex:none; color:var(--muted); font-weight:700; }
   .m-week .row.today { background:var(--red); color:#fff; font-weight:700; }
   .m-week .row.today .d { color:#fff; }
-  .slide.text { flex-direction:column; justify-content:center; text-align:center; gap:4vh; }
-  .t-title { font-size:11vh; font-weight:900; line-height:1.15; word-break:keep-all; }
-  .t-body { font-size:4.6vh; line-height:1.6; color:var(--cream); white-space:pre-line; word-break:keep-all; }
-  .t-rule { width:12vw; height:.7vh; background:var(--red); border-radius:1vh; }
+
+  .slide.week { flex-direction:column; align-items:stretch; justify-content:center; gap:calc(3 * var(--u)); }
+  .w-head { display:flex; align-items:baseline; justify-content:space-between; gap:calc(3 * var(--u)); flex-wrap:wrap; }
+  .w-head .kj { font-size:calc(7 * var(--u)); }
+  .w-title { font-size:calc(4.2 * var(--u)); font-weight:900; color:var(--gold); }
+  .w-title small { font-size:.7em; color:var(--muted); font-weight:700; margin-left:.6em; }
+  .w-rows { display:flex; flex-direction:column; gap:calc(1 * var(--u)); }
+  .w-row { display:flex; align-items:center; gap:calc(3 * var(--u)); padding:calc(1.4 * var(--u)) calc(2.5 * var(--u));
+    background:rgba(255,255,255,.06); border-radius:calc(1.2 * var(--u)); }
+  .w-row .d { width:5.2em; flex:none; font-size:calc(3 * var(--u)); font-weight:700; color:var(--muted); }
+  .w-row .mn { font-size:calc(4.4 * var(--u)); font-weight:900; word-break:keep-all; }
+  .w-row .ex { font-size:calc(2.5 * var(--u)); color:var(--muted); margin-left:auto; text-align:right; word-break:keep-all; }
+  .portrait .w-row { flex-wrap:wrap; gap:calc(.6 * var(--u)) calc(3 * var(--u)); padding:calc(2 * var(--u)) calc(2.5 * var(--u)); }
+  .portrait .w-row .ex { margin-left:0; text-align:left; width:100%; padding-left:calc(5.2em * 1.2 + 3 * var(--u)); }
+  .w-row.today { background:var(--red); }
+  .w-row.today .d, .w-row.today .ex { color:#fff; }
+  .w-foot { display:flex; justify-content:space-between; align-items:center; font-size:calc(3 * var(--u)); color:var(--muted); }
+  .w-foot .p { background:var(--red); color:#fff; font-weight:900; font-size:calc(4.5 * var(--u)); padding:calc(.4 * var(--u)) calc(2 * var(--u)); border-radius:calc(1 * var(--u)); }
+
+  .slide.text { flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:calc(4 * var(--u)); }
+  .t-title { font-size:calc(11 * var(--u)); font-weight:900; line-height:1.15; word-break:keep-all; }
+  .t-body { font-size:calc(4.6 * var(--u)); line-height:1.6; white-space:pre-line; word-break:keep-all; }
+  .t-rule { width:calc(14 * var(--u)); height:calc(.7 * var(--u)); background:var(--red); border-radius:1em; }
 
   /* ---------- bottom bar ---------- */
-  #bar { position:fixed; left:0; right:0; bottom:0; height:6vh; background:var(--ink); display:none;
-    align-items:center; justify-content:space-between; padding:0 2.5vw; font-size:2.6vh;
-    border-top:.4vh solid var(--red); }
-  body.bar-on #bar { display:flex; }
+  #bar { position:absolute; left:0; right:0; bottom:0; height:calc(6 * var(--u)); background:var(--ink); display:none;
+    align-items:center; justify-content:space-between; gap:calc(2 * var(--u)); padding:0 calc(2.5 * var(--u));
+    font-size:calc(2.5 * var(--u)); border-top:calc(.4 * var(--u)) solid var(--red); white-space:nowrap; }
+  #root.bar-on #bar { display:flex; }
   #bar b { font-weight:900; }
-  #bar .mid { color:var(--muted); }
+  #bar .mid { color:var(--muted); overflow:hidden; text-overflow:ellipsis; }
   #clock { font-variant-numeric:tabular-nums; font-weight:700; }
 
   /* ---------- start overlay ---------- */
-  #start { position:fixed; inset:0; z-index:30; background:var(--ink); display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:3vh; text-align:center; padding:4vw; }
-  #start h1 { font-size:8vh; font-weight:900; }
+  #start { position:absolute; inset:0; z-index:30; background:var(--ink); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:calc(2.6 * var(--u)); text-align:center; padding:calc(4 * var(--u)); overflow:auto; }
+  #start h1 { font-size:calc(7 * var(--u)); font-weight:900; }
   #start h1 span { color:var(--red); }
-  #start p { font-size:3vh; color:var(--muted); }
-  #start .btns { display:flex; gap:2vw; margin-top:2vh; }
-  .big { font:inherit; font-size:3.4vh; font-weight:700; padding:2vh 4vw; border-radius:1.4vh; border:0; cursor:pointer; }
-  .big.go { background:var(--red); color:#fff; }
-  .big.alt { background:transparent; color:var(--cream); border:2px solid var(--muted); }
-  .hidden { display:none !important; }
+  #start p { font-size:calc(2.6 * var(--u)); color:var(--muted); line-height:1.5; }
+  #start .btns { display:flex; gap:calc(2 * var(--u)); flex-wrap:wrap; justify-content:center; }
+  .big { font:inherit; font-size:calc(3 * var(--u)); font-weight:700; padding:calc(1.8 * var(--u)) calc(3.5 * var(--u));
+    border-radius:calc(1.4 * var(--u)); border:2px solid var(--muted); background:transparent; color:var(--cream); cursor:pointer; }
+  .big.go { background:var(--red); color:#fff; border-color:var(--red); }
+  .dev { display:flex; flex-direction:column; gap:calc(1.4 * var(--u)); margin-top:calc(1 * var(--u)); padding:calc(2 * var(--u));
+    border:1px solid rgba(255,255,255,.15); border-radius:calc(1.6 * var(--u)); }
+  .dev .line { display:flex; align-items:center; gap:calc(1.2 * var(--u)); flex-wrap:wrap; justify-content:center; font-size:calc(2.2 * var(--u)); color:var(--muted); }
+  .seg { font:inherit; font-size:calc(2.2 * var(--u)); padding:calc(.9 * var(--u)) calc(1.8 * var(--u)); border-radius:calc(1 * var(--u));
+    border:1px solid var(--muted); background:transparent; color:var(--cream); cursor:pointer; }
+  .seg.sel { background:var(--cream); color:var(--ink); font-weight:700; }
 
-  #corner { position:fixed; top:0; right:0; width:12vw; height:12vh; z-index:20; }
+  #corner { position:absolute; top:0; right:0; width:calc(14 * var(--u)); height:calc(14 * var(--u)); z-index:20; }
+
+  /* ---------- whiteboard ---------- */
+  #wb { position:absolute; inset:0; z-index:35; background:#fff; touch-action:none; }
+  #wb canvas { position:absolute; inset:0; width:100%; height:100%; touch-action:none; cursor:crosshair; }
+  #wbtools { position:absolute; left:50%; bottom:calc(2 * var(--u)); transform:translateX(-50%); display:flex; gap:8px; flex-wrap:wrap;
+    justify-content:center; background:#1b1815; padding:10px 12px; border-radius:14px; max-width:96%; }
+  #wbtools button { font:inherit; font-size:16px; min-width:44px; height:44px; padding:0 12px; border-radius:10px; border:2px solid transparent;
+    background:#3a342e; color:#fff; cursor:pointer; }
+  #wbtools button.sel { border-color:#fff; }
+  #wbtools .sw { width:44px; padding:0; }
 
   /* ---------- admin ---------- */
-  #admin { position:fixed; inset:0; z-index:40; background:#f4f1ec; color:#1b1815; overflow-y:auto;
-    font-size:16px; cursor:auto; }
+  #admin { position:absolute; inset:0; z-index:40; background:#f4f1ec; color:#1b1815; overflow-y:auto; font-size:16px; cursor:auto; }
   #admin .wrap { max-width:1100px; margin:0 auto; padding:24px 20px 120px; }
   #admin h1 { font-size:26px; margin-bottom:4px; }
   #admin h2 { font-size:19px; margin:30px 0 10px; padding-top:18px; border-top:1px solid #d9d2c6; }
   #admin p.help { color:#6b6359; font-size:14px; line-height:1.5; margin-bottom:10px; }
-  #admin input[type=text], #admin input[type=number], #admin input[type=time], #admin textarea {
-    font:inherit; padding:9px 10px; border:1px solid #c9c1b4; border-radius:8px; background:#fff; width:100%; }
+  #admin input[type=text], #admin input[type=password], #admin input[type=number], #admin input[type=time], #admin textarea, #admin select {
+    font:inherit; padding:9px 10px; border:1px solid #c9c1b4; border-radius:8px; background:#fff; width:100%; color:#1b1815; }
   #admin textarea { min-height:70px; resize:vertical; }
-  #admin button { font:inherit; padding:9px 14px; border-radius:8px; border:1px solid #c9c1b4; background:#fff; cursor:pointer; }
+  #admin button { font:inherit; padding:9px 14px; border-radius:8px; border:1px solid #c9c1b4; background:#fff; cursor:pointer; color:#1b1815; }
   #admin button.primary { background:var(--red); color:#fff; border-color:var(--red); font-weight:700; }
   #admin button.danger { color:#b3261e; }
-  .addrow { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 14px; }
+  #admin button.on { background:#1b1815; color:#fff; border-color:#1b1815; }
+  .addrow { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 14px; align-items:center; }
   .card { background:#fff; border:1px solid #d9d2c6; border-radius:12px; padding:14px; margin-bottom:10px; }
   .card.off { opacity:.55; }
   .card .head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
@@ -93,22 +134,30 @@
   .card .head .sp { flex:1; }
   .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:10px; }
   .grid label { font-size:13px; color:#6b6359; display:flex; flex-direction:column; gap:4px; }
-  .c12 { grid-column:span 12; } .c6 { grid-column:span 6; } .c4 { grid-column:span 4; } .c3 { grid-column:span 3; }
-  @media (max-width:700px) { .c6,.c4,.c3 { grid-column:span 12; } }
+  .c12 { grid-column:span 12; } .c6 { grid-column:span 6; } .c4 { grid-column:span 4; } .c3 { grid-column:span 3; } .c2 { grid-column:span 2; }
+  @media (max-width:700px) { .c6,.c4,.c3,.c2 { grid-column:span 12; } }
   .note { font-size:13px; color:#6b6359; }
   .warn { font-size:13px; color:#b3261e; }
-  .week { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; }
-  @media (max-width:800px) { .week { grid-template-columns:repeat(2,1fr); } }
+  .thumb { max-height:90px; max-width:160px; border-radius:6px; border:1px solid #d9d2c6; display:block; }
+  .sched .drow { display:grid; grid-template-columns:90px 1.2fr 1fr 1.6fr; gap:8px; align-items:center; margin-bottom:8px; }
+  .sched .drow.today .dl { color:var(--red); }
+  .sched .dl { font-weight:700; font-size:14px; line-height:1.3; }
+  .sched .dl small { display:block; font-weight:400; color:#6b6359; }
+  .sched .hdr { font-size:12px; color:#6b6359; }
+  @media (max-width:700px) { .sched .drow { grid-template-columns:1fr; background:#fff; border:1px solid #d9d2c6; border-radius:10px; padding:10px; }
+    .sched .hdr { display:none; } }
   .chk { display:flex; align-items:center; gap:8px; margin:8px 0; }
   .chk input { width:20px; height:20px; }
-  #savebar { position:fixed; left:0; right:0; bottom:0; background:#1b1815; padding:12px 20px; display:flex;
-    gap:10px; justify-content:flex-end; align-items:center; z-index:41; }
+  #savebar { position:sticky; bottom:0; background:#1b1815; padding:12px 20px; display:flex; gap:10px; justify-content:flex-end;
+    align-items:center; z-index:41; margin-top:-64px; }
   #savebar span { color:#d9d2c6; font-size:14px; margin-right:auto; }
-  #savebar button { font:inherit; font-size:17px; padding:11px 22px; border-radius:8px; border:0; cursor:pointer; }
+  #savebar button { font:inherit; font-size:16px; padding:10px 18px; border-radius:8px; border:0; cursor:pointer; }
   #savebar .primary { background:var(--red); color:#fff; font-weight:700; }
+  .login { max-width:380px; margin:12vh auto 0; padding:0 20px; display:flex; flex-direction:column; gap:12px; }
 </style>
 </head>
 <body>
+<div id="root">
 
 <div id="stage"></div>
 
@@ -118,130 +167,170 @@
   <div id="clock"></div>
 </div>
 
-<div id="corner" title=""></div>
+<div id="corner"></div>
 
 <div id="start">
   <h1>AnnanGol <span>Display</span></h1>
-  <p>화면을 터치하면 전체화면으로 시작합니다.<br><span id="countdown"></span></p>
+  <p id="countdown"></p>
   <div class="btns">
-    <button class="big go" id="btnStart">▶ 시작</button>
-    <button class="big alt" id="btnSettings">⚙ 설정</button>
+    <button class="big go" id="btnStart">▶ 재생 시작</button>
+    <button class="big" id="btnBoard">✎ 화이트보드</button>
+    <button class="big" id="btnAdmin">⚙ 관리자</button>
   </div>
-  <p style="font-size:2.2vh">재생 중 설정 열기: 화면 오른쪽 위 모서리를 빠르게 3번 터치 (키보드는 S)</p>
+  <div class="dev">
+    <div class="line">이 화면:
+      <button class="seg" data-screen="board">보드 (세로)</button>
+      <button class="seg" data-screen="tv">TV (가로)</button>
+    </div>
+    <div class="line">화면 회전:
+      <button class="seg" data-rot="0">회전 없음</button>
+      <button class="seg" data-rot="90">90°</button>
+      <button class="seg" data-rot="270">270°</button>
+    </div>
+  </div>
+  <p>재생 중 이 화면으로 돌아오기: 오른쪽 위 모서리를 빠르게 3번 터치 (키보드는 Esc)</p>
+</div>
+
+<div id="wb" class="hidden">
+  <canvas id="wbc"></canvas>
+  <div id="wbtools">
+    <button class="sw" data-c="#111111" style="background:#111"></button>
+    <button class="sw" data-c="#d7262c" style="background:#d7262c"></button>
+    <button class="sw" data-c="#1d5fd0" style="background:#1d5fd0"></button>
+    <button class="sw" data-c="#1f8a4c" style="background:#1f8a4c"></button>
+    <button data-w="4">가늘게</button>
+    <button data-w="10">보통</button>
+    <button data-w="22">굵게</button>
+    <button data-c="erase">지우개</button>
+    <button id="wbUndo">되돌리기</button>
+    <button id="wbClear">모두 지우기</button>
+    <button id="wbClose" style="background:#d7262c">닫기</button>
+  </div>
 </div>
 
 <div id="admin" class="hidden"></div>
 
+</div>
 <script>
 /* =====================================================================
-   아난골 디스플레이 — 유튜브 / 이미지 / 동영상 / 메뉴 슬라이드 순환 재생
-   유튜브 재생을 위해 반드시 웹 주소(https://...)로 열어야 합니다.
+   아난골 디스플레이
+   - 재생 화면: 유튜브(영상·재생목록) / 이미지 / 동영상 / 짬밥 메뉴 / 안내 문구 순환
+   - 관리자: 같은 주소에서 로그인해 목록·업로드·주간 스케줄 수정 (서버에 저장)
+   - 화면 종류: 보드(세로) / TV(가로) — 항목마다 어느 화면에 낼지 선택
    ===================================================================== */
 (function () {
   'use strict';
 
-  var LS_KEY = 'annangol-display-v1';
-  var DAYS_KO = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
-  var DAYS_EN = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  var TYPE_NAME = { youtube:'유튜브', image:'이미지', video:'동영상 파일', menu:'메뉴 슬라이드', text:'안내 문구' };
+  var API = 'api.php';
+  var CACHE_KEY = 'annangol-display-state', DEV_KEY = 'annangol-display-device';
+  var DAY_KO = ['일', '월', '화', '수', '목', '금', '토'];
+  var DAY_EN = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  var TYPE_NAME = { youtube: '유튜브', image: '이미지', video: '동영상 파일', menu: '짬밥 메뉴', text: '안내 문구' };
+  var root = document.getElementById('root');
 
   function uid() { return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-
-  function defaults() {
-    return {
-      settings: { sound: true, showBar: true, barText: 'Open 7 AM – 10 PM Daily · (703) 914-4600' },
-      menu: { week: ['', '', '', '', '', '', ''], price: '$13.99', note: '매일 아침 7–10 AM',
-              tagline: '한국인의 힘은 든든한 아침 짬밥에서' },
-      items: [
-        { id: uid(), type: 'menu', label: '오늘의 K-JjamBab', seconds: 15, from: '07:00', to: '10:00', on: true },
-        { id: uid(), type: 'text', label: '영업 안내', seconds: 12, from: '', to: '', on: true,
-          title: 'AnnanGol 아난골',
-          body: '30년 전통\nOpen 7 AM – 10 PM Daily\nK-JjamBab 7–10 AM · Full menu from 10 AM' }
-      ]
-    };
-  }
-
-  function loadState() {
-    var d = defaults();
-    try {
-      var s = JSON.parse(localStorage.getItem(LS_KEY));
-      if (s && Array.isArray(s.items)) {
-        d.items = s.items;
-        if (s.settings) for (var k in s.settings) d.settings[k] = s.settings[k];
-        if (s.menu) for (var m in s.menu) d.menu[m] = s.menu[m];
-        if (!Array.isArray(d.menu.week) || d.menu.week.length !== 7) d.menu.week = ['', '', '', '', '', '', ''];
-      }
-    } catch (e) {}
-    return d;
-  }
-  function saveState() {
-    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); return true; } catch (e) { return false; }
-  }
-
-  var state = loadState();
-
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
 
-  /* ---------- 이 기기에 저장하는 파일 (IndexedDB) ---------- */
-  var idb = null;
-  function openIdb() {
-    return new Promise(function (resolve) {
-      if (idb) return resolve(idb);
-      try {
-        var req = indexedDB.open('annangol-display', 1);
-        req.onupgradeneeded = function () { req.result.createObjectStore('media'); };
-        req.onsuccess = function () { idb = req.result; resolve(idb); };
-        req.onerror = function () { resolve(null); };
-      } catch (e) { resolve(null); }
-    });
+  /* ---------- 날짜 ---------- */
+  function ymd(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function addDays(d, n) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
+  function mondayOf(d) { return addDays(d, -((d.getDay() + 6) % 7)); }
+  function md(d) { return (d.getMonth() + 1) + '/' + d.getDate(); }
+
+  /* ---------- 상태 ---------- */
+  function defaults() {
+    return {
+      settings: { sound: true, showBar: true, barText: 'Open 7 AM – 10 PM Daily · (703) 914-4600' },
+      menu: { price: '$13.99', note: '매일 아침 7–10 AM', tagline: '한국인의 힘은 든든한 아침 짬밥에서' },
+      schedule: {},
+      items: [
+        { id: uid(), type: 'menu', view: 'today', label: '오늘의 K-JjamBab', seconds: 15, from: '07:00', to: '10:00', screens: 'all', on: true },
+        { id: uid(), type: 'menu', view: 'week', label: '이번 주 K-JjamBab', seconds: 15, from: '', to: '', screens: 'all', on: true },
+        { id: uid(), type: 'image', label: 'K-JjamBab 포스터', src: 'media/kjjambab-special.jpg', seconds: 12, from: '', to: '', screens: 'board', on: true },
+        { id: uid(), type: 'image', label: 'HERO PRICE 포스터', src: 'media/hero-price.jpg', seconds: 12, from: '', to: '', screens: 'board', on: true },
+        { id: uid(), type: 'text', label: '영업 안내', seconds: 12, from: '', to: '', screens: 'all', on: true,
+          title: 'AnnanGol 아난골', body: '30년 전통\nOpen 7 AM – 10 PM Daily\nK-JjamBab 7–10 AM · Full menu from 10 AM' }
+      ]
+    };
   }
-  function idbPut(key, blob) {
-    return openIdb().then(function (db) {
-      return new Promise(function (resolve) {
-        if (!db) return resolve(false);
-        var tx = db.transaction('media', 'readwrite');
-        tx.objectStore('media').put(blob, key);
-        tx.oncomplete = function () { resolve(true); };
-        tx.onerror = tx.onabort = function () { resolve(false); };
-      });
-    });
-  }
-  function idbGet(key) {
-    return openIdb().then(function (db) {
-      return new Promise(function (resolve) {
-        if (!db) return resolve(null);
-        var req = db.transaction('media').objectStore('media').get(key);
-        req.onsuccess = function () { resolve(req.result || null); };
-        req.onerror = function () { resolve(null); };
-      });
-    });
-  }
-  function idbDel(key) {
-    return openIdb().then(function (db) {
-      if (!db) return;
-      try { db.transaction('media', 'readwrite').objectStore('media').delete(key); } catch (e) {}
-    });
-  }
-  /* src 가 "idb:키" 이면 저장된 파일을, 아니면 주소 그대로 돌려줌 */
-  function resolveSrc(src) {
-    if (src && src.indexOf('idb:') === 0) {
-      return idbGet(src.slice(4)).then(function (blob) {
-        return blob ? { url: URL.createObjectURL(blob), revoke: true } : null;
-      });
-    }
-    return Promise.resolve(src ? { url: src, revoke: false } : null);
+  function normalize(s) {
+    var d = defaults();
+    if (!s || !Array.isArray(s.items)) return d;
+    var k;
+    if (s.settings) for (k in s.settings) d.settings[k] = s.settings[k];
+    if (s.menu) for (k in s.menu) d.menu[k] = s.menu[k];
+    d.schedule = (s.schedule && typeof s.schedule === 'object') ? s.schedule : {};
+    d.items = s.items.filter(function (i) { return i && TYPE_NAME[i.type]; });
+    d.items.forEach(function (i) { if (!i.id) i.id = uid(); if (!i.screens) i.screens = 'all'; });
+    return d;
   }
 
-  /* ---------- 유튜브 ---------- */
-  function ytId(input) {
-    var s = String(input || '').trim();
-    if (/^[\w-]{11}$/.test(s)) return s;
-    var m = s.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/);
-    return m ? m[1] : '';
+  var state = defaults(), version = null, online = false;
+  try { var c = JSON.parse(localStorage.getItem(CACHE_KEY)); if (c && c.state) { state = normalize(c.state); version = c.version; } } catch (e) {}
+
+  function call(action, opts) {
+    return fetch(API + '?a=' + action, opts || {}).then(function (r) {
+      return r.json().then(function (j) { return { ok: r.ok, status: r.status, data: j }; });
+    });
+  }
+  function postJson(action, body) {
+    return call(action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), credentials: 'same-origin' });
+  }
+  function pull() {
+    return call('state', { cache: 'no-store' }).then(function (r) {
+      online = r.ok;
+      if (!r.ok) return false;
+      if (r.data.version !== version) {
+        version = r.data.version;
+        state = normalize(r.data.state);
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ state: state, version: version })); } catch (e) {}
+        applyChrome();
+        return true;
+      }
+      return false;
+    }).catch(function () { online = false; return false; });
+  }
+
+  /* ---------- 이 기기 설정 (화면 종류 · 회전) ---------- */
+  var dev = { screen: '', rot: 0 };
+  try { var dv = JSON.parse(localStorage.getItem(DEV_KEY)); if (dv) { dev.screen = dv.screen || ''; dev.rot = +dv.rot || 0; } } catch (e) {}
+  (function () {
+    var q = new URLSearchParams(location.search);
+    if (q.get('s') === 'board' || q.get('s') === 'tv') dev.screen = q.get('s');
+    if (q.get('r') === '0' || q.get('r') === '90' || q.get('r') === '270') dev.rot = +q.get('r');
+  })();
+  function saveDev() { try { localStorage.setItem(DEV_KEY, JSON.stringify(dev)); } catch (e) {} }
+
+  var LW = 0, LH = 0;
+  function layout() {
+    var vw = window.innerWidth, vh = window.innerHeight, r = dev.rot;
+    LW = r ? vh : vw; LH = r ? vw : vh;
+    root.style.width = LW + 'px'; root.style.height = LH + 'px';
+    root.style.transform = r === 90 ? 'rotate(90deg) translateY(-100%)' : r === 270 ? 'rotate(-90deg) translateX(-100%)' : '';
+    root.style.setProperty('--u', (Math.min(LW, LH) / 100) + 'px');
+    root.classList.toggle('portrait', LH > LW);
+    wbResize();
+  }
+  function screenKind() { return dev.screen || (LH > LW ? 'board' : 'tv'); }
+  function paintDev() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-screen]'), function (b) { b.classList.toggle('sel', b.dataset.screen === screenKind()); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-rot]'), function (b) { b.classList.toggle('sel', +b.dataset.rot === dev.rot); });
+  }
+  window.addEventListener('resize', layout);
+
+  /* ---------- 주소 해석 ---------- */
+  function srcUrl(src) { return src && src.indexOf('up:') === 0 ? API + '?a=file&f=' + encodeURIComponent(src.slice(3)) : (src || ''); }
+  function ytParse(input) {
+    var s = String(input || '').trim(), out = { video: '', list: '' };
+    var l = s.match(/[?&]list=([\w-]{10,})/); if (l) out.list = l[1];
+    if (/^[\w-]{11}$/.test(s)) out.video = s;
+    else if (/^(PL|UU|FL|OL|RD)[\w-]{10,}$/.test(s)) out.list = s;
+    else { var m = s.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/); if (m) out.video = m[1]; }
+    return out;
   }
   var ytReady = null;
   function loadYt() {
@@ -259,31 +348,30 @@
     return ytReady;
   }
 
-  /* ---------- 시간대 ---------- */
-  function mins(hhmm) {
-    var m = /^(\d{1,2}):(\d{2})$/.exec(hhmm || '');
-    return m ? (+m[1]) * 60 + (+m[2]) : null;
-  }
+  /* ---------- 재생 대상 고르기 ---------- */
+  function mins(hhmm) { var m = /^(\d{1,2}):(\d{2})$/.exec(hhmm || ''); return m ? (+m[1]) * 60 + (+m[2]) : null; }
   function inWindow(item, now) {
     var a = mins(item.from), b = mins(item.to);
     if (a === null || b === null || a === b) return true;
     var t = now.getHours() * 60 + now.getMinutes();
-    return a < b ? (t >= a && t < b) : (t >= a || t < b);   // 자정을 넘기는 시간대도 허용
+    return a < b ? (t >= a && t < b) : (t >= a || t < b);
   }
   function playable(item) {
     if (!item.on) return false;
-    if (item.type === 'youtube') return !!ytId(item.src);
+    if (item.type === 'youtube') { var y = ytParse(item.src); return !!(y.video || y.list); }
     if (item.type === 'image' || item.type === 'video') return !!item.src;
     return true;
   }
-  function eligible() {
+  function eligible(kind) {
     var now = new Date();
-    return state.items.filter(function (i) { return playable(i) && inWindow(i, now); });
+    return state.items.filter(function (i) {
+      return playable(i) && inWindow(i, now) && (i.screens === 'all' || !i.screens || i.screens === kind);
+    });
   }
 
   /* ---------- 재생 ---------- */
   var stage = document.getElementById('stage');
-  var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now();
+  var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now(), plIndex = {};
 
   function clearLayer(el) {
     if (!el) return;
@@ -299,22 +387,17 @@
   function stopAll() {
     token++; clearTimeout(timer); running = false;
     Array.prototype.slice.call(stage.children).forEach(clearLayer);
-    document.body.classList.remove('playing');
+    root.classList.remove('playing');
   }
-  function after(ms, my) {
-    clearTimeout(timer);
-    timer = setTimeout(function () { if (my === token) next(); }, ms);
-  }
+  function after(ms, my) { clearTimeout(timer); timer = setTimeout(function () { if (my === token) next(); }, ms); }
 
   function next() {
     if (!running) return;
-    // 하루 이상 켜져 있었으면 새벽 3~5시 사이에 한 번 새로고침
     var h = new Date().getHours();
     if (Date.now() - bootedAt > 20 * 3600 * 1000 && h >= 3 && h < 5) { location.reload(); return; }
-
     var my = ++token;
     clearTimeout(timer);
-    var list = eligible();
+    var list = eligible(screenKind());
     if (!list.length) { showIdle(); after(30000, my); return; }
     var pos = -1;
     for (var i = 0; i < list.length; i++) if (list[i].id === currentId) pos = i;
@@ -325,7 +408,6 @@
 
   function layer() { var d = document.createElement('div'); d.className = 'layer'; return d; }
   function secs(item, fallback) { var n = parseFloat(item.seconds); return (n > 0 ? n : fallback) * 1000; }
-
   function showIdle() {
     var el = layer();
     el.innerHTML = '<div class="slide text"><div class="t-title">AnnanGol 아난골</div><div class="t-rule"></div></div>';
@@ -335,280 +417,394 @@
   function show(item, my) {
     var el = layer();
 
-    if (item.type === 'menu') {
-      el.innerHTML = menuHtml();
-      swapIn(el); after(secs(item, 15), my); return;
-    }
+    if (item.type === 'menu') { el.innerHTML = menuHtml(item.view || 'today'); swapIn(el); after(secs(item, 15), my); return; }
     if (item.type === 'text') {
-      el.innerHTML = '<div class="slide text"><div class="t-title">' + esc(item.title) + '</div>' +
-        '<div class="t-rule"></div><div class="t-body">' + esc(item.body) + '</div></div>';
+      el.innerHTML = '<div class="slide text"><div class="t-title">' + esc(item.title) + '</div><div class="t-rule"></div>' +
+        '<div class="t-body">' + esc(item.body) + '</div></div>';
       swapIn(el); after(secs(item, 12), my); return;
     }
-
     if (item.type === 'image') {
-      resolveSrc(item.src).then(function (r) {
-        if (my !== token) { if (r && r.revoke) URL.revokeObjectURL(r.url); return; }
-        if (!r) { after(500, my); return; }
-        var img = new Image();
-        if (r.revoke) el._cleanup = function () { URL.revokeObjectURL(r.url); };
-        img.onload = function () { if (my !== token) return; el.appendChild(img); swapIn(el); after(secs(item, 10), my); };
-        img.onerror = function () { if (my !== token) return; clearLayer(el); after(500, my); };
-        img.src = r.url;
-      });
-      after(15000, my);   // 이미지가 끝내 안 열리면 다음으로
+      var img = new Image();
+      img.onload = function () { if (my !== token) return; el.appendChild(img); swapIn(el); after(secs(item, 10), my); };
+      img.onerror = function () { if (my === token) after(500, my); };
+      img.src = srcUrl(item.src);
+      after(15000, my);
       return;
     }
-
     if (item.type === 'video') {
-      resolveSrc(item.src).then(function (r) {
-        if (my !== token) { if (r && r.revoke) URL.revokeObjectURL(r.url); return; }
-        if (!r) { after(500, my); return; }
-        var v = document.createElement('video');
-        v.playsInline = true; v.preload = 'auto'; v.muted = !state.settings.sound;
-        el._cleanup = function () { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} if (r.revoke) URL.revokeObjectURL(r.url); };
-        v.onended = function () { if (my === token) next(); };
-        v.onerror = function () { if (my === token) after(500, my); };
-        v.onplaying = function () { clearTimeout(timer); };
-        v.src = r.url;
-        el.appendChild(v); swapIn(el);
-        var p = v.play();
-        if (p && p.catch) p.catch(function () { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function () { if (my === token) after(500, my); }); });
-      });
-      after(20000, my);   // 20초 안에 재생이 시작되지 않으면 다음으로
+      var v = document.createElement('video');
+      v.playsInline = true; v.preload = 'auto'; v.muted = !state.settings.sound;
+      el._cleanup = function () { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} };
+      v.onended = function () { if (my === token) next(); };
+      v.onerror = function () { if (my === token) after(500, my); };
+      v.onplaying = function () { if (my === token) clearTimeout(timer); };
+      v.src = srcUrl(item.src);
+      el.appendChild(v); swapIn(el);
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function () { if (my === token) after(500, my); }); });
+      after(20000, my);
       return;
     }
-
     if (item.type === 'youtube') {
-      var id = ytId(item.src);
+      var y = ytParse(item.src), isList = !!y.list, oneEach = isList && item.plMode === 'one';
       var holder = document.createElement('div'); holder.className = 'yt';
       var target = document.createElement('div'); holder.appendChild(target);
       el.appendChild(holder); swapIn(el);
-      after(25000, my);   // 25초 안에 재생이 시작되지 않으면 다음으로
+      after(25000, my);   // 25초 안에 재생이 시작되지 않으면 다음 항목으로
       loadYt().then(function (ok) {
         if (my !== token) return;
         if (!ok) { after(500, my); return; }
         var started = false, player;
-        player = new YT.Player(target, {
-          width: '100%', height: '100%', videoId: id,
-          playerVars: { autoplay: 1, controls: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3,
-                        disablekb: 1, fs: 0, mute: state.settings.sound ? 0 : 1, origin: location.origin },
-          events: {
-            onReady: function (e) {
-              if (my !== token) return;
-              if (!state.settings.sound) e.target.mute();
-              e.target.playVideo();
-              // 소리 있는 자동재생이 막히면 음소거로 다시 시도
-              setTimeout(function () {
-                if (my === token && !started) { try { e.target.mute(); e.target.playVideo(); } catch (x) {} }
-              }, 6000);
-            },
-            onStateChange: function (e) {
-              if (my !== token) return;
-              if (e.data === 1) { started = true; clearTimeout(timer); }
-              if (e.data === 0) next();
-            },
-            onError: function () { if (my === token) after(500, my); }
+        var vars = { autoplay: 1, controls: 0, rel: 0, playsinline: 1, iv_load_policy: 3, disablekb: 1, fs: 0,
+                     mute: state.settings.sound ? 0 : 1, origin: location.origin };
+        var cfg = { width: '100%', height: '100%', playerVars: vars };
+        if (isList) { vars.listType = 'playlist'; vars.list = y.list; if (oneEach) vars.index = plIndex[item.id] || 0; }
+        else cfg.videoId = y.video;
+        function listEnd() {
+          try { var pl = player.getPlaylist() || [], ix = player.getPlaylistIndex(); return { len: pl.length, ix: ix }; }
+          catch (e) { return { len: 0, ix: 0 }; }
+        }
+        cfg.events = {
+          onReady: function (e) {
+            if (my !== token) return;
+            if (!state.settings.sound) e.target.mute();
+            e.target.playVideo();
+            setTimeout(function () { if (my === token && !started) { try { e.target.mute(); e.target.playVideo(); } catch (x) {} } }, 6000);
+          },
+          onStateChange: function (e) {
+            if (my !== token) return;
+            if (e.data === 1) { started = true; clearTimeout(timer); }
+            if (e.data === 0) {
+              if (!isList) { next(); return; }
+              var s = listEnd();
+              if (oneEach) { plIndex[item.id] = s.len ? (s.ix + 1) % s.len : 0; next(); }
+              else if (!s.len || s.ix >= s.len - 1) next();
+              else after(25000, my);   // 다음 영상이 이어서 시작되지 않으면 넘어감
+            }
+          },
+          onError: function () {
+            if (my !== token) return;
+            var s = listEnd();
+            if (isList && !oneEach && s.len && s.ix < s.len - 1) { try { player.nextVideo(); after(25000, my); return; } catch (x) {} }
+            if (oneEach) plIndex[item.id] = s.len ? (s.ix + 1) % s.len : 0;
+            after(500, my);
           }
-        });
+        };
+        player = new YT.Player(target, cfg);
         el._cleanup = function () { try { player.destroy(); } catch (e) {} };
       });
       return;
     }
-
     after(500, my);
   }
 
-  function menuHtml() {
-    var m = state.menu, d = new Date().getDay();
-    var dish = (m.week[d] || '').trim();
-    var any = m.week.some(function (w) { return (w || '').trim(); });
-    var html = '<div class="slide menu"><div class="m-left">' +
-      '<div class="kj"><span class="k">K</span>-JjamBab</div>' +
-      '<div class="m-day">' + DAYS_KO[d] + ' · ' + DAYS_EN[d] + '</div>' +
-      '<div class="m-dish">' + esc(dish || '오늘의 백반') + '</div>' +
+  /* ---------- 짬밥 메뉴 슬라이드 ---------- */
+  function dayEntry(d) { var e = state.schedule[ymd(d)] || {}; return { main: (e.main || '').trim(), soup: (e.soup || '').trim(), sides: (e.sides || '').trim() }; }
+  function weekHasAny(mon) { for (var i = 0; i < 7; i++) { var e = dayEntry(addDays(mon, i)); if (e.main || e.soup || e.sides) return true; } return false; }
+  function menuHtml(view) {
+    var m = state.menu, today = new Date(), tkey = ymd(today), mon, i, d, e, h;
+    if (view === 'week' || view === 'next') {
+      mon = addDays(mondayOf(today), view === 'next' ? 7 : 0);
+      h = '<div class="slide week"><div class="w-head"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
+        '<div class="w-title">' + (view === 'next' ? '다음 주 메뉴' : '이번 주 메뉴') + '<small>' + md(mon) + ' – ' + md(addDays(mon, 6)) + '</small></div></div><div class="w-rows">';
+      for (i = 0; i < 7; i++) {
+        d = addDays(mon, i); e = dayEntry(d);
+        var ex = [e.soup, e.sides].filter(Boolean).join(' · ');
+        h += '<div class="w-row' + (ymd(d) === tkey ? ' today' : '') + '"><span class="d">' + DAY_KO[d.getDay()] + ' ' + md(d) + '</span>' +
+          '<span class="mn">' + esc(e.main || '—') + '</span>' + (ex ? '<span class="ex">' + esc(ex) + '</span>' : '') + '</div>';
+      }
+      return h + '</div><div class="w-foot"><span>' + esc(m.note || '') + '</span>' + (m.price ? '<span class="p">' + esc(m.price) + '</span>' : '') + '</div></div>';
+    }
+    e = dayEntry(today); mon = mondayOf(today);
+    h = '<div class="slide menu"><div class="m-left"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
+      '<div class="m-day">' + DAY_KO[today.getDay()] + '요일 · ' + DAY_EN[today.getDay()] + ' ' + md(today) + '</div>' +
+      '<div class="m-dish">' + esc(e.main || '오늘의 백반') + '</div>' +
+      ((e.soup || e.sides) ? '<div class="m-extra">' + (e.soup ? '<div><b>국</b>' + esc(e.soup) + '</div>' : '') + (e.sides ? '<div><b>반찬</b>' + esc(e.sides) + '</div>' : '') + '</div>' : '') +
       (m.note ? '<div class="m-sub">' + esc(m.note) + '</div>' : '') +
       (m.price ? '<div class="m-price">' + esc(m.price) + '</div>' : '') +
       (m.tagline ? '<div class="m-tag">' + esc(m.tagline) + '</div>' : '') + '</div>';
-    if (any) {
-      html += '<div class="m-week"><h3>WEEKLY MENU</h3>';
-      for (var i = 1; i <= 7; i++) {
-        var k = i % 7;   // 월요일부터
-        html += '<div class="row' + (k === d ? ' today' : '') + '"><span class="d">' + DAYS_KO[k].slice(0, 1) +
-          '</span><span>' + esc((m.week[k] || '').trim() || '—') + '</span></div>';
-      }
-      html += '</div>';
+    if (weekHasAny(mon)) {
+      h += '<div class="m-week"><h3>THIS WEEK</h3>';
+      for (i = 0; i < 7; i++) { d = addDays(mon, i);
+        h += '<div class="row' + (ymd(d) === tkey ? ' today' : '') + '"><span class="d">' + DAY_KO[d.getDay()] + '</span><span>' + esc(dayEntry(d).main || '—') + '</span></div>'; }
+      h += '</div>';
     }
-    return html + '</div>';
+    return h + '</div>';
   }
 
   /* ---------- 하단 바 / 시계 ---------- */
   function applyChrome() {
-    document.body.classList.toggle('bar-on', !!state.settings.showBar);
+    root.classList.toggle('bar-on', !!state.settings.showBar);
     document.getElementById('barText').textContent = state.settings.barText || '';
   }
   function tick() {
     var n = new Date(), h = n.getHours(), m = n.getMinutes();
-    document.getElementById('clock').textContent =
-      (h % 12 || 12) + ':' + (m < 10 ? '0' : '') + m + ' ' + (h < 12 ? 'AM' : 'PM');
+    document.getElementById('clock').textContent = (h % 12 || 12) + ':' + (m < 10 ? '0' : '') + m + ' ' + (h < 12 ? 'AM' : 'PM');
   }
-  setInterval(tick, 10000); tick(); applyChrome();
+  setInterval(tick, 10000); tick();
+  setInterval(function () { if (running) pull(); }, 60000);   // 관리자가 바꾼 내용을 1분 안에 반영
 
-  /* ---------- 시작 ---------- */
-  var startEl = document.getElementById('start');
-  var countdownEl = document.getElementById('countdown');
-  var autoTimer = null, left = 10;
+  /* ---------- 시작 화면 ---------- */
+  var startEl = document.getElementById('start'), countdownEl = document.getElementById('countdown');
+  var adminEl = document.getElementById('admin'), wbEl = document.getElementById('wb');
+  var autoTimer = null, left = 0;
 
+  function showStart(auto) {
+    stopAll(); adminEl.classList.add('hidden'); wbEl.classList.add('hidden');
+    startEl.classList.remove('hidden'); paintDev();
+    clearInterval(autoTimer); countdownEl.textContent = '';
+    if (auto) {
+      left = 12;
+      var say = function () { countdownEl.textContent = left + '초 후 자동으로 재생을 시작합니다. 버튼을 누르면 전체화면으로 시작합니다.'; };
+      say();
+      autoTimer = setInterval(function () { left--; say(); if (left <= 0) begin(false); }, 1000);
+    }
+  }
   function begin(viaTouch) {
     clearInterval(autoTimer);
     startEl.classList.add('hidden');
-    if (viaTouch) {
-      try { var p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
-    }
+    if (viaTouch) { try { var p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
     try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {}
-    document.body.classList.add('playing');
+    root.classList.add('playing');
     running = true; currentId = null; next();
   }
   document.getElementById('btnStart').addEventListener('click', function () { begin(true); });
-  document.getElementById('btnSettings').addEventListener('click', function () { clearInterval(autoTimer); countdownEl.textContent = ''; openAdmin(); });
-  autoTimer = setInterval(function () {
-    left--; countdownEl.textContent = left + '초 후 자동으로 시작합니다.';
-    if (left <= 0) begin(false);
-  }, 1000);
-  countdownEl.textContent = left + '초 후 자동으로 시작합니다.';
+  document.getElementById('btnBoard').addEventListener('click', function () { clearInterval(autoTimer); openBoard(); });
+  document.getElementById('btnAdmin').addEventListener('click', function () { clearInterval(autoTimer); openAdmin(); });
+  startEl.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.dataset.screen) { dev.screen = t.dataset.screen; }
+    else if (t.dataset.rot) { dev.rot = +t.dataset.rot; layout(); }
+    else return;
+    clearInterval(autoTimer); countdownEl.textContent = ''; saveDev(); paintDev();
+  });
 
-  /* 재생 중 설정 열기: 오른쪽 위 모서리 3번 터치, 또는 S 키 */
   var taps = [];
   document.getElementById('corner').addEventListener('click', function () {
     var t = Date.now(); taps = taps.filter(function (x) { return t - x < 2000; }); taps.push(t);
-    if (taps.length >= 3) { taps = []; openAdmin(); }
+    if (taps.length >= 3) { taps = []; showStart(false); }
   });
-  document.addEventListener('keydown', function (e) {
-    if (!adminEl.classList.contains('hidden')) return;
-    if (e.key === 's' || e.key === 'S') openAdmin();
-  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && running) showStart(false); });
 
-  /* ---------- 설정 화면 ---------- */
-  var adminEl = document.getElementById('admin');
-  var isWeb = /^https?:$/.test(location.protocol);
+  /* ---------- 화이트보드 ---------- */
+  var wbc = document.getElementById('wbc'), wctx = wbc.getContext('2d');
+  var strokes = [], live = {}, pen = { c: '#111111', w: 10 };
+  function wbResize() {
+    if (!LW) return;
+    var dpr = window.devicePixelRatio || 1;
+    wbc.width = Math.round(LW * dpr); wbc.height = Math.round(LH * dpr);
+    wctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    wbRedraw();
+  }
+  function wbStroke(s) {
+    if (!s.pts.length) return;
+    wctx.lineCap = 'round'; wctx.lineJoin = 'round';
+    wctx.strokeStyle = s.c === 'erase' ? '#ffffff' : s.c; wctx.lineWidth = s.c === 'erase' ? s.w * 4 : s.w;
+    wctx.beginPath(); wctx.moveTo(s.pts[0][0], s.pts[0][1]);
+    if (s.pts.length === 1) wctx.lineTo(s.pts[0][0] + 0.01, s.pts[0][1]);
+    for (var i = 1; i < s.pts.length; i++) wctx.lineTo(s.pts[i][0], s.pts[i][1]);
+    wctx.stroke();
+  }
+  function wbRedraw() { wctx.clearRect(0, 0, LW, LH); strokes.forEach(wbStroke); }
+  function wbPoint(e) {   // 회전된 화면에서도 손가락 위치를 맞춤
+    var x = e.clientX, y = e.clientY;
+    if (dev.rot === 90) return [y, window.innerWidth - x];
+    if (dev.rot === 270) return [window.innerHeight - y, x];
+    return [x, y];
+  }
+  wbc.addEventListener('pointerdown', function (e) {
+    e.preventDefault(); try { wbc.setPointerCapture(e.pointerId); } catch (x) {}
+    var s = { c: pen.c, w: pen.w, pts: [wbPoint(e)] }; live[e.pointerId] = s; strokes.push(s); wbStroke(s);
+  });
+  wbc.addEventListener('pointermove', function (e) {
+    var s = live[e.pointerId]; if (!s) return;
+    var p = wbPoint(e), q = s.pts[s.pts.length - 1];
+    s.pts.push(p);
+    wbStroke({ c: s.c, w: s.w, pts: [q, p] });
+  });
+  function wbUp(e) { delete live[e.pointerId]; }
+  wbc.addEventListener('pointerup', wbUp); wbc.addEventListener('pointercancel', wbUp);
+  function wbPaintTools() {
+    Array.prototype.forEach.call(document.querySelectorAll('#wbtools [data-c]'), function (b) { b.classList.toggle('sel', b.dataset.c === pen.c); });
+    Array.prototype.forEach.call(document.querySelectorAll('#wbtools [data-w]'), function (b) { b.classList.toggle('sel', +b.dataset.w === pen.w); });
+  }
+  document.getElementById('wbtools').addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.dataset.c) pen.c = t.dataset.c;
+    else if (t.dataset.w) pen.w = +t.dataset.w;
+    else if (t.id === 'wbUndo') { strokes.pop(); wbRedraw(); }
+    else if (t.id === 'wbClear') {
+      if (t.dataset.sure) { strokes = []; wbRedraw(); delete t.dataset.sure; t.textContent = '모두 지우기'; }
+      else { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 지움'; setTimeout(function () { delete t.dataset.sure; t.textContent = '모두 지우기'; }, 3000); }
+    }
+    else if (t.id === 'wbClose') { showStart(false); return; }
+    wbPaintTools();
+  });
+  function openBoard() { stopAll(); startEl.classList.add('hidden'); wbEl.classList.remove('hidden'); wbResize(); wbPaintTools(); }
+
+  /* ---------- 관리자 ---------- */
+  var saveTimer = null, saveMsg = '', schedWeek = 0;
 
   function openAdmin() {
-    clearInterval(autoTimer);
-    stopAll();
-    startEl.classList.add('hidden');
-    adminEl.classList.remove('hidden');
-    renderAdmin();
+    stopAll(); startEl.classList.add('hidden'); wbEl.classList.add('hidden'); adminEl.classList.remove('hidden');
+    adminEl.innerHTML = '<div class="login"><p class="help">연결 중…</p></div>';
+    call('me', { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) throw 0;
+      if (r.data.authed) pull().then(renderAdmin); else renderLogin('');
+    }).catch(function () {
+      adminEl.innerHTML = '<div class="login"><h1>관리자</h1><p class="warn">서버에 연결하지 못했습니다. 이 페이지는 annangol.com/display/ 주소로 열어야 관리자 기능이 작동합니다.</p><button id="btnBack">돌아가기</button></div>';
+    });
   }
-  function closeAdmin() {
-    saveState(); applyChrome();
-    adminEl.classList.add('hidden');
-    startEl.classList.remove('hidden');
-    countdownEl.textContent = '';
+  function renderLogin(msg) {
+    adminEl.innerHTML = '<form class="login" id="loginForm"><h1>아난골 디스플레이 관리자</h1>' +
+      '<p class="help">방문 통계 페이지와 같은 비밀번호를 사용합니다.</p>' +
+      '<input type="password" id="pw" placeholder="비밀번호" autocomplete="current-password">' +
+      (msg ? '<p class="warn">' + esc(msg) + '</p>' : '') +
+      '<button class="primary" type="submit">로그인</button><button type="button" id="btnBack">돌아가기</button></form>';
+    var pw = document.getElementById('pw'); if (pw) pw.focus();
+  }
+  adminEl.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (e.target.id !== 'loginForm') return;
+    postJson('login', { password: document.getElementById('pw').value }).then(function (r) {
+      if (r.ok && r.data.authed) pull().then(renderAdmin); else renderLogin('비밀번호가 맞지 않습니다.');
+    }).catch(function () { renderLogin('서버에 연결하지 못했습니다.'); });
+  });
+
+  function setMsg(t) { saveMsg = t; var el = document.getElementById('saveMsg'); if (el) el.textContent = t; }
+  function dirty() { setMsg('저장 대기 중…'); clearTimeout(saveTimer); saveTimer = setTimeout(pushState, 1200); }
+  function pushState() {
+    clearTimeout(saveTimer);
+    var cut = ymd(addDays(new Date(), -60));   // 두 달 지난 스케줄은 정리
+    Object.keys(state.schedule).forEach(function (k) { var e = state.schedule[k]; if (k < cut || !(e.main || e.soup || e.sides)) delete state.schedule[k]; });
+    setMsg('저장 중…');
+    return postJson('save', state).then(function (r) {
+      if (r.status === 401) { renderLogin('로그인이 만료되었습니다. 다시 로그인해 주세요.'); return; }
+      if (!r.ok) { setMsg('저장하지 못했습니다. 다시 시도해 주세요.'); return; }
+      version = r.data.version;
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ state: state, version: version })); } catch (e) {}
+      applyChrome();
+      setMsg('저장됨 · 매장 화면에는 1분 안에 반영됩니다.');
+    }).catch(function () { setMsg('저장하지 못했습니다. 인터넷 연결을 확인해 주세요.'); });
   }
 
+  function opt(v, label, cur) { return '<option value="' + v + '"' + (v === cur ? ' selected' : '') + '>' + label + '</option>'; }
   function itemCard(it, i) {
     var h = '<div class="card' + (it.on ? '' : ' off') + '" data-i="' + i + '"><div class="head">' +
-      '<span class="badge ' + it.type + '">' + TYPE_NAME[it.type] + '</span>' +
-      '<b>' + (i + 1) + '. ' + esc(it.label || '') + '</b><span class="sp"></span>' +
+      '<span class="badge ' + it.type + '">' + TYPE_NAME[it.type] + '</span><b>' + (i + 1) + '. ' + esc(it.label || '') + '</b><span class="sp"></span>' +
       '<button data-act="up">▲</button><button data-act="down">▼</button>' +
-      '<button data-act="toggle">' + (it.on ? '끄기' : '켜기') + '</button>' +
-      '<button class="danger" data-act="del">삭제</button></div><div class="grid">';
-    h += '<label class="c6">이름 (목록 표시용)<input type="text" data-f="label" value="' + esc(it.label) + '"></label>';
+      '<button data-act="toggle">' + (it.on ? '끄기' : '켜기') + '</button><button class="danger" data-act="del">삭제</button></div><div class="grid">';
+    h += '<label class="c4">이름 (목록 표시용)<input type="text" data-f="label" value="' + esc(it.label) + '"></label>';
+    h += '<label class="c2">나올 화면<select data-f="screens">' + opt('all', '모든 화면', it.screens) + opt('board', '보드만 (세로)', it.screens) + opt('tv', 'TV만 (가로)', it.screens) + '</select></label>';
     if (it.type === 'youtube') {
-      h += '<label class="c6">유튜브 주소<input type="text" data-f="src" placeholder="https://www.youtube.com/watch?v=..." value="' + esc(it.src) + '"></label>';
-      if (it.src && !ytId(it.src)) h += '<div class="c12 warn">유튜브 주소를 인식하지 못했습니다. 영상 한 개의 주소를 넣어 주세요.</div>';
+      var y = ytParse(it.src);
+      h += '<label class="c6">유튜브 주소 (영상 또는 재생목록)<input type="text" data-f="src" placeholder="https://www.youtube.com/watch?v=... 또는 playlist?list=..." value="' + esc(it.src) + '"></label>';
+      if (y.list) h += '<label class="c6">재생목록 재생 방식<select data-f="plMode">' + opt('all', '재생목록 전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
+      if (it.src && !y.video && !y.list) h += '<div class="c12 warn">유튜브 주소를 인식하지 못했습니다.</div>';
+      else if (y.list) h += '<div class="c6 note">재생목록으로 인식했습니다. 재생목록은 "공개" 또는 "일부 공개"여야 재생됩니다.</div>';
     } else if (it.type === 'image' || it.type === 'video') {
-      var stored = it.src && it.src.indexOf('idb:') === 0;
-      h += '<label class="c6">파일 주소 (웹에 올린 파일)<input type="text" data-f="src" placeholder="media/ad1.jpg 또는 https://..." value="' + esc(stored ? '' : it.src) + '"></label>';
-      h += '<label class="c6">또는 이 기기에서 파일 선택<input type="file" data-file accept="' + (it.type === 'image' ? 'image/*' : 'video/*') + '"></label>';
-      if (stored) h += '<div class="c12 note">이 기기에 저장된 파일 사용 중: ' + esc(it.fileName || '') + '</div>';
+      var up = it.src && it.src.indexOf('up:') === 0;
+      h += '<label class="c6">파일 올리기' + (it.type === 'image' ? ' (JPG · PNG · WEBP · GIF)' : ' (MP4 · WEBM · MOV)') +
+        '<input type="file" data-file accept="' + (it.type === 'image' ? 'image/*' : 'video/*') + '"></label>';
+      h += '<label class="c6">또는 파일 주소<input type="text" data-f="src" placeholder="https://..." value="' + esc(up ? '' : it.src) + '"></label>';
+      h += '<div class="c6 note" data-upmsg>' + (up ? '올린 파일: ' + esc(it.fileName || it.src.slice(3)) : '') + '</div>';
+      if (it.type === 'image' && it.src) h += '<div class="c6"><img class="thumb" src="' + esc(srcUrl(it.src)) + '" alt=""></div>';
     } else if (it.type === 'text') {
       h += '<label class="c6">큰 제목<input type="text" data-f="title" value="' + esc(it.title) + '"></label>';
       h += '<label class="c12">내용 (줄바꿈 가능)<textarea data-f="body">' + esc(it.body) + '</textarea></label>';
     } else if (it.type === 'menu') {
-      h += '<div class="c6 note">아래 "요일별 K-JjamBab 메뉴"에서 입력한 내용 중 오늘 요일의 메뉴를 보여줍니다.</div>';
+      h += '<label class="c6">보여줄 내용<select data-f="view">' + opt('today', '오늘의 메뉴', it.view || 'today') + opt('week', '이번 주 메뉴표', it.view || 'today') + opt('next', '다음 주 메뉴표', it.view || 'today') + '</select></label>';
     }
-    if (it.type === 'youtube' || it.type === 'video') {
-      h += '<div class="c4 note">영상은 끝까지 재생한 뒤 다음으로 넘어갑니다.</div>';
-    } else {
-      h += '<label class="c4">표시 시간 (초)<input type="number" min="3" data-f="seconds" value="' + esc(it.seconds) + '"></label>';
-    }
+    if (it.type === 'youtube' || it.type === 'video') h += '<div class="c4 note">영상은 끝까지 재생한 뒤 다음으로 넘어갑니다.</div>';
+    else h += '<label class="c4">표시 시간 (초)<input type="number" min="3" data-f="seconds" value="' + esc(it.seconds) + '"></label>';
     h += '<label class="c4">시작 시각 (비우면 종일)<input type="time" data-f="from" value="' + esc(it.from) + '"></label>';
     h += '<label class="c4">종료 시각<input type="time" data-f="to" value="' + esc(it.to) + '"></label>';
     return h + '</div></div>';
   }
 
+  function schedHtml() {
+    var today = new Date(), mon = addDays(mondayOf(today), schedWeek * 7), tkey = ymd(today);
+    var name = schedWeek === 0 ? '이번 주' : schedWeek === 1 ? '다음 주' : schedWeek === -1 ? '지난 주' : (schedWeek > 0 ? schedWeek + '주 뒤' : (-schedWeek) + '주 전');
+    var h = '<div class="addrow"><button data-wk="-1">◀ 이전 주</button>' +
+      '<button data-wkset="0"' + (schedWeek === 0 ? ' class="on"' : '') + '>이번 주</button>' +
+      '<button data-wkset="1"' + (schedWeek === 1 ? ' class="on"' : '') + '>다음 주</button>' +
+      '<button data-wk="1">다음 주 ▶</button><b style="margin-left:8px">' + name + ' · ' + md(mon) + ' – ' + md(addDays(mon, 6)) + '</b></div>';
+    h += '<div class="sched"><div class="drow hdr"><span></span><span>메인</span><span>국</span><span>반찬</span></div>';
+    for (var i = 0; i < 7; i++) {
+      var d = addDays(mon, i), k = ymd(d), e = state.schedule[k] || {};
+      h += '<div class="drow' + (k === tkey ? ' today' : '') + '"><span class="dl">' + DAY_KO[d.getDay()] + '요일<small>' + md(d) + (k === tkey ? ' · 오늘' : '') + '</small></span>' +
+        '<input type="text" data-day="' + k + '" data-k="main" placeholder="메인 (예: 불고기 백반)" value="' + esc(e.main) + '">' +
+        '<input type="text" data-day="' + k + '" data-k="soup" placeholder="국" value="' + esc(e.soup) + '">' +
+        '<input type="text" data-day="' + k + '" data-k="sides" placeholder="반찬" value="' + esc(e.sides) + '"></div>';
+    }
+    h += '</div><div class="addrow"><button id="btnCopyWeek">바로 앞 주 내용을 이 주로 복사</button><button class="danger" id="btnClearWeek">이 주 비우기</button></div>';
+    return h;
+  }
+
   function renderAdmin() {
-    var s = state.settings, m = state.menu, n = eligible().length;
-    var h = '<div class="wrap"><h1>아난골 디스플레이 설정</h1>' +
-      '<p class="help">위에서 아래 순서대로 반복 재생됩니다. 시작·종료 시각을 넣으면 그 시간대에만 나옵니다. 설정은 이 기기의 브라우저에 저장됩니다.</p>';
-    if (!isWeb) h += '<p class="warn">지금은 파일로 직접 연 상태입니다. 유튜브 영상은 웹 주소(https://...)로 열었을 때만 재생됩니다.</p>';
+    var s = state.settings, m = state.menu;
+    var h = '<div class="wrap"><h1>아난골 디스플레이 관리자</h1>' +
+      '<p class="help">여기서 바꾼 내용은 자동 저장되고, 매장의 보드와 TV에 1분 안에 반영됩니다. 위에서 아래 순서대로 반복 재생됩니다.</p>';
 
-    h += '<h2>재생 목록</h2><div class="addrow">' +
-      '<button data-add="youtube">+ 유튜브 영상</button><button data-add="image">+ 이미지 (광고)</button>' +
-      '<button data-add="video">+ 동영상 파일</button><button data-add="menu">+ 메뉴 슬라이드</button>' +
-      '<button data-add="text">+ 안내 문구</button></div><div id="items">';
-    state.items.forEach(function (it, i) { h += itemCard(it, i); });
-    h += '</div><p class="note">지금 시간대에 재생되는 항목: ' + n + '개</p>';
-
-    h += '<h2>요일별 K-JjamBab 메뉴</h2><p class="help">메뉴 슬라이드에 오늘의 메인 메뉴로 표시됩니다. 비워 두면 "오늘의 백반"으로 나옵니다.</p><div class="week">';
-    for (var i = 1; i <= 7; i++) { var k = i % 7;
-      h += '<label class="note">' + DAYS_KO[k] + '<input type="text" data-week="' + k + '" value="' + esc(m.week[k]) + '"></label>'; }
-    h += '</div><div class="grid" style="margin-top:12px">' +
-      '<label class="c3">가격<input type="text" data-menu="price" value="' + esc(m.price) + '"></label>' +
+    h += '<h2>K-JjamBab 주간 스케줄</h2><p class="help">날짜별로 메뉴를 넣어 두면 "짬밥 메뉴" 항목이 오늘의 메뉴와 주간 메뉴표를 자동으로 보여줍니다.</p><div id="sched">' + schedHtml() + '</div>' +
+      '<div class="grid" style="margin-top:6px"><label class="c3">가격<input type="text" data-menu="price" value="' + esc(m.price) + '"></label>' +
       '<label class="c4">안내 한 줄<input type="text" data-menu="note" value="' + esc(m.note) + '"></label>' +
       '<label class="c4" style="grid-column:span 5">문구<input type="text" data-menu="tagline" value="' + esc(m.tagline) + '"></label></div>';
+
+    h += '<h2>재생 목록</h2><div class="addrow">' +
+      '<button data-add="youtube">+ 유튜브 (영상 · 재생목록)</button><button data-add="image">+ 이미지 · 포스터</button>' +
+      '<button data-add="video">+ 동영상 파일</button><button data-add="menu">+ 짬밥 메뉴</button><button data-add="text">+ 안내 문구</button></div><div id="items">';
+    state.items.forEach(function (it, i) { h += itemCard(it, i); });
+    h += '</div><p class="note">지금 시간대 재생 항목 — 보드(세로): ' + eligible('board').length + '개 · TV(가로): ' + eligible('tv').length + '개</p>';
 
     h += '<h2>화면 설정</h2>' +
       '<label class="chk"><input type="checkbox" data-set="sound"' + (s.sound ? ' checked' : '') + '> 영상 소리 켜기</label>' +
       '<label class="chk"><input type="checkbox" data-set="showBar"' + (s.showBar ? ' checked' : '') + '> 하단 바 (매장명 · 안내 · 시계) 표시</label>' +
       '<div class="grid"><label class="c12">하단 바 안내 문구<input type="text" data-set="barText" value="' + esc(s.barText) + '"></label></div>';
 
-    h += '<h2>백업 / 다른 기기로 옮기기</h2><p class="help">아래 글자를 복사해 두면 설정을 백업할 수 있습니다. 다른 기기에서는 붙여넣고 "불러오기"를 누르세요. (이 기기에서 선택한 파일은 옮겨지지 않습니다.)</p>' +
-      '<textarea id="backup" style="min-height:110px;font-family:monospace;font-size:13px">' + esc(JSON.stringify(state)) + '</textarea>' +
-      '<div class="addrow"><button id="btnImport">불러오기</button><button class="danger" id="btnReset">처음 상태로 되돌리기</button><span class="note" id="backupMsg"></span></div>';
-
-    h += '</div><div id="savebar"><span>변경 내용은 자동 저장됩니다.</span><button class="primary" id="btnDone">저장하고 닫기</button></div>';
+    h += '</div><div id="savebar"><span id="saveMsg">' + esc(saveMsg) + '</span><button id="btnLogout">로그아웃</button><button class="primary" id="btnDone">닫기</button></div>';
+    var top = adminEl.scrollTop;
     adminEl.innerHTML = h;
+    adminEl.scrollTop = top;
   }
 
   function newItem(type) {
-    var it = { id: uid(), type: type, label: TYPE_NAME[type], from: '', to: '', on: true };
+    var it = { id: uid(), type: type, label: TYPE_NAME[type], from: '', to: '', screens: 'all', on: true };
     if (type === 'youtube' || type === 'image' || type === 'video') it.src = '';
     if (type === 'image') it.seconds = 10;
-    if (type === 'menu') { it.seconds = 15; it.label = '오늘의 K-JjamBab'; }
+    if (type === 'menu') { it.seconds = 15; it.view = 'today'; }
     if (type === 'text') { it.seconds = 12; it.title = '제목'; it.body = '내용을 입력하세요'; }
     return it;
   }
+  function dropFile(it) { if (it.src && it.src.indexOf('up:') === 0) postJson('delete', { file: it.src.slice(3) }).catch(function () {}); }
 
   adminEl.addEventListener('click', function (e) {
     var t = e.target;
-    if (t.dataset.add) { state.items.push(newItem(t.dataset.add)); saveState(); renderAdmin(); return; }
+    if (t.id === 'btnBack' || t.id === 'btnDone') { if (t.id === 'btnDone') { clearTimeout(saveTimer); pushState(); } showStart(false); return; }
+    if (t.id === 'btnLogout') { postJson('logout', {}).then(function () { showStart(false); }).catch(function () { showStart(false); }); return; }
+    if (t.dataset.add) { state.items.push(newItem(t.dataset.add)); renderAdmin(); dirty(); return; }
+    if (t.dataset.wk) { schedWeek += +t.dataset.wk; document.getElementById('sched').innerHTML = schedHtml(); return; }
+    if (t.dataset.wkset) { schedWeek = +t.dataset.wkset; document.getElementById('sched').innerHTML = schedHtml(); return; }
+    if (t.id === 'btnCopyWeek' || t.id === 'btnClearWeek') {
+      if (!t.dataset.sure) { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 실행합니다'; return; }
+      var mon = addDays(mondayOf(new Date()), schedWeek * 7);
+      for (var i = 0; i < 7; i++) {
+        var k = ymd(addDays(mon, i)), p = state.schedule[ymd(addDays(mon, i - 7))];
+        if (t.id === 'btnCopyWeek' && p) state.schedule[k] = { main: p.main || '', soup: p.soup || '', sides: p.sides || '' };
+        else delete state.schedule[k];
+      }
+      document.getElementById('sched').innerHTML = schedHtml(); dirty(); return;
+    }
     if (t.dataset.act) {
-      var i = +t.closest('.card').dataset.i, it = state.items[i], a = t.dataset.act;
-      if (a === 'up' && i > 0) { state.items.splice(i - 1, 0, state.items.splice(i, 1)[0]); }
-      if (a === 'down' && i < state.items.length - 1) { state.items.splice(i + 1, 0, state.items.splice(i, 1)[0]); }
+      var idx = +t.closest('.card').dataset.i, it = state.items[idx], a = t.dataset.act;
+      if (a === 'up' && idx > 0) state.items.splice(idx - 1, 0, state.items.splice(idx, 1)[0]);
+      if (a === 'down' && idx < state.items.length - 1) state.items.splice(idx + 1, 0, state.items.splice(idx, 1)[0]);
       if (a === 'toggle') it.on = !it.on;
       if (a === 'del') {
-        if (t.dataset.sure) {
-          if (it.src && it.src.indexOf('idb:') === 0) idbDel(it.src.slice(4));
-          state.items.splice(i, 1);
-        } else { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 삭제'; return; }
+        if (!t.dataset.sure) { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 삭제'; return; }
+        dropFile(it); state.items.splice(idx, 1);
       }
-      saveState(); renderAdmin(); return;
-    }
-    if (t.id === 'btnDone') { closeAdmin(); return; }
-    if (t.id === 'btnImport') {
-      var msg = document.getElementById('backupMsg');
-      try {
-        var s = JSON.parse(document.getElementById('backup').value);
-        if (!s || !Array.isArray(s.items)) throw 0;
-        localStorage.setItem(LS_KEY, JSON.stringify(s)); state = loadState(); renderAdmin();
-      } catch (x) { msg.textContent = '불러오지 못했습니다. 복사한 내용을 다시 확인해 주세요.'; }
-      return;
-    }
-    if (t.id === 'btnReset') {
-      if (t.dataset.sure) { try { localStorage.removeItem(LS_KEY); } catch (x) {} state = defaults(); saveState(); renderAdmin(); }
-      else { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 모두 지웁니다'; }
+      renderAdmin(); dirty();
     }
   });
 
@@ -616,28 +812,53 @@
     var t = e.target;
     if (t.dataset.f) {
       var it = state.items[+t.closest('.card').dataset.i];
-      if (t.dataset.f === 'src' && it.src && it.src.indexOf('idb:') === 0 && !t.value) return;
+      if (t.dataset.f === 'src' && it.src && it.src.indexOf('up:') === 0 && !t.value) return;
+      if (t.dataset.f === 'src' && it.src && it.src.indexOf('up:') === 0) { dropFile(it); delete it.fileName; }
       it[t.dataset.f] = t.type === 'number' ? (parseFloat(t.value) || '') : t.value;
-    } else if (t.dataset.week) { state.menu.week[+t.dataset.week] = t.value; }
-    else if (t.dataset.menu) { state.menu[t.dataset.menu] = t.value; }
+    } else if (t.dataset.day) {
+      var e2 = state.schedule[t.dataset.day] || (state.schedule[t.dataset.day] = { main: '', soup: '', sides: '' });
+      e2[t.dataset.k] = t.value;
+    } else if (t.dataset.menu) { state.menu[t.dataset.menu] = t.value; }
     else if (t.dataset.set && t.type !== 'checkbox') { state.settings[t.dataset.set] = t.value; }
     else return;
-    saveState();
+    dirty();
   });
 
   adminEl.addEventListener('change', function (e) {
     var t = e.target;
-    if (t.dataset.set && t.type === 'checkbox') { state.settings[t.dataset.set] = t.checked; saveState(); return; }
+    if (t.dataset.set && t.type === 'checkbox') { state.settings[t.dataset.set] = t.checked; dirty(); return; }
+    if (t.tagName === 'SELECT' && t.dataset.f) { renderAdmin(); return; }
+    if (t.dataset.f === 'src') { renderAdmin(); return; }
     if (t.hasAttribute('data-file') && t.files && t.files[0]) {
-      var it = state.items[+t.closest('.card').dataset.i], f = t.files[0], key = it.id;
-      idbPut(key, f).then(function (ok) {
-        if (ok) { it.src = 'idb:' + key; it.fileName = f.name; if (!it.label || it.label === TYPE_NAME[it.type]) it.label = f.name; saveState(); }
-        renderAdmin();
-        if (!ok) { var c = adminEl.querySelector('.card[data-i="' + state.items.indexOf(it) + '"] .grid');
-          if (c) c.insertAdjacentHTML('beforeend', '<div class="c12 warn">이 기기에 파일을 저장하지 못했습니다. 파일을 웹에 올리고 주소를 넣어 주세요.</div>'); }
-      });
+      var card = t.closest('.card'), it = state.items[+card.dataset.i], f = t.files[0], msg = card.querySelector('[data-upmsg]');
+      var fd = new FormData(); fd.append('file', f);
+      var x = new XMLHttpRequest();
+      x.open('POST', API + '?a=upload'); x.withCredentials = true;
+      x.upload.onprogress = function (ev) { if (ev.lengthComputable && msg) msg.textContent = '올리는 중… ' + Math.round(ev.loaded / ev.total * 100) + '%'; };
+      x.onerror = function () { if (msg) { msg.className = 'c6 warn'; msg.textContent = '올리지 못했습니다. 인터넷 연결을 확인해 주세요.'; } };
+      x.onload = function () {
+        var r = {}; try { r = JSON.parse(x.responseText); } catch (er) {}
+        if (x.status === 401) { renderLogin('로그인이 만료되었습니다. 다시 로그인해 주세요.'); return; }
+        if (x.status !== 200 || !r.ok) {
+          var why = r.error === 'too_large' ? '파일이 너무 큽니다' + (r.limit ? ' (서버 한도 ' + r.limit + ')' : '') + '. 큰 영상은 유튜브에 올려 주소로 넣어 주세요.'
+            : r.error === 'type' ? '올릴 수 없는 파일 형식입니다.' : '올리지 못했습니다.';
+          if (x.status === 413) why = '파일이 너무 큽니다. 큰 영상은 유튜브에 올려 주소로 넣어 주세요.';
+          if (msg) { msg.className = 'c6 warn'; msg.textContent = why; }
+          return;
+        }
+        dropFile(it);
+        it.src = 'up:' + r.file; it.fileName = r.name;
+        if (!it.label || it.label === TYPE_NAME[it.type]) it.label = r.name;
+        renderAdmin(); pushState();
+      };
+      x.send(fd);
     }
   });
+
+  /* ---------- 시작 ---------- */
+  layout(); applyChrome(); paintDev();
+  var wantsAdmin = /(^|[?&])admin\b/.test(location.search) || location.hash === '#admin';
+  pull().then(function () { if (wantsAdmin) openAdmin(); else showStart(true); });
 })();
 </script>
 </body>
