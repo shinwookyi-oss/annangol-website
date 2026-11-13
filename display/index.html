@@ -103,6 +103,8 @@
     border:1px solid var(--muted); background:transparent; color:var(--cream); cursor:pointer; }
   .seg.sel { background:var(--cream); color:var(--ink); font-weight:700; }
 
+  #mutebadge { position:absolute; left:calc(2 * var(--u)); top:calc(2 * var(--u)); z-index:25; pointer-events:none; background:rgba(0,0,0,.72);
+    color:#fff; font-size:calc(2.4 * var(--u)); padding:calc(1 * var(--u)) calc(2 * var(--u)); border-radius:calc(1 * var(--u)); }
   #corner { position:absolute; top:0; right:0; width:calc(14 * var(--u)); height:calc(14 * var(--u)); z-index:20; }
 
   /* ---------- whiteboard ---------- */
@@ -174,6 +176,7 @@
 </div>
 
 <div id="corner"></div>
+<div id="mutebadge" class="hidden">🔇 화면을 한 번 터치하면 소리가 켜집니다</div>
 
 <div id="start">
   <h1>AnnanGol <span>Display</span></h1>
@@ -393,6 +396,14 @@
   var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now(), plIndex = {}, gap = {}, lastNormal = false;
   function every(i) { return (i.type === 'youtube' || i.type === 'video') ? (parseInt(i.every, 10) || 0) : 0; }
 
+  // 소리: 브라우저가 터치 없이 시작한 소리 재생을 막으면 음소거로 틀고, 화면을 터치하면 바로 소리를 켠다
+  var media = null, badge = document.getElementById('mutebadge');
+  function mutedFallback() { if (state.settings.sound) badge.classList.remove('hidden'); }
+  document.addEventListener('pointerdown', function () {
+    if (!running || !state.settings.sound) return;
+    badge.classList.add('hidden');
+    if (media) { try { media.unmute(); } catch (e) {} }
+  }, true);
   function clearLayer(el) {
     if (!el) return;
     if (el._cleanup) { try { el._cleanup(); } catch (e) {} el._cleanup = null; }
@@ -417,6 +428,7 @@
     if (Date.now() - bootedAt > 20 * 3600 * 1000 && h >= 3 && h < 5) { location.reload(); return; }
     var my = ++token;
     clearTimeout(timer);
+    media = null; badge.classList.add('hidden');
     var all = eligible(screenKind());
     if (!all.length) { showIdle(); after(30000, my); return; }
     // "사이사이" 항목은 목록 순서에서 빼 두었다가, 일반 항목 N개가 지나갈 때마다 하나씩 끼워 넣는다
@@ -472,7 +484,8 @@
       v.src = srcUrl(item.src);
       el.appendChild(v); swapIn(el);
       var p = v.play();
-      if (p && p.catch) p.catch(function () { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function () { if (my === token) after(500, my); }); });
+      media = { unmute: function () { v.muted = false; } };
+      if (p && p.catch) p.catch(function () { v.muted = true; mutedFallback(); var q = v.play(); if (q && q.catch) q.catch(function () { if (my === token) after(500, my); }); });
       after(20000, my);
       return;
     }
@@ -506,9 +519,17 @@
         cfg.events = {
           onReady: function (e) {
             if (my !== token) return;
-            if (!state.settings.sound) e.target.mute();
+            // 유튜브 플레이어는 이전의 음소거 상태를 기억하므로 매번 명시적으로 맞춘다
+            if (state.settings.sound) { try { e.target.unMute(); e.target.setVolume(100); } catch (x) {} } else e.target.mute();
+            media = { unmute: function () { player.unMute(); player.setVolume(100); } };
             e.target.playVideo();
-            setTimeout(function () { if (my === token && !started) { try { e.target.mute(); e.target.playVideo(); } catch (x) {} } }, 6000);
+            var tries = 0, watch = function () {
+              if (my !== token || started) return;
+              var st = -1; try { st = e.target.getPlayerState(); } catch (x) {}
+              if (st === 3 && tries++ < 2) { setTimeout(watch, 5000); return; }   // 버퍼링 중이면 더 기다림
+              try { e.target.mute(); e.target.playVideo(); mutedFallback(); } catch (x) {}
+            };
+            setTimeout(watch, 6000);
           },
           onStateChange: function (e) {
             if (my !== token) return;
