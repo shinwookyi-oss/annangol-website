@@ -175,17 +175,16 @@
 
 <div id="start">
   <h1>AnnanGol <span>Display</span></h1>
-  <p id="countdown"></p>
+  <p id="countdown">이 화면에서 무엇을 할지 골라 주세요.</p>
   <div class="btns">
-    <button class="big go" id="btnStart">▶ 재생 시작</button>
+    <button class="big go" data-go="board">▶ 보드로 시작 (세로)</button>
+    <button class="big go" data-go="tv">▶ TV로 시작 (가로)</button>
+  </div>
+  <div class="btns">
+    <button class="big" id="btnAdmin">⚙ 관리자 로그인</button>
     <button class="big" id="btnBoard">✎ 화이트보드</button>
-    <button class="big" id="btnAdmin">⚙ 관리자</button>
   </div>
   <div class="dev">
-    <div class="line">이 화면:
-      <button class="seg" data-screen="board">보드 (세로)</button>
-      <button class="seg" data-screen="tv">TV (가로)</button>
-    </div>
     <div class="line">화면 회전:
       <button class="seg" data-rot="0">회전 없음</button>
       <button class="seg" data-rot="90">90°</button>
@@ -313,7 +312,7 @@
   try { var dv = JSON.parse(localStorage.getItem(DEV_KEY)); if (dv) { dev.screen = dv.screen || ''; dev.rot = +dv.rot || 0; } } catch (e) {}
   (function () {
     var q = new URLSearchParams(location.search);
-    if (q.get('s') === 'board' || q.get('s') === 'tv') dev.screen = q.get('s');
+    if (q.get('s') === 'board' || q.get('s') === 'tv') { dev.screen = q.get('s'); try { localStorage.setItem(DEV_KEY, JSON.stringify(dev)); } catch (e) {} }
     if (q.get('r') === '0' || q.get('r') === '90' || q.get('r') === '270') dev.rot = +q.get('r');
   })();
   function saveDev() { try { localStorage.setItem(DEV_KEY, JSON.stringify(dev)); } catch (e) {} }
@@ -330,7 +329,6 @@
   }
   function screenKind() { return dev.screen || (LH > LW ? 'board' : 'tv'); }
   function paintDev() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-screen]'), function (b) { b.classList.toggle('sel', b.dataset.screen === screenKind()); });
     Array.prototype.forEach.call(document.querySelectorAll('[data-rot]'), function (b) { b.classList.toggle('sel', +b.dataset.rot === dev.rot); });
   }
   window.addEventListener('resize', layout);
@@ -603,10 +601,10 @@
   function showStart(auto) {
     stopAll(); adminEl.classList.add('hidden'); wbEl.classList.add('hidden');
     startEl.classList.remove('hidden'); paintDev();
-    clearInterval(autoTimer); countdownEl.textContent = '';
-    if (auto) {
+    clearInterval(autoTimer); countdownEl.textContent = '이 화면에서 무엇을 할지 골라 주세요.';
+    if (auto && dev.screen) {   // 한 번 고른 기기는 다음부터 자동으로 시작
       left = 12;
-      var say = function () { countdownEl.textContent = left + '초 후 자동으로 재생을 시작합니다. 버튼을 누르면 전체화면으로 시작합니다.'; };
+      var say = function () { countdownEl.textContent = left + '초 후 ' + (dev.screen === 'tv' ? 'TV(가로)' : '보드(세로)') + ' 화면으로 자동 시작합니다.'; };
       say();
       autoTimer = setInterval(function () { left--; say(); if (left <= 0) begin(false); }, 1000);
     }
@@ -619,15 +617,14 @@
     root.classList.add('playing');
     running = true; currentId = null; lastNormal = false; next();
   }
-  document.getElementById('btnStart').addEventListener('click', function () { begin(true); });
   document.getElementById('btnBoard').addEventListener('click', function () { clearInterval(autoTimer); openBoard(); });
   document.getElementById('btnAdmin').addEventListener('click', function () { clearInterval(autoTimer); openAdmin(); });
   startEl.addEventListener('click', function (e) {
     var t = e.target;
-    if (t.dataset.screen) { dev.screen = t.dataset.screen; }
-    else if (t.dataset.rot) { dev.rot = +t.dataset.rot; layout(); }
-    else return;
-    clearInterval(autoTimer); countdownEl.textContent = ''; saveDev(); paintDev();
+    if (t.dataset.go) { dev.screen = t.dataset.go; saveDev(); begin(true); return; }
+    if (!t.dataset.rot) return;
+    dev.rot = +t.dataset.rot; layout();
+    clearInterval(autoTimer); countdownEl.textContent = '이 화면에서 무엇을 할지 골라 주세요.'; saveDev(); paintDev();
   });
 
   var taps = [];
