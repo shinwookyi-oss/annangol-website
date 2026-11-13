@@ -329,11 +329,17 @@
   /* ---------- 주소 해석 ---------- */
   function srcUrl(src) { return src && src.indexOf('up:') === 0 ? API + '?a=file&f=' + encodeURIComponent(src.slice(3)) : (src || ''); }
   function ytParse(input) {
-    var s = String(input || '').trim(), out = { video: '', list: '' };
-    var l = s.match(/[?&]list=([\w-]{10,})/); if (l) out.list = l[1];
-    if (/^[\w-]{11}$/.test(s)) out.video = s;
-    else if (/^(PL|UU|FL|OL|RD)[\w-]{10,}$/.test(s)) out.list = s;
-    else { var m = s.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/); if (m) out.video = m[1]; }
+    // 한 줄에 하나씩 여러 주소를 넣을 수 있다. 재생목록 주소가 있으면 재생목록이 우선.
+    var out = { video: '', videos: [], list: '' };
+    String(input || '').split(/[\s,]+/).forEach(function (s) {
+      if (!s) return;
+      var l = s.match(/[?&]list=([\w-]{10,})/);
+      if (l) { if (!out.list) out.list = l[1]; return; }
+      if (/^(PL|UU|FL|OL|RD)[\w-]{10,}$/.test(s)) { if (!out.list) out.list = s; return; }
+      var m = /^[\w-]{11}$/.test(s) ? [0, s] : s.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/);
+      if (m) out.videos.push(m[1]);
+    });
+    out.video = out.videos[0] || '';
     return out;
   }
   var ytReady = null;
@@ -462,7 +468,9 @@
       return;
     }
     if (item.type === 'youtube') {
-      var y = ytParse(item.src), isList = !!y.list, oneEach = isList && (item.plMode === 'one' || every(item) > 0);
+      var y = ytParse(item.src), isList = !!y.list, multi = !isList && y.videos.length > 1;
+      var oneEach = (isList || multi) && (item.plMode === 'one' || every(item) > 0);
+      var vi = multi && oneEach ? (plIndex[item.id] || 0) % y.videos.length : 0;
       var holder = document.createElement('div'); holder.className = 'yt';
       var target = document.createElement('div'); holder.appendChild(target);
       el.appendChild(holder); swapIn(el);
@@ -475,7 +483,13 @@
                      mute: state.settings.sound ? 0 : 1, origin: location.origin };
         var cfg = { width: '100%', height: '100%', playerVars: vars };
         if (isList) { vars.listType = 'playlist'; vars.list = y.list; if (oneEach) vars.index = plIndex[item.id] || 0; }
-        else cfg.videoId = y.video;
+        else cfg.videoId = y.videos[vi];
+        function multiNext() {   // 여러 영상을 넣은 항목: 다음 영상으로, 끝이면 다음 항목으로
+          if (oneEach) { plIndex[item.id] = (vi + 1) % y.videos.length; return false; }
+          vi++; if (vi >= y.videos.length) return false;
+          try { player.loadVideoById(y.videos[vi]); } catch (x) { return false; }
+          after(25000, my); return true;
+        }
         function listEnd() {
           try { var pl = player.getPlaylist() || [], ix = player.getPlaylistIndex(); return { len: pl.length, ix: ix }; }
           catch (e) { return { len: 0, ix: 0 }; }
@@ -491,6 +505,7 @@
             if (my !== token) return;
             if (e.data === 1) { started = true; clearTimeout(timer); }
             if (e.data === 0) {
+              if (multi) { if (!multiNext()) next(); return; }
               if (!isList) { next(); return; }
               var s = listEnd();
               if (oneEach) { plIndex[item.id] = s.len ? (s.ix + 1) % s.len : 0; next(); }
@@ -500,6 +515,7 @@
           },
           onError: function () {
             if (my !== token) return;
+            if (multi) { if (!multiNext()) after(500, my); return; }
             var s = listEnd();
             if (isList && !oneEach && s.len && s.ix < s.len - 1) { try { player.nextVideo(); after(25000, my); return; } catch (x) {} }
             if (oneEach) plIndex[item.id] = s.len ? (s.ix + 1) % s.len : 0;
@@ -723,8 +739,9 @@
     h += '<label class="c2">나올 화면<select data-f="screens">' + opt('all', '모든 화면', it.screens) + opt('board', '보드만 (세로)', it.screens) + opt('tv', 'TV만 (가로)', it.screens) + '</select></label>';
     if (it.type === 'youtube') {
       var y = ytParse(it.src);
-      h += '<label class="c6">유튜브 주소 (영상 또는 재생목록)<input type="text" data-f="src" placeholder="https://www.youtube.com/watch?v=... 또는 playlist?list=..." value="' + esc(it.src) + '"></label>';
-      if (y.list && !(every(it) > 0)) h += '<label class="c6">재생목록 재생 방식<select data-f="plMode">' + opt('all', '재생목록 전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
+      h += '<label class="c6">유튜브 주소 (영상 여러 개는 한 줄에 하나씩 · 재생목록 주소도 가능)<textarea data-f="src" placeholder="https://www.youtube.com/watch?v=...">' + esc(it.src) + '</textarea></label>';
+      if (!y.list && y.videos.length > 1) h += '<div class="c6 note">영상 ' + y.videos.length + '개를 인식했습니다.</div>';
+      if ((y.list || y.videos.length > 1) && !(every(it) > 0)) h += '<label class="c6">여러 영상 재생 방식<select data-f="plMode">' + opt('all', '전체를 이어서 재생', it.plMode || 'all') + opt('one', '차례가 올 때마다 한 영상씩', it.plMode || 'all') + '</select></label>';
       if (it.src && !y.video && !y.list) h += '<div class="c12 warn">유튜브 주소를 인식하지 못했습니다.</div>';
       else if (y.list) h += '<div class="c6 note">재생목록으로 인식했습니다. 재생목록은 "공개" 또는 "일부 공개"여야 재생됩니다.' + (every(it) > 0 ? ' 사이사이 끼워 넣을 때는 차례마다 한 곡씩 이어서 재생합니다.' : '') + '</div>';
     } else if (it.type === 'image' || it.type === 'video') {
