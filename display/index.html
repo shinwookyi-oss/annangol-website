@@ -257,7 +257,7 @@
   /* ---------- 상태 ---------- */
   function defaults() {
     return {
-      settings: { sound: true, showBar: true, barText: 'Open 7 AM – 10 PM Daily · (703) 914-4600' },
+      settings: { sound: true, shuffle: false, showBar: true, barText: 'Open 7 AM – 10 PM Daily · (703) 914-4600' },
       menu: { price: '$13.99', special: '', specialLabel: '특가', specialUntil: '', note: '매일 아침 7–10 AM', tagline: '한국인의 힘은 든든한 아침 짬밥에서' },
       schedule: {},
       items: [
@@ -396,6 +396,8 @@
   /* ---------- 재생 ---------- */
   var stage = document.getElementById('stage');
   var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now(), plIndex = {}, gap = {}, lastNormal = false;
+  var resume = {}, bag = [];   // resume: 시간 제한으로 끊은 영상의 이어보기 위치, bag: 셔플 때 이번 바퀴에 남은 항목
+  function shuffleArr(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function every(i) { return (i.type === 'youtube' || i.type === 'video') ? (parseInt(i.every, 10) || 0) : 0; }
 
   // 소리: 브라우저가 터치 없이 시작한 소리 재생을 막으면 음소거로 틀고, 화면을 터치하면 바로 소리를 켠다
@@ -443,9 +445,16 @@
     } else { list = inters; }
     if (item) { gap[item.id] = 0; lastNormal = false; }
     else {
-      var pos = -1;
-      for (var i = 0; i < list.length; i++) if (list[i].id === currentId) pos = i;
-      item = list[(pos + 1) % list.length];
+      if (state.settings.shuffle && list.length > 1) {   // 셔플: 한 바퀴 안에서는 겹치지 않게 무작위 순서
+        bag = bag.filter(function (id) { return list.some(function (i) { return i.id === id; }); });
+        if (!bag.length) { bag = shuffleArr(list.map(function (i) { return i.id; })); if (bag[0] === currentId) bag.push(bag.shift()); }
+        var pick = bag.shift();
+        item = list.filter(function (i) { return i.id === pick; })[0];
+      } else {
+        var pos = -1;
+        for (var i = 0; i < list.length; i++) if (list[i].id === currentId) pos = i;
+        item = list[(pos + 1) % list.length];
+      }
       currentId = item.id; lastNormal = true;
     }
     try { show(item, my); } catch (e) { after(1500, my); }
@@ -479,10 +488,16 @@
     if (item.type === 'video') {
       var v = document.createElement('video');
       v.playsInline = true; v.preload = 'auto'; v.muted = !state.settings.sound;
-      el._cleanup = function () { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} };
-      v.onended = function () { if (my === token) next(); };
+      var vcut = (parseFloat(item.maxMin) || 0) * 60000, vr = resume[item.id], vct = null;
+      el._cleanup = function () { clearTimeout(vct); try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} };
+      v.onloadedmetadata = function () { if (vr && vcut && vr.t < v.duration - 5) { try { v.currentTime = vr.t; } catch (e) {} } };
+      v.onended = function () { delete resume[item.id]; if (my === token) next(); };
       v.onerror = function () { if (my === token) after(500, my); };
-      v.onplaying = function () { if (my === token) clearTimeout(timer); };
+      v.onplaying = function () {
+        if (my !== token) return;
+        clearTimeout(timer);
+        if (vcut && !vct) vct = setTimeout(function () { if (my !== token) return; resume[item.id] = { t: v.currentTime }; next(); }, vcut);
+      };
       v.src = srcUrl(item.src);
       el.appendChild(v); swapIn(el);
       var p = v.play();
@@ -494,7 +509,15 @@
     if (item.type === 'youtube') {
       var y = ytParse(item.src), isList = !!y.list, multi = !isList && y.videos.length > 1;
       var oneEach = (isList || multi) && (item.plMode === 'one' || every(item) > 0);
-      var vi = multi && oneEach ? (plIndex[item.id] || 0) % y.videos.length : 0;
+      var shuf = !!state.settings.shuffle, vids = y.videos.slice();
+      if (shuf && multi && !oneEach) shuffleArr(vids);
+      var vi = multi && oneEach ? (shuf ? Math.floor(Math.random() * vids.length) : (plIndex[item.id] || 0) % vids.length) : 0;
+      // 시간 제한(분)이 있으면 그만큼만 틀고 넘어가며, 다음 차례에 끊긴 곳부터 이어서 튼다
+      var cut = (parseFloat(item.maxMin) || 0) * 60000, cutTimer = null, startAt = 0, rs = (!isList && cut) ? resume[item.id] : null;
+      if (rs) {
+        var ri = vids.indexOf(rs.v);
+        if (ri >= 0) { if (multi && !oneEach) { vids.splice(ri, 1); vids.unshift(rs.v); vi = 0; } else vi = ri; startAt = Math.floor(rs.t || 0); }
+      }
       var holder = document.createElement('div'); holder.className = 'yt';
       var target = document.createElement('div'); holder.appendChild(target);
       el.appendChild(holder); swapIn(el);
@@ -507,11 +530,11 @@
                      mute: state.settings.sound ? 0 : 1, origin: location.origin };
         var cfg = { width: '100%', height: '100%', playerVars: vars };
         if (isList) { vars.listType = 'playlist'; vars.list = y.list; if (oneEach) vars.index = plIndex[item.id] || 0; }
-        else cfg.videoId = y.videos[vi];
+        else { cfg.videoId = vids[vi]; if (startAt) vars.start = startAt; }
         function multiNext() {   // 여러 영상을 넣은 항목: 다음 영상으로, 끝이면 다음 항목으로
-          if (oneEach) { plIndex[item.id] = (vi + 1) % y.videos.length; return false; }
-          vi++; if (vi >= y.videos.length) return false;
-          try { player.loadVideoById(y.videos[vi]); } catch (x) { return false; }
+          if (oneEach) { plIndex[item.id] = (vi + 1) % vids.length; return false; }
+          vi++; if (vi >= vids.length) return false;
+          try { player.loadVideoById(vids[vi]); } catch (x) { return false; }
           after(25000, my); return true;
         }
         function listEnd() {
@@ -524,6 +547,7 @@
             // 유튜브 플레이어는 이전의 음소거 상태를 기억하므로 매번 명시적으로 맞춘다
             if (state.settings.sound) { try { e.target.unMute(); e.target.setVolume(100); } catch (x) {} } else e.target.mute();
             media = { unmute: function () { player.unMute(); player.setVolume(100); } };
+            if (isList && shuf) { try { e.target.setShuffle(true); } catch (x) {} }
             e.target.playVideo();
             var tries = 0, watch = function () {
               if (my !== token || started) return;
@@ -535,8 +559,18 @@
           },
           onStateChange: function (e) {
             if (my !== token) return;
-            if (e.data === 1) { started = true; clearTimeout(timer); }
+            if (e.data === 1) {
+              started = true; clearTimeout(timer);
+              if (cut && !cutTimer) cutTimer = setTimeout(function () {
+                if (my !== token) return;
+                var t = 0; try { t = player.getCurrentTime(); } catch (x) {}
+                if (!isList) resume[item.id] = { v: vids[vi], t: t };
+                else if (oneEach) { var q = listEnd(); plIndex[item.id] = q.len ? (q.ix + 1) % q.len : 0; }
+                next();
+              }, cut);
+            }
             if (e.data === 0) {
+              delete resume[item.id];
               if (multi) { if (!multiNext()) next(); return; }
               if (!isList) { next(); return; }
               var s = listEnd();
@@ -555,7 +589,7 @@
           }
         };
         player = new YT.Player(target, cfg);
-        el._cleanup = function () { try { player.destroy(); } catch (e) {} };
+        el._cleanup = function () { clearTimeout(cutTimer); try { player.destroy(); } catch (e) {} };
       });
       return;
     }
@@ -796,6 +830,7 @@
     }
     if (it.type === 'youtube' || it.type === 'video') h += '<label class="c4">사이사이 끼워 넣기 (다른 항목 몇 개마다 · 비우면 목록 순서대로)<input type="number" min="0" data-f="every" placeholder="예: 3" value="' + esc(it.every || '') + '"></label>';
     else h += '<label class="c4">표시 시간 (초)<input type="number" min="3" data-f="seconds" value="' + esc(it.seconds) + '"></label>';
+    if (it.type === 'youtube' || it.type === 'video') h += '<label class="c4">한 번에 재생할 시간 (분 · 비우면 끝까지 · 긴 음악 영상에 권장)<input type="number" min="0" step="0.5" data-f="maxMin" placeholder="예: 5" value="' + esc(it.maxMin || '') + '"></label>';
     h += '<label class="c4">시작 시각 (비우면 종일)<input type="time" data-f="from" value="' + esc(it.from) + '"></label>';
     h += '<label class="c4">종료 시각<input type="time" data-f="to" value="' + esc(it.to) + '"></label>';
     return h + '</div></div>';
@@ -849,6 +884,7 @@
 
     h += '<h2>화면 설정</h2>' +
       '<label class="chk"><input type="checkbox" data-set="sound"' + (s.sound ? ' checked' : '') + '> 영상 소리 켜기</label>' +
+      '<label class="chk"><input type="checkbox" data-set="shuffle"' + (s.shuffle ? ' checked' : '') + '> 셔플 (재생 순서와 유튜브 영상 순서를 무작위로)</label>' +
       '<label class="chk"><input type="checkbox" data-set="showBar"' + (s.showBar ? ' checked' : '') + '> 하단 바 (매장명 · 안내 · 시계) 표시</label>' +
       '<div class="grid"><label class="c12">하단 바 안내 문구<input type="text" data-set="barText" value="' + esc(s.barText) + '"></label></div>';
 
