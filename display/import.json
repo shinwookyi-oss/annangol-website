@@ -1,5 +1,5 @@
 {
- "id": "week-2026-11-16",
+ "id": "weeks-2026-11-16-and-23",
  "schedule": {
   "2026-11-16": {
    "main": "소불고기",
@@ -44,8 +44,8 @@
   "2026-11-21": {
    "main": "제육볶음",
    "mainEn": "Spicy stir-fried pork",
-   "sides": "김치 · 고추장아찌 · 무생채 · 감자볶음",
-   "sidesEn": "Kimchi · Pickled peppers · Radish salad · Stir-fried potato",
+   "sides": "김치 · 고추장아찌 · 브로콜리 · 감자볶음",
+   "sidesEn": "Kimchi · Pickled peppers · Broccoli · Stir-fried potato",
    "soup": "미역국",
    "soupEn": "Seaweed soup"
   },
@@ -56,6 +56,62 @@
    "sidesEn": "Radish kimchi · Braised anchovies · Bean sprouts · Fish cake",
    "soup": "순두부국",
    "soupEn": "Soft tofu soup"
+  },
+  "2026-11-23": {
+   "main": "못난이",
+   "mainEn": "Monnani pork",
+   "sides": "김치 · 콩자반 · 시금치나물 · 감자볶음",
+   "sidesEn": "Kimchi · Sweet black beans · Spinach · Stir-fried potato",
+   "soup": "아난골 무국",
+   "soupEn": "AnnanGol radish soup"
+  },
+  "2026-11-24": {
+   "main": "소불고기",
+   "mainEn": "Beef bulgogi",
+   "sides": "깍두기 · 멸치조림 · 브로콜리 · 미역줄기",
+   "sidesEn": "Radish kimchi · Braised anchovies · Broccoli · Seaweed stems",
+   "soup": "순두부국",
+   "soupEn": "Soft tofu soup"
+  },
+  "2026-11-25": {
+   "main": "제육볶음",
+   "mainEn": "Spicy stir-fried pork",
+   "sides": "김치 · 깻잎 · 시금치나물 · 오뎅",
+   "sidesEn": "Kimchi · Perilla leaves · Spinach · Fish cake",
+   "soup": "계란국",
+   "soupEn": "Egg drop soup"
+  },
+  "2026-11-26": {
+   "main": "태능 양념 돼지",
+   "mainEn": "Taeneung-style marinated pork",
+   "sides": "깍두기 · 콩자반 · 콩나물무침 · 감자볶음",
+   "sidesEn": "Radish kimchi · Sweet black beans · Bean sprouts · Stir-fried potato",
+   "soup": "된장찌개",
+   "soupEn": "Soybean paste stew"
+  },
+  "2026-11-27": {
+   "main": "오징어볶음",
+   "mainEn": "Spicy stir-fried squid",
+   "sides": "김치 · 고추장아찌 · 시금치나물 · 미역줄기",
+   "sidesEn": "Kimchi · Pickled peppers · Spinach · Seaweed stems",
+   "soup": "콩나물국",
+   "soupEn": "Bean sprout soup"
+  },
+  "2026-11-28": {
+   "main": "못난이 돼지",
+   "mainEn": "Monnani pork",
+   "sides": "깍두기 · 멸치조림 · 브로콜리 · 오뎅",
+   "sidesEn": "Radish kimchi · Braised anchovies · Broccoli · Fish cake",
+   "soup": "섞어탕국",
+   "soupEn": "Seokkeo-tang soup"
+  },
+  "2026-11-29": {
+   "main": "소불고기",
+   "mainEn": "Beef bulgogi",
+   "sides": "김치 · 깻잎 · 무생채 · 감자볶음",
+   "sidesEn": "Kimchi · Perilla leaves · Radish salad · Stir-fried potato",
+   "soup": "미역국",
+   "soupEn": "Seaweed soup"
   }
  }
 }
