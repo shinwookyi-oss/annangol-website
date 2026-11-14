@@ -151,6 +151,11 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 @media (max-width:860px){.am .wrap{grid-template-columns:1fr}}
 .am .was{text-decoration:line-through;opacity:.75;font-weight:700;font-size:20px}
 .am .deal{font-weight:700;color:#F2D28E;flex-basis:100%;margin-bottom:-6px}
+.am .offers{display:grid;gap:8px;margin-top:20px;max-width:520px}
+.am .offer{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;border:1.5px solid rgba(236,234,216,.45);border-radius:12px;padding:10px 14px}
+.am .offer b{font:800 17px var(--f-sans);letter-spacing:.01em}
+.am .offer .op{font:900 26px/1 var(--f-stencil);color:#F2D28E}
+.am .offer .od{flex-basis:100%;font-size:14px;line-height:1.45;opacity:.9}
 .am .wrap.wk{display:block;margin-top:48px}
 .am .wrap.wk[hidden]{display:none}
 .wk-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin-bottom:16px}
@@ -327,6 +332,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <p>Antes del almuerzo, AnnanGol sirve K-JjamBab, un desayuno coreano en bandeja al estilo militar: arroz con huevo frito, una sopa caliente, tres acompañamientos y un plato principal que cambia cada día. Con gim tostado al lado.</p>
         <p class="kr" >당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
         <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$13.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>Todas las mañanas, 7–10 AM</span></div>
+        <div class="offers" id="amOffers" hidden></div>
       </div>
       <div class="trays">
         <img src="../img/tray_bulgogi.jpg" loading="lazy" alt="K-JjamBab tray with bulgogi, kkakdugi, rice and fried egg, and stew">
@@ -432,6 +438,14 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
       dl.textContent=((ko&&(m.specialLabel||'').trim())||T.wk_special)+(m.specialUntil?' · '+T.wk_until.replace('{d}',fMD.format(D(m.specialUntil))):'');
       dl.hidden=false;
     } else if(reg) P.textContent=reg;
+    // prices for specific guests (Hero Price etc.), managed in the display admin
+    const offs=(Array.isArray(m.offers)?m.offers:[]).filter(o=>o&&o.on!==false&&String(o.name||'').trim()&&String(o.price||'').trim()&&(!o.until||today<=o.until));
+    if(offs.length){
+      const ob=document.getElementById('amOffers');
+      ob.innerHTML=offs.map(o=>{const d=ko?(o.desc||o.descEn||''):(o.descEn||o.desc||'');
+        return '<div class="offer"><b>'+esc(o.name)+'</b><span class="op">'+esc(o.price)+'</span>'+(d?'<span class="od">'+esc(d)+'</span>':'')+'</div>'}).join('');
+      ob.hidden=false;
+    }
     // weekly menu
     const pick=(e,k)=>{const a=(e[k]||'').trim(), b=(e[k+'En']||'').trim();return ko?(a||b):(b||a)};
     const week=o=>{const out=[];for(let i=0;i<7;i++){const d=add(mon,o*7+i);out.push({d:d,e:sc[iso(d)]||{}})}return out};

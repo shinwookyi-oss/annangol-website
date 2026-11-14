@@ -47,6 +47,8 @@
   .m-deal { margin-top:calc(3.5 * var(--u)); margin-bottom:calc(-2.5 * var(--u)); font-size:calc(2.8 * var(--u)); font-weight:900; color:var(--gold); letter-spacing:.04em; }
   .w-foot .was { text-decoration:line-through; margin-right:calc(1.5 * var(--u)); }
   .w-foot .deal { color:var(--gold); font-weight:900; margin-right:calc(1.5 * var(--u)); }
+  .m-offer { margin-top:calc(2.2 * var(--u)); font-size:calc(2.6 * var(--u)); line-height:1.4; color:var(--cream); word-break:keep-all; }
+  .m-offer b { display:inline-block; background:#1d3a6e; color:#fff; font-weight:900; padding:calc(.3 * var(--u)) calc(1.4 * var(--u)); border-radius:calc(.8 * var(--u)); margin-right:calc(1.2 * var(--u)); }
   .m-tag { margin-top:calc(3.5 * var(--u)); font-size:calc(3.2 * var(--u)); opacity:.85; }
   .m-week { flex:1; min-width:0; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
     border-radius:calc(2 * var(--u)); padding:calc(3 * var(--u)); }
@@ -292,6 +294,7 @@
     if (s.settings) for (k in s.settings) d.settings[k] = s.settings[k];
     if (s.menu) for (k in s.menu) d.menu[k] = s.menu[k];
     d.schedule = (s.schedule && typeof s.schedule === 'object') ? s.schedule : {};
+    if (!Array.isArray(d.menu.offers)) d.menu.offers = [];
     d.items = s.items.filter(function (i) { return i && TYPE_NAME[i.type]; });
     d.items.forEach(function (i) { if (!i.id) i.id = uid(); if (!i.screens) i.screens = 'all'; });
     return d;
@@ -486,6 +489,23 @@
     try { show(item, my); } catch (e) { after(1500, my); }
   }
 
+  // 내용이 화면보다 길면 그 슬라이드만 글자 크기를 줄여 한 화면에 맞춘다
+  function fit(el) {
+    var sl = el.querySelector('.slide'); if (!sl) return;
+    var u = Math.min(LW, LH) / 100;
+    // 가운데 정렬된 내용은 위쪽으로 넘친 만큼이 scrollHeight에 잡히지 않으므로, 안쪽 내용의 실제 높이로 잰다
+    function need() {
+      var cs = getComputedStyle(sl), pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom), col = cs.flexDirection === 'column', sum = 0, max = 0;
+      var gap = parseFloat(cs.rowGap) || 0, kids = sl.children;
+      for (var k = 0; k < kids.length; k++) { var hh = kids[k].offsetHeight; sum += hh; if (hh > max) max = hh; }
+      return pad + (col ? sum + gap * Math.max(0, kids.length - 1) : max);
+    }
+    for (var i = 0; i < 5; i++) {
+      var n = need(); if (n <= sl.clientHeight) break;
+      u = u * Math.max(0.7, sl.clientHeight / n) * 0.98;
+      sl.style.setProperty('--u', u + 'px');
+    }
+  }
   function layer() { var d = document.createElement('div'); d.className = 'layer'; return d; }
   function secs(item, fallback) { var n = parseFloat(item.seconds); return (n > 0 ? n : fallback) * 1000; }
   function showIdle() {
@@ -497,7 +517,7 @@
   function show(item, my) {
     var el = layer();
 
-    if (item.type === 'menu') { el.innerHTML = menuHtml(item.view || 'today'); swapIn(el); after(secs(item, 15), my); return; }
+    if (item.type === 'menu') { el.innerHTML = menuHtml(item.view || 'today'); swapIn(el); fit(el); after(secs(item, 15), my); return; }
     if (item.type === 'text') {
       el.innerHTML = '<div class="slide text"><div class="t-title">' + esc(item.title) + '</div><div class="t-rule"></div>' +
         '<div class="t-body">' + esc(item.body) + '</div></div>';
@@ -650,6 +670,11 @@
     if (u) label += (label ? ' · ' : '') + (+u[1]) + '/' + (+u[2]) + '까지';
     return { price: sp, was: (m.price || '').trim(), label: label };
   }
+  // 대상 한정 가격 (Hero Price 등): 켜져 있고 종료일이 지나지 않은 것만
+  function offers() {
+    var t = ymd(new Date());
+    return (state.menu.offers || []).filter(function (o) { return o && o.on !== false && String(o.name || '').trim() && String(o.price || '').trim() && (!o.until || t <= o.until); });
+  }
   function menuHtml(view) {
     var m = state.menu, today = new Date(), tkey = ymd(today), mon, i, d, e, h, dl = deal();
     if (view === 'week' || view === 'next') {
@@ -673,6 +698,7 @@
       (m.note ? '<div class="m-sub">' + esc(m.note) + '</div>' : '') +
       (dl ? (dl.label ? '<div class="m-deal">' + esc(dl.label) + '</div>' : '') + '<div><span class="m-price">' + esc(dl.price) + '</span>' + (dl.was ? '<span class="m-was">' + esc(dl.was) + '</span>' : '') + '</div>'
           : (m.price ? '<div class="m-price">' + esc(m.price) + '</div>' : '')) +
+      offers().map(function (o) { return '<div class="m-offer"><b>' + esc(o.name) + ' ' + esc(o.price) + '</b>' + esc(o.desc || o.descEn || '') + '</div>'; }).join('') +
       (m.tagline ? '<div class="m-tag">' + esc(m.tagline) + '</div>' : '') + '</div>';
     if (weekHasAny(mon)) {
       h += '<div class="m-week"><h3>THIS WEEK</h3>';
@@ -924,6 +950,20 @@
     return h;
   }
 
+  function offersHtml() {
+    var h = '';
+    (state.menu.offers || []).forEach(function (o, i) {
+      h += '<div class="card' + (o.on === false ? ' off' : '') + '" data-o="' + i + '"><div class="grid">' +
+        '<label class="c3">이름<input type="text" data-ok="name" placeholder="예: Hero Price" value="' + esc(o.name) + '"></label>' +
+        '<label class="c2">가격<input type="text" data-ok="price" placeholder="$10.99" value="' + esc(o.price) + '"></label>' +
+        '<label class="c3">종료일 (비우면 계속)<input type="date" data-ok="until" value="' + esc(o.until) + '"></label>' +
+        '<div class="c4" style="display:flex;gap:8px;align-items:flex-end"><button data-oact="toggle">' + (o.on === false ? '켜기' : '끄기') + '</button><button class="danger" data-oact="del">삭제</button></div>' +
+        '<label class="c6">대상·조건 (한글)<input type="text" data-ok="desc" value="' + esc(o.desc) + '"></label>' +
+        '<label class="c6">대상·조건 (영문 · 한국어 외 페이지에 표시)<input type="text" data-ok="descEn" value="' + esc(o.descEn) + '"></label>' +
+        '</div></div>';
+    });
+    return h + '<div class="addrow"><button data-oact="add">+ 가격 추가</button></div>';
+  }
   function renderAdmin() {
     var s = state.settings, m = state.menu;
     var h = '<div class="wrap"><h1>아난골 디스플레이 관리자</h1>' +
@@ -936,6 +976,8 @@
       '<label class="c3">특가 종료일 (지나면 자동으로 정가)<input type="date" data-menu="specialUntil" value="' + esc(m.specialUntil) + '"></label>' +
       '<label class="c4">안내 한 줄<input type="text" data-menu="note" value="' + esc(m.note) + '"></label>' +
       '<label class="c4" style="grid-column:span 8">문구<input type="text" data-menu="tagline" value="' + esc(m.tagline) + '"></label></div>';
+
+    h += '<h2>대상 한정 가격</h2><p class="help">Hero Price나 어르신 가격처럼 특정 손님에게만 적용하는 가격입니다. 켜 두면 웹사이트의 짬밥 안내와 매장의 "오늘의 메뉴" 화면에 함께 표시되고, 종료일이 지나면 자동으로 내려갑니다.</p><div id="offers">' + offersHtml() + '</div>';
 
     h += '<h2>재생 목록</h2><div class="addrow">' +
       '<button data-add="youtube">+ 유튜브 (영상 · 재생목록)</button><button data-add="music">+ 사이사이 음악 영상 (유튜브)</button><button data-add="image">+ 이미지 · 포스터</button>' +
@@ -971,6 +1013,13 @@
     var t = e.target;
     if (t.id === 'btnBack' || t.id === 'btnDone') { if (t.id === 'btnDone') { clearTimeout(saveTimer); pushState(); } showStart(false); return; }
     if (t.id === 'btnLogout') { postJson('logout', {}).then(function () { showStart(false); }).catch(function () { showStart(false); }); return; }
+    if (t.dataset.oact) {
+      var ol = state.menu.offers || (state.menu.offers = []), oc = t.closest('[data-o]'), oi = oc ? +oc.dataset.o : -1;
+      if (t.dataset.oact === 'add') ol.push({ on: true, name: '', price: '', desc: '', descEn: '', until: '' });
+      else if (t.dataset.oact === 'toggle') ol[oi].on = ol[oi].on === false;
+      else if (t.dataset.oact === 'del') { if (!t.dataset.sure) { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 삭제'; return; } ol.splice(oi, 1); }
+      document.getElementById('offers').innerHTML = offersHtml(); dirty(); return;
+    }
     if (t.dataset.add) { state.items.push(newItem(t.dataset.add)); renderAdmin(); dirty(); return; }
     if (t.hasAttribute('data-yttest')) {
       var tc = t.closest('.card'), tm = tc.querySelector('[data-ytmsg]'), tb = tc.querySelector('[data-ytbox]');
@@ -1047,6 +1096,8 @@
       if (t.dataset.f === 'src' && it.src && it.src.indexOf('up:') === 0 && !t.value) return;
       if (t.dataset.f === 'src' && it.src && it.src.indexOf('up:') === 0) { dropFile(it); delete it.fileName; }
       it[t.dataset.f] = t.type === 'number' ? (parseFloat(t.value) || '') : t.value;
+    } else if (t.dataset.ok) {
+      state.menu.offers[+t.closest('[data-o]').dataset.o][t.dataset.ok] = t.value;
     } else if (t.dataset.day) {
       var e2 = state.schedule[t.dataset.day] || (state.schedule[t.dataset.day] = { main: '', soup: '', sides: '' });
       e2[t.dataset.k] = t.value;

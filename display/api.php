@@ -66,6 +66,11 @@ function apply_import(): void {
             if (preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$day) && is_array($entry)) $state['schedule'][$day] = $entry;
         }
     }
+    // menu_default: menu settings that are filled in only when the admin has not set them
+    if (is_array($imp['menu_default'] ?? null)) {
+        if (!is_array($state['menu'] ?? null)) $state['menu'] = [];
+        foreach ($imp['menu_default'] as $k => $v) { if (!array_key_exists($k, $state['menu'])) $state['menu'][$k] = $v; }
+    }
     if (is_array($state['items'] ?? null)) {
         // items_set: change fields of existing items by id (null removes a field)
         if (is_array($imp['items_set'] ?? null)) {

@@ -1,74 +1,15 @@
 {
- "id": "playlist-review-2026-11-14",
- "items_set": {
-  "imwffpe6wjpoiv": {
-   "label": "음악 영상 (7080 모음)",
-   "every": 3,
-   "maxMin": 4
-  },
-  "imwfk8n43e0ke0": {
-   "label": "음악 영상 (명곡 모음)",
-   "maxMin": 4
-  },
-  "imwfk9j0kf3q7p": {
-   "src": "https://youtube.com/shorts/_iTX8s81xn8?feature=share"
-  }
- },
- "items_add": [
-  {
-   "id": "imp-menu-next",
-   "type": "menu",
-   "view": "next",
-   "label": "다음 주 K-JjamBab",
-   "seconds": 15,
-   "from": "",
-   "to": "",
-   "screens": "all",
-   "on": true
-  },
-  {
-   "id": "imp-dosirock-p",
-   "type": "image",
-   "label": "K-DosiRock Coming Soon (세로)",
-   "src": "media/dosirock-portrait.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "board",
-   "on": true
-  },
-  {
-   "id": "imp-annangol-p",
-   "type": "image",
-   "label": "아난골 포스터 (세로)",
-   "src": "media/annangol-portrait.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "board",
-   "on": true
-  },
-  {
-   "id": "imp-dosirock-l",
-   "type": "image",
-   "label": "K-DosiRock Coming Soon (가로)",
-   "src": "media/dosirock-landscape.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "tv",
-   "on": true
-  },
-  {
-   "id": "imp-annangol-l",
-   "type": "image",
-   "label": "아난골 포스터 (가로)",
-   "src": "media/annangol-landscape.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "tv",
-   "on": true
-  }
- ]
+ "id": "hero-price-offer-2026-11-14",
+ "menu_default": {
+  "offers": [
+   {
+    "on": true,
+    "name": "Hero Price",
+    "price": "$10.99",
+    "desc": "군인 · 재향군인 · 경찰 · 소방·구급대원 — 계산대에서 신분증을 보여주세요",
+    "descEn": "Military · Veterans · Police · Fire & EMS — show your ID or badge at the counter",
+    "until": ""
+   }
+  ]
+ }
 }
