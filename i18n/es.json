@@ -93,5 +93,16 @@
  "wk_sides": "Acompañamientos",
  "wk_note": "El menú puede cambiar según los ingredientes del día.",
  "wk_special": "Precio especial",
- "wk_until": "hasta el {d}"
+ "wk_until": "hasta el {d}",
+ "sg_title": "Cuéntanos qué te gustaría comer",
+ "sg_sub": "Las sugerencias de menú y los comentarios llegan directamente al dueño. No se publican en este sitio.",
+ "sg_kind_menu": "Sugerencia de menú",
+ "sg_kind_op": "Comentario",
+ "sg_ph": "¿Qué plato te gustaría ver en la bandeja del desayuno?",
+ "sg_name": "Nombre (opcional)",
+ "sg_contact": "Teléfono o correo (opcional)",
+ "sg_send": "Enviar",
+ "sg_thanks": "¡Gracias! Leemos todos los mensajes.",
+ "sg_err": "No se pudo enviar. Inténtalo de nuevo.",
+ "wk_want": "Lo quiero"
 }

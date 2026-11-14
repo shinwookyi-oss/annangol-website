@@ -93,5 +93,16 @@
  "wk_sides": "Acompanhamentos",
  "wk_note": "O cardápio pode mudar conforme os ingredientes do dia.",
  "wk_special": "Preço especial",
- "wk_until": "até {d}"
+ "wk_until": "até {d}",
+ "sg_title": "Conte-nos o que você gostaria de comer",
+ "sg_sub": "Pedidos de cardápio e comentários vão direto para o proprietário. Não são exibidos neste site.",
+ "sg_kind_menu": "Pedido de cardápio",
+ "sg_kind_op": "Comentário",
+ "sg_ph": "Que prato você gostaria de ver na bandeja do café da manhã?",
+ "sg_name": "Nome (opcional)",
+ "sg_contact": "Telefone ou e-mail (opcional)",
+ "sg_send": "Enviar",
+ "sg_thanks": "Obrigado! Lemos todas as mensagens.",
+ "sg_err": "Não foi possível enviar. Tente novamente.",
+ "wk_want": "Eu quero"
 }

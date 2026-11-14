@@ -93,5 +93,16 @@
  "wk_sides": "Sides",
  "wk_note": "The menu may change depending on the day's ingredients.",
  "wk_special": "Special price",
- "wk_until": "through {d}"
+ "wk_until": "through {d}",
+ "sg_title": "Tell us what you'd like to eat",
+ "sg_sub": "Menu requests and comments go straight to the owner. They are not shown on this site.",
+ "sg_kind_menu": "Menu request",
+ "sg_kind_op": "Comment",
+ "sg_ph": "Which dish would you like to see on the breakfast tray?",
+ "sg_name": "Name (optional)",
+ "sg_contact": "Phone or email (optional)",
+ "sg_send": "Send",
+ "sg_thanks": "Thank you! We read every message.",
+ "sg_err": "Could not send. Please try again.",
+ "wk_want": "I want this"
 }

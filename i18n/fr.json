@@ -93,5 +93,16 @@
  "wk_sides": "Accompagnements",
  "wk_note": "Le menu peut changer selon les ingrédients du jour.",
  "wk_special": "Prix spécial",
- "wk_until": "jusqu'au {d}"
+ "wk_until": "jusqu'au {d}",
+ "sg_title": "Dites-nous ce que vous aimeriez manger",
+ "sg_sub": "Les demandes de plats et les commentaires sont transmis directement au propriétaire. Ils ne sont pas publiés sur ce site.",
+ "sg_kind_menu": "Demande de plat",
+ "sg_kind_op": "Commentaire",
+ "sg_ph": "Quel plat aimeriez-vous voir sur le plateau du petit-déjeuner ?",
+ "sg_name": "Nom (facultatif)",
+ "sg_contact": "Téléphone ou e-mail (facultatif)",
+ "sg_send": "Envoyer",
+ "sg_thanks": "Merci ! Nous lisons tous les messages.",
+ "sg_err": "Envoi impossible. Veuillez réessayer.",
+ "wk_want": "J'en veux"
 }

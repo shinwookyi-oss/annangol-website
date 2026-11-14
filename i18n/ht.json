@@ -93,5 +93,16 @@
  "wk_sides": "Akonpayman",
  "wk_note": "Meni an ka chanje selon engredyan jou a.",
  "wk_special": "Pri espesyal",
- "wk_until": "jiska {d}"
+ "wk_until": "jiska {d}",
+ "sg_title": "Di nou sa ou ta renmen manje",
+ "sg_sub": "Demann meni ak kòmantè yo ale dirèkteman bay pwopriyetè a. Yo pa parèt sou sit sa a.",
+ "sg_kind_menu": "Demann meni",
+ "sg_kind_op": "Kòmantè",
+ "sg_ph": "Ki plat ou ta renmen wè nan plato manje maten an?",
+ "sg_name": "Non (opsyonèl)",
+ "sg_contact": "Telefòn oswa imèl (opsyonèl)",
+ "sg_send": "Voye",
+ "sg_thanks": "Mèsi! Nou li tout mesaj yo.",
+ "sg_err": "Nou pa t ka voye l. Tanpri eseye ankò.",
+ "wk_want": "Mwen vle sa"
 }

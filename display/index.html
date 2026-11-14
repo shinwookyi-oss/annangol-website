@@ -836,7 +836,7 @@
     adminEl.innerHTML = '<div class="login"><p class="help">연결 중…</p></div>';
     call('me', { credentials: 'same-origin' }).then(function (r) {
       if (!r.ok) throw 0;
-      if (r.data.authed) pull().then(renderAdmin); else renderLogin('');
+      if (r.data.authed) pull().then(function () { renderAdmin(); loadFb(); }); else renderLogin('');
     }).catch(function () {
       adminEl.innerHTML = '<div class="login"><h1>관리자</h1><p class="warn">서버에 연결하지 못했습니다. 이 페이지는 annangol.com/display/ 주소로 열어야 관리자 기능이 작동합니다.</p><button id="btnBack">돌아가기</button></div>';
     });
@@ -852,7 +852,7 @@
     e.preventDefault();
     if (e.target.id !== 'loginForm') return;
     postJson('login', { password: document.getElementById('pw').value }).then(function (r) {
-      if (r.ok && r.data.authed) pull().then(renderAdmin); else renderLogin('비밀번호가 맞지 않습니다.');
+      if (r.ok && r.data.authed) pull().then(function () { renderAdmin(); loadFb(); }); else renderLogin('비밀번호가 맞지 않습니다.');
     }).catch(function () { renderLogin('서버에 연결하지 못했습니다.'); });
   });
 
@@ -950,6 +950,27 @@
     return h;
   }
 
+  var fb = null;   // 손님 제안과 원해요 수 (관리자 화면을 열 때 불러옴)
+  function fbHtml() {
+    if (!fb) return '<p class="note">불러오는 중…</p>';
+    var names = Object.keys(fb.likes || {}), h = '<div class="card"><b>메뉴별 원해요</b><div class="note" style="margin-top:6px;line-height:1.9">' +
+      (names.length ? names.map(function (n) { return esc(n) + ' <b style="color:#b3261e">♥ ' + (+fb.likes[n]) + '</b>'; }).join(' &nbsp;·&nbsp; ') : '아직 없습니다.') + '</div></div>';
+    if (!(fb.items || []).length) return h + '<p class="note">받은 제안이 아직 없습니다.</p>';
+    fb.items.forEach(function (r) {
+      var d = new Date(r.t), when = isNaN(d) ? '' : (d.getMonth() + 1) + '/' + d.getDate() + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+      h += '<div class="card"><div class="head"><span class="badge ' + (r.kind === 'comment' ? 'text' : 'menu') + '">' + (r.kind === 'comment' ? '의견' : '메뉴 요청') + '</span>' +
+        '<span class="note">' + esc(when) + (r.lang ? ' · ' + esc(r.lang) : '') + '</span><span class="sp"></span><button class="danger" data-fbdel="' + esc(r.id) + '">삭제</button></div>' +
+        '<div style="white-space:pre-wrap;line-height:1.5">' + esc(r.text) + '</div>' +
+        ((r.name || r.contact) ? '<div class="note" style="margin-top:6px">' + esc([r.name, r.contact].filter(Boolean).join(' · ')) + '</div>' : '') + '</div>';
+    });
+    return h;
+  }
+  function loadFb() {
+    call('feedback', { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) return;
+      fb = r.data; var el = document.getElementById('fb'); if (el) el.innerHTML = fbHtml();
+    }).catch(function () {});
+  }
   function offersHtml() {
     var h = '';
     (state.menu.offers || []).forEach(function (o, i) {
@@ -968,6 +989,8 @@
     var s = state.settings, m = state.menu;
     var h = '<div class="wrap"><h1>아난골 디스플레이 관리자</h1>' +
       '<p class="help">여기서 바꾼 내용은 자동 저장되고, 매장의 보드와 TV에 1분 안에 반영됩니다. 위에서 아래 순서대로 반복 재생됩니다.</p>';
+
+    h += '<h2>손님 제안함 · 원해요</h2><p class="help">웹사이트에서 손님이 보낸 메뉴 요청과 의견, 그리고 주간 메뉴에서 누른 "원해요" 수입니다. 여기에서만 보이고 사이트에는 공개되지 않습니다.</p><div id="fb">' + fbHtml() + '</div>';
 
     h += '<h2>K-JjamBab 주간 스케줄</h2><p class="help">날짜별로 메뉴를 넣어 두면 "짬밥 메뉴" 항목이 오늘의 메뉴와 주간 메뉴표를 자동으로 보여줍니다.</p><div id="sched">' + schedHtml() + '</div>' +
       '<div class="grid" style="margin-top:6px"><label class="c3">정가<input type="text" data-menu="price" value="' + esc(m.price) + '"></label>' +
@@ -1013,6 +1036,11 @@
     var t = e.target;
     if (t.id === 'btnBack' || t.id === 'btnDone') { if (t.id === 'btnDone') { clearTimeout(saveTimer); pushState(); } showStart(false); return; }
     if (t.id === 'btnLogout') { postJson('logout', {}).then(function () { showStart(false); }).catch(function () { showStart(false); }); return; }
+    if (t.dataset.fbdel) {
+      if (!t.dataset.sure) { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 삭제'; return; }
+      postJson('feedback_del', { id: t.dataset.fbdel }).then(loadFb).catch(function () {});
+      return;
+    }
     if (t.dataset.oact) {
       var ol = state.menu.offers || (state.menu.offers = []), oc = t.closest('[data-o]'), oi = oc ? +oc.dataset.o : -1;
       if (t.dataset.oact === 'add') ol.push({ on: true, name: '', price: '', desc: '', descEn: '', until: '' });

@@ -93,6 +93,30 @@ function apply_import(): void {
     if (file_put_contents("$f.tmp", $json, LOCK_EX) !== false && rename("$f.tmp", $f)) file_put_contents($mark, (string)$imp['id'], LOCK_EX);
     clearstatcache();
 }
+// A per-day visitor id (no IP is stored), used only to stop repeat likes and floods of suggestions.
+function visitor_id(): string {
+    return substr(hash('sha256', ag_daily_salt(gmdate('Y-m-d')) . '|' . ag_client_ip() . '|' . ($_SERVER['HTTP_USER_AGENT'] ?? '')), 0, 16);
+}
+// Read-modify-write a small JSON file under an exclusive lock.
+function json_update(string $file, callable $fn) {
+    $fh = fopen($file, 'c+');
+    if (!$fh) throw new RuntimeException('open');
+    flock($fh, LOCK_EX);
+    $raw = stream_get_contents($fh);
+    $data = $raw !== '' && $raw !== false ? (json_decode($raw, true) ?: []) : [];
+    $res = $fn($data);
+    ftruncate($fh, 0); rewind($fh);
+    fwrite($fh, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    fflush($fh); flock($fh, LOCK_UN); fclose($fh);
+    return $res;
+}
+function json_read(string $file): array {
+    return is_file($file) ? (json_decode((string)file_get_contents($file), true) ?: []) : [];
+}
+function clip($v, int $max): string {
+    $s = trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', (string)$v) ?? '');
+    return function_exists('mb_substr') ? mb_substr($s, 0, $max) : substr($s, 0, $max);
+}
 function media_name(string $f): ?string {
     return preg_match('/^[a-f0-9]{16}\.(' . implode('|', array_keys(DISPLAY_EXT)) . ')$/', $f) ? $f : null;
 }
@@ -134,8 +158,68 @@ try {
         $f = display_dir() . '/state.json';
         $raw = is_file($f) ? (string)file_get_contents($f) : '';
         $state = $raw !== '' ? json_decode($raw, true) : null;
-        out(['state' => $state, 'version' => $raw !== '' ? (string)filemtime($f) . '-' . strlen($raw) : '0',
+        out(['state' => $state, 'likes' => (object)(json_read(display_dir() . '/likes.json')['counts'] ?? []),
+             'version' => $raw !== '' ? (string)filemtime($f) . '-' . strlen($raw) : '0',
              'app' => (string)@filemtime(__DIR__ . '/index.html')]);   // lets open screens notice a new page version
+    }
+
+    if ($a === 'like') {                                   // public: "I want this" on a dish of the weekly menu
+        need_post();
+        $in = json_decode((string)file_get_contents('php://input'), true) ?: [];
+        $dish = clip($in['dish'] ?? '', 60);
+        $state = json_read(display_dir() . '/state.json');
+        $known = [];
+        foreach (($state['schedule'] ?? []) as $e) { if (is_array($e) && trim((string)($e['main'] ?? '')) !== '') $known[trim((string)$e['main'])] = 1; }
+        if ($dish === '' || !isset($known[$dish])) out(['error' => 'dish'], 400);
+        if (ag_is_bot((string)($_SERVER['HTTP_USER_AGENT'] ?? ''))) out(['ok' => true, 'count' => 0]);
+        $day = gmdate('Y-m-d'); $key = visitor_id() . '|' . $dish;
+        $count = json_update(display_dir() . '/likes.json', function (&$d) use ($day, $key, $dish) {
+            if (!is_array($d['counts'] ?? null)) $d['counts'] = [];
+            if (($d['day'] ?? '') !== $day) { $d['day'] = $day; $d['seen'] = []; }   // one like per visitor, dish and day
+            if (empty($d['seen'][$key])) { $d['seen'][$key] = 1; $d['counts'][$dish] = (int)($d['counts'][$dish] ?? 0) + 1; }
+            return (int)$d['counts'][$dish];
+        });
+        out(['ok' => true, 'count' => $count]);
+    }
+
+    if ($a === 'suggest') {                                // public: private suggestion box
+        need_post();
+        $in = json_decode((string)file_get_contents('php://input'), true) ?: [];
+        if (trim((string)($in['website'] ?? '')) !== '' || ag_is_bot((string)($_SERVER['HTTP_USER_AGENT'] ?? ''))) out(['ok' => true]);   // bots: accept and drop
+        $text = clip($in['text'] ?? '', 600);
+        if ((function_exists('mb_strlen') ? mb_strlen($text) : strlen($text)) < 2) out(['error' => 'text'], 400);
+        $day = gmdate('Y-m-d'); $vid = visitor_id();
+        $allowed = json_update(display_dir() . '/feedback-rate.json', function (&$d) use ($day, $vid) {
+            if (($d['day'] ?? '') !== $day) $d = ['day' => $day, 'n' => []];
+            $d['n'][$vid] = (int)($d['n'][$vid] ?? 0) + 1;
+            return $d['n'][$vid] <= 5 && count($d['n']) <= 300;   // 5 per visitor and 300 senders per day
+        });
+        if (!$allowed) out(['error' => 'rate'], 429);
+        $row = ['id' => bin2hex(random_bytes(6)), 't' => gmdate('c'), 'kind' => ($in['kind'] ?? '') === 'comment' ? 'comment' : 'menu',
+                'text' => $text, 'name' => clip($in['name'] ?? '', 60), 'contact' => clip($in['contact'] ?? '', 100), 'lang' => clip($in['lang'] ?? '', 5)];
+        json_update(display_dir() . '/feedback.json', function (&$d) use ($row) {
+            if (!is_array($d['items'] ?? null)) $d['items'] = [];
+            $d['items'][] = $row;
+            if (count($d['items']) > 500) $d['items'] = array_slice($d['items'], -500);
+        });
+        out(['ok' => true]);
+    }
+
+    if ($a === 'feedback') {                               // admin: read suggestions and likes
+        need_auth();
+        $items = array_reverse(json_read(display_dir() . '/feedback.json')['items'] ?? []);
+        $likes = json_read(display_dir() . '/likes.json')['counts'] ?? [];
+        arsort($likes);
+        out(['items' => $items, 'likes' => (object)$likes]);
+    }
+    if ($a === 'feedback_del') {
+        need_post(); need_auth();
+        $in = json_decode((string)file_get_contents('php://input'), true) ?: [];
+        $id = (string)($in['id'] ?? '');
+        json_update(display_dir() . '/feedback.json', function (&$d) use ($id) {
+            $d['items'] = array_values(array_filter($d['items'] ?? [], function ($r) use ($id) { return ($r['id'] ?? '') !== $id; }));
+        });
+        out(['ok' => true]);
     }
 
     if ($a === 'me') { start_session(); out(['authed' => !empty($_SESSION['ok'])]); }

@@ -93,5 +93,16 @@
  "wk_sides": "Mga side dish",
  "wk_note": "Maaaring magbago ang menu depende sa sangkap ng araw.",
  "wk_special": "Espesyal na presyo",
- "wk_until": "hanggang {d}"
+ "wk_until": "hanggang {d}",
+ "sg_title": "Sabihin sa amin kung ano ang gusto mong kainin",
+ "sg_sub": "Direktang napupunta sa may-ari ang mga hiling sa menu at komento. Hindi ito ipinapakita sa site na ito.",
+ "sg_kind_menu": "Hiling sa menu",
+ "sg_kind_op": "Komento",
+ "sg_ph": "Anong ulam ang gusto mong makita sa breakfast tray?",
+ "sg_name": "Pangalan (opsyonal)",
+ "sg_contact": "Telepono o email (opsyonal)",
+ "sg_send": "Ipadala",
+ "sg_thanks": "Salamat! Binabasa namin ang bawat mensahe.",
+ "sg_err": "Hindi naipadala. Pakisubukang muli.",
+ "wk_want": "Gusto ko ito"
 }

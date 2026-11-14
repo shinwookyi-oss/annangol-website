@@ -150,7 +150,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .wk-tabs button[aria-pressed=true]{background:var(--olive);color:var(--olive-ink);border-color:var(--olive);opacity:1}
 .wk-range{opacity:.8;font-size:14px;margin-inline-start:auto}
 .wk-list{display:grid;gap:8px}
-.wk-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,1.5fr);gap:6px 22px;align-items:center;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px 18px}
+.wk-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,1.5fr) auto;gap:6px 22px;align-items:center;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px 18px}
 .wk-row.today{border-color:var(--ember);box-shadow:inset 0 0 0 1px var(--ember)}
 .wk-d b{font-weight:800}
 .wk-d span{opacity:.8;margin-inline-start:6px;font-size:14px}
@@ -159,6 +159,21 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .wk-m small{opacity:.8;font-size:14px}
 .wk-x{font-size:14px;line-height:1.5;opacity:.92;display:grid;gap:2px}
 .wk-x i{font-style:normal;font-weight:700;color:var(--ember);margin-inline-end:8px}
+.wk-like{font:700 14px var(--f-sans);color:var(--ember);background:transparent;border:1.5px solid var(--ember);border-radius:999px;padding:7px 14px;cursor:pointer;white-space:nowrap;justify-self:end}
+.wk-like[aria-pressed=true]{background:var(--ember);color:var(--ember-ink);cursor:default}
+.am #suggest{margin-top:20px}
+.sg h3{font:800 22px/1.2 var(--f-sans);letter-spacing:-.01em}
+.am .sg-sub{margin-top:6px;font-size:14px;color:var(--muted);opacity:1;max-width:none}
+.sg-kind{display:flex;flex-wrap:wrap;gap:8px 20px;margin:16px 0 10px;font-weight:600;font-size:15px}
+.sg-kind label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.sg textarea,.sg input:not([type=radio]){font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:11px 13px;width:100%}
+.sg textarea{min-height:96px;resize:vertical;display:block}
+.sg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.sg .sg-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.sg-act{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:14px}
+.sg-act .btn{border:0;cursor:pointer;font-family:inherit}
+#sgMsg{font-size:14px;font-weight:600}
+@media (max-width:700px){.sg-row{grid-template-columns:1fr}.wk-like{justify-self:start;margin-top:4px}}
 .am .wk-note{margin-top:12px;font-size:13px;color:var(--muted);opacity:1;max-width:none}
 @media (max-width:700px){.wk-row{grid-template-columns:1fr;gap:4px}.wk-range{margin-inline-start:0;flex-basis:100%}}
 
@@ -318,6 +333,18 @@ footer small{font-size:13px;opacity:.8}
       <p class="wk-note">{{wk_note}}</p>
      </div>
     </div>
+    <!-- Private suggestion box: messages go to the display admin, never shown on the site. -->
+    <div class="wrap wk" id="suggest">
+     <form class="wk-card sg" id="sgForm">
+      <h3>{{sg_title}}</h3>
+      <p class="sg-sub">{{sg_sub}}</p>
+      <div class="sg-kind"><label><input type="radio" name="kind" value="menu" checked> {{sg_kind_menu}}</label><label><input type="radio" name="kind" value="comment"> {{sg_kind_op}}</label></div>
+      <textarea name="text" maxlength="600" required placeholder="{{sg_ph}}" aria-label="{{sg_title}}"></textarea>
+      <div class="sg-row"><input name="name" maxlength="60" placeholder="{{sg_name}}" aria-label="{{sg_name}}" autocomplete="name"><input name="contact" maxlength="100" placeholder="{{sg_contact}}" aria-label="{{sg_contact}}"></div>
+      <input name="website" class="sg-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="sg-act"><button class="btn" type="submit">{{sg_send}}</button><span id="sgMsg" role="status"></span></div>
+     </form>
+    </div>
   </section>
 
   <section id="inside">
@@ -394,7 +421,8 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const mon=add(D(today),-((D(today).getUTCDay()+6)%7));
   const fDay=new Intl.DateTimeFormat(lang,{weekday:'short',timeZone:'UTC'}), fMD=ko?{format:d=>(d.getUTCMonth()+1)+'/'+d.getUTCDate()}:new Intl.DateTimeFormat(lang,{month:'numeric',day:'numeric',timeZone:'UTC'});
   fetch('/display/api.php?a=state').then(r=>r.json()).then(j=>{
-    const st=j.state||{}, sc=st.schedule||{}, m=st.menu||{};
+    const st=j.state||{}, sc=st.schedule||{}, m=st.menu||{}, likes=j.likes||{};
+    let mine=[]; try{mine=JSON.parse(localStorage.getItem('ag_likes'))||[]}catch(e){}
     // price
     const sp=(m.special||'').trim(), reg=(m.price||'').trim(), P=document.getElementById('amPrice');
     if(sp&&(!m.specialUntil||today<=m.specialUntil)){
@@ -419,6 +447,17 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     const avail=[0,1].filter(has); if(!avail.length) return;
     const tabs=document.getElementById('wkTabs'), list=document.getElementById('wkList'), range=document.getElementById('wkRange');
     if(avail.length<2) tabs.hidden=true;
+    // "I want this": one tap per dish; the count is kept on the server and shown to the owner in the display admin
+    const likeLabel=d=>'♥ '+esc(T.wk_want)+(likes[d]>0?' · '+likes[d]:'');
+    list.addEventListener('click',ev=>{
+      const b=ev.target.closest('.wk-like'); if(!b||b.getAttribute('aria-pressed')==='true') return;
+      const d=b.dataset.dish; mine.push(d); try{localStorage.setItem('ag_likes',JSON.stringify(mine))}catch(e){}
+      likes[d]=(+likes[d]||0)+1;
+      const paint=()=>list.querySelectorAll('.wk-like').forEach(x=>{if(x.dataset.dish===d){x.setAttribute('aria-pressed','true');x.innerHTML=likeLabel(d)}});
+      paint();
+      fetch('/display/api.php?a=like',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dish:d})})
+        .then(r=>r.json()).then(r=>{if(r&&r.count>0){likes[d]=r.count;paint()}}).catch(()=>{});
+    });
     const show=o=>{
       const w=week(o);
       range.textContent=fMD.format(w[0].d)+' – '+fMD.format(w[6].d);
@@ -427,13 +466,26 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
         const e=x.e, main=pick(e,'main'), alt=(!ko&&(e.mainEn||'').trim()&&(e.main||'').trim())?e.main.trim():'', soup=pick(e,'soup'), sides=pick(e,'sides'), t=iso(x.d)===today;
         return '<div class="wk-row'+(t?' today':'')+'"><div class="wk-d"><b>'+esc(fDay.format(x.d))+'</b><span>'+esc(fMD.format(x.d))+'</span>'+(t?'<em>'+esc(T.wk_today)+'</em>':'')+'</div>'+
           '<div class="wk-m"><strong>'+esc(main||'—')+'</strong>'+(alt?'<small class="kr" lang="ko">'+esc(alt)+'</small>':'')+'</div>'+
-          '<div class="wk-x">'+(soup?'<span><i>'+esc(T.wk_soup)+'</i>'+esc(soup)+'</span>':'')+(sides?'<span><i>'+esc(T.wk_sides)+'</i>'+esc(sides)+'</span>':'')+'</div></div>';
+          '<div class="wk-x">'+(soup?'<span><i>'+esc(T.wk_soup)+'</i>'+esc(soup)+'</span>':'')+(sides?'<span><i>'+esc(T.wk_sides)+'</i>'+esc(sides)+'</span>':'')+'</div>'+
+          ((e.main||'').trim()?'<button type="button" class="wk-like" data-dish="'+esc(e.main.trim())+'" aria-pressed="'+(mine.indexOf(e.main.trim())>=0)+'">'+likeLabel(e.main.trim())+'</button>':'')+'</div>';
       }).join('');
       tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.wk===o)));
     };
     tabs.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(+b.dataset.wk)});
     show(avail[0]); box.hidden=false;
   }).catch(()=>{});
+  // suggestion box
+  const f=document.getElementById('sgForm'); if(!f) return;
+  f.addEventListener('submit',ev=>{
+    ev.preventDefault();
+    const msg=document.getElementById('sgMsg'), btn=f.querySelector('button[type=submit]'), v=n=>f.elements[n].value;
+    btn.disabled=true; msg.textContent='';
+    fetch('/display/api.php?a=suggest',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({kind:v('kind'),text:v('text'),name:v('name'),contact:v('contact'),website:v('website'),lang:lang})})
+      .then(r=>r.json().then(j=>({ok:r.ok&&j.ok})))
+      .then(r=>{btn.disabled=false; if(r.ok){f.reset(); msg.textContent=T.sg_thanks} else msg.textContent=T.sg_err})
+      .catch(()=>{btn.disabled=false; msg.textContent=T.sg_err});
+  });
 })();
 </script>
 <script>

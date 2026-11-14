@@ -93,5 +93,16 @@
  "wk_sides": "小菜",
  "wk_note": "菜单可能因当日食材而调整。",
  "wk_special": "特价",
- "wk_until": "至 {d}"
+ "wk_until": "至 {d}",
+ "sg_title": "告诉我们您想吃什么",
+ "sg_sub": "菜单建议和意见会直接发给店主，不会在本网站公开。",
+ "sg_kind_menu": "菜单建议",
+ "sg_kind_op": "意见",
+ "sg_ph": "您希望早餐餐盘里有哪道菜？",
+ "sg_name": "姓名（选填）",
+ "sg_contact": "电话或邮箱（选填）",
+ "sg_send": "发送",
+ "sg_thanks": "谢谢！我们会阅读每一条留言。",
+ "sg_err": "发送失败，请重试。",
+ "wk_want": "想吃"
 }

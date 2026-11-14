@@ -61,7 +61,7 @@ def build():
             pre = '' if root else '../'
             html = tpl
             d['hide_if_ko'] = 'hidden' if code == 'ko' else ''
-            d['js_strings'] = json.dumps({k: d[k] for k in ('copy', 'copied', 'selected', 'wk_today', 'wk_soup', 'wk_sides', 'wk_special', 'wk_until')}, ensure_ascii=False)
+            d['js_strings'] = json.dumps({k: d[k] for k in ('copy', 'copied', 'selected', 'wk_today', 'wk_soup', 'wk_sides', 'wk_special', 'wk_until', 'wk_want', 'sg_thanks', 'sg_err')}, ensure_ascii=False)
             html = re.sub(r'\{\{(\w+)\}\}', lambda m: d[m.group(1)], html)
             html = html.replace('<html lang="en">', f'<html lang="{code}"' + (' dir="rtl"' if rtl else '') + '>')
             # asset paths

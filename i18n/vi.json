@@ -93,5 +93,16 @@
  "wk_sides": "Món phụ",
  "wk_note": "Thực đơn có thể thay đổi tùy theo nguyên liệu trong ngày.",
  "wk_special": "Giá đặc biệt",
- "wk_until": "đến hết {d}"
+ "wk_until": "đến hết {d}",
+ "sg_title": "Hãy cho chúng tôi biết bạn muốn ăn gì",
+ "sg_sub": "Yêu cầu món và góp ý được gửi thẳng đến chủ quán, không hiển thị trên trang này.",
+ "sg_kind_menu": "Yêu cầu món",
+ "sg_kind_op": "Góp ý",
+ "sg_ph": "Bạn muốn có món nào trong khay bữa sáng?",
+ "sg_name": "Tên (không bắt buộc)",
+ "sg_contact": "Số điện thoại hoặc email (không bắt buộc)",
+ "sg_send": "Gửi",
+ "sg_thanks": "Cảm ơn bạn! Chúng tôi đọc mọi tin nhắn.",
+ "sg_err": "Không gửi được. Vui lòng thử lại.",
+ "wk_want": "Tôi muốn món này"
 }
