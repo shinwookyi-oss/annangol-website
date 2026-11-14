@@ -84,5 +84,14 @@
  "copied": "Đã sao chép",
  "selected": "Đã chọn",
  "menu_sub": "Giá có trên trang đặt món online của chúng tôi.",
- "lang_label": "Ngôn ngữ"
+ "lang_label": "Ngôn ngữ",
+ "wk_title": "Thực đơn K-JjamBab hằng tuần",
+ "wk_this": "Tuần này",
+ "wk_next": "Tuần sau",
+ "wk_today": "Hôm nay",
+ "wk_soup": "Canh",
+ "wk_sides": "Món phụ",
+ "wk_note": "Thực đơn có thể thay đổi tùy theo nguyên liệu trong ngày.",
+ "wk_special": "Giá đặc biệt",
+ "wk_until": "đến hết {d}"
 }

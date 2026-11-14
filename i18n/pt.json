@@ -84,5 +84,14 @@
  "copy": "Copiar",
  "copied": "Copiado",
  "selected": "Selecionado",
- "menu_sub": "Os preços estão na nossa página de pedidos online."
+ "menu_sub": "Os preços estão na nossa página de pedidos online.",
+ "wk_title": "Cardápio semanal K-JjamBab",
+ "wk_this": "Esta semana",
+ "wk_next": "Próxima semana",
+ "wk_today": "Hoje",
+ "wk_soup": "Sopa",
+ "wk_sides": "Acompanhamentos",
+ "wk_note": "O cardápio pode mudar conforme os ingredientes do dia.",
+ "wk_special": "Preço especial",
+ "wk_until": "até {d}"
 }

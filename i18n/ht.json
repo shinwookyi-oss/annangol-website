@@ -84,5 +84,14 @@
  "copy": "Kopye",
  "copied": "Kopye!",
  "selected": "Chwazi",
- "menu_sub": "Pri yo sou paj kòmand sou entènèt nou an."
+ "menu_sub": "Pri yo sou paj kòmand sou entènèt nou an.",
+ "wk_title": "Meni K-JjamBab chak semèn",
+ "wk_this": "Semèn sa a",
+ "wk_next": "Semèn pwochèn",
+ "wk_today": "Jodi a",
+ "wk_soup": "Soup",
+ "wk_sides": "Akonpayman",
+ "wk_note": "Meni an ka chanje selon engredyan jou a.",
+ "wk_special": "Pri espesyal",
+ "wk_until": "jiska {d}"
 }

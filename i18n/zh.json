@@ -84,5 +84,14 @@
  "copied": "已复制",
  "selected": "已选择",
  "menu_sub": "价格请见我们的在线点餐页面。",
- "lang_label": "语言"
+ "lang_label": "语言",
+ "wk_title": "K-JjamBab 每周菜单",
+ "wk_this": "本周",
+ "wk_next": "下周",
+ "wk_today": "今天",
+ "wk_soup": "汤",
+ "wk_sides": "小菜",
+ "wk_note": "菜单可能因当日食材而调整。",
+ "wk_special": "特价",
+ "wk_until": "至 {d}"
 }

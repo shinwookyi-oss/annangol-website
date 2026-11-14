@@ -84,5 +84,14 @@
  "copied": "Nakopya na",
  "selected": "Napili",
  "menu_sub": "Nasa aming online order page ang mga presyo.",
- "lang_label": "Wika"
+ "lang_label": "Wika",
+ "wk_title": "Lingguhang menu ng K-JjamBab",
+ "wk_this": "Ngayong linggo",
+ "wk_next": "Susunod na linggo",
+ "wk_today": "Ngayon",
+ "wk_soup": "Sabaw",
+ "wk_sides": "Mga side dish",
+ "wk_note": "Maaaring magbago ang menu depende sa sangkap ng araw.",
+ "wk_special": "Espesyal na presyo",
+ "wk_until": "hanggang {d}"
 }

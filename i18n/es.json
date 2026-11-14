@@ -84,5 +84,14 @@
  "copy": "Copiar",
  "copied": "Copiado",
  "selected": "Seleccionado",
- "menu_sub": "Los precios están en nuestra página de pedidos en línea."
+ "menu_sub": "Los precios están en nuestra página de pedidos en línea.",
+ "wk_title": "Menú semanal K-JjamBab",
+ "wk_this": "Esta semana",
+ "wk_next": "Próxima semana",
+ "wk_today": "Hoy",
+ "wk_soup": "Sopa",
+ "wk_sides": "Acompañamientos",
+ "wk_note": "El menú puede cambiar según los ingredientes del día.",
+ "wk_special": "Precio especial",
+ "wk_until": "hasta el {d}"
 }

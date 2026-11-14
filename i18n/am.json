@@ -84,5 +84,14 @@
  "copied": "ተቀድቷል",
  "selected": "ተመርጧል",
  "menu_sub": "ዋጋዎች በመስመር ላይ ማዘዣ ገጻችን ላይ ይገኛሉ።",
- "lang_label": "ቋንቋ"
+ "lang_label": "ቋንቋ",
+ "wk_title": "የK-JjamBab ሳምንታዊ ምናሌ",
+ "wk_this": "ይህ ሳምንት",
+ "wk_next": "የሚቀጥለው ሳምንት",
+ "wk_today": "ዛሬ",
+ "wk_soup": "ሾርባ",
+ "wk_sides": "ተጨማሪ ምግቦች",
+ "wk_note": "ምናሌው እንደ ዕለቱ ግብዓቶች ሊለወጥ ይችላል።",
+ "wk_special": "ልዩ ዋጋ",
+ "wk_until": "እስከ {d}"
 }

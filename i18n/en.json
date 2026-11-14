@@ -84,5 +84,14 @@
  "copied": "Copied",
  "selected": "Selected",
  "menu_sub": "Prices are on our online order page.",
- "lang_label": "Language"
+ "lang_label": "Language",
+ "wk_title": "K-JjamBab weekly menu",
+ "wk_this": "This week",
+ "wk_next": "Next week",
+ "wk_today": "Today",
+ "wk_soup": "Soup",
+ "wk_sides": "Sides",
+ "wk_note": "The menu may change depending on the day's ingredients.",
+ "wk_special": "Special price",
+ "wk_until": "through {d}"
 }

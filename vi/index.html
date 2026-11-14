@@ -149,6 +149,28 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .am .trays img{border-radius:12px;aspect-ratio:4/3;object-fit:cover;width:100%}
 .am .trays img:first-child{grid-column:1/-1;aspect-ratio:auto}
 @media (max-width:860px){.am .wrap{grid-template-columns:1fr}}
+.am .was{text-decoration:line-through;opacity:.75;font-weight:700;font-size:20px}
+.am .deal{font-weight:700;color:#F2D28E;flex-basis:100%;margin-bottom:-6px}
+.am .wrap.wk{display:block;margin-top:48px}
+.am .wrap.wk[hidden]{display:none}
+.wk-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin-bottom:16px}
+.wk-head h3{font:800 24px/1.2 var(--f-sans);letter-spacing:-.01em}
+.wk-tabs{display:flex;gap:6px}
+.wk-tabs button{font:600 14px var(--f-sans);color:inherit;background:transparent;border:1.5px solid currentColor;border-radius:999px;padding:6px 14px;cursor:pointer;opacity:.75}
+.wk-tabs button[aria-pressed=true]{background:var(--olive-ink);color:var(--olive);border-color:var(--olive-ink);opacity:1}
+.wk-range{opacity:.8;font-size:14px;margin-inline-start:auto}
+.wk-list{display:grid;gap:8px}
+.wk-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,1.5fr);gap:6px 22px;align-items:center;background:rgba(255,255,255,.08);border-radius:12px;padding:12px 18px}
+.wk-row.today{background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 2px #F2D28E}
+.wk-d b{font-weight:800}
+.wk-d span{opacity:.8;margin-inline-start:6px;font-size:14px}
+.wk-d em{display:block;font-style:normal;font-weight:700;font-size:12px;color:#F2D28E}
+.wk-m strong{font:800 20px/1.25 var(--f-sans);display:block}
+.wk-m small{opacity:.8;font-size:14px}
+.wk-x{font-size:14px;line-height:1.5;opacity:.92;display:grid;gap:2px}
+.wk-x i{font-style:normal;font-weight:700;color:#F2D28E;margin-inline-end:8px}
+.am .wk-note{margin-top:12px;font-size:13px;opacity:.75;max-width:none}
+@media (max-width:700px){.wk-row{grid-template-columns:1fr;gap:4px}.wk-range{margin-inline-start:0;flex-basis:100%}}
 
 /* room */
 .room{margin-top:36px;display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:auto auto;gap:16px}
@@ -302,13 +324,23 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <h2 class="h2">Bánh burger NO. Trứng ốp la NO. <span>Là K-JjamBab đây!</span></h2>
         <p>Trước giờ trưa, AnnanGol phục vụ K-JjamBab, bữa sáng khay kiểu quân đội Hàn Quốc: cơm với trứng ốp la, một bát canh nóng, ba món phụ và một món chính thay đổi mỗi ngày. Kèm gim nướng.</p>
         <p class="kr" >당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
-        <div class="row"><span class="price">$13.99</span><span class="stamp">NO TIP</span><span>Mỗi sáng, 7–10 giờ</span></div>
+        <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$13.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>Mỗi sáng, 7–10 giờ</span></div>
       </div>
       <div class="trays">
         <img src="../img/tray_bulgogi.jpg" loading="lazy" alt="K-JjamBab tray with bulgogi, kkakdugi, rice and fried egg, and stew">
         <img src="../img/tray_shrimp.jpg" loading="lazy" alt="K-JjamBab tray with shrimp stew">
         <img src="../img/tray_fish.jpg" loading="lazy" alt="K-JjamBab tray with braised fish and potato stew">
       </div>
+    </div>
+    <!-- Weekly menu: filled from the in-store display schedule (/display/ admin). Hidden until there is a menu to show. -->
+    <div class="wrap wk" id="weekmenu" hidden>
+      <div class="wk-head">
+        <h3>Thực đơn K-JjamBab hằng tuần</h3>
+        <div class="wk-tabs" id="wkTabs"><button type="button" data-wk="0" aria-pressed="true">Tuần này</button><button type="button" data-wk="1" aria-pressed="false">Tuần sau</button></div>
+        <span class="wk-range" id="wkRange"></span>
+      </div>
+      <div class="wk-list" id="wkList"></div>
+      <p class="wk-note">Thực đơn có thể thay đổi tùy theo nguyên liệu trong ngày.</p>
     </div>
   </section>
 
@@ -367,12 +399,58 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
 </footer>
 
 <script>
-const T={"copy": "Sao chép", "copied": "Đã sao chép", "selected": "Đã chọn"};
+const T={"copy": "Sao chép", "copied": "Đã sao chép", "selected": "Đã chọn", "wk_today": "Hôm nay", "wk_soup": "Canh", "wk_sides": "Món phụ", "wk_special": "Giá đặc biệt", "wk_until": "đến hết {d}"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
   try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
 }));
+</script>
+<script>
+/* Weekly K-JjamBab menu and current price, read from the in-store display schedule. */
+(function(){
+  const box=document.getElementById('weekmenu'); if(!box||!window.fetch||!window.Intl) return;
+  const lang=document.documentElement.lang||'en', ko=lang==='ko';
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  // "Today" is the restaurant's day (Eastern time), wherever the visitor is.
+  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  const D=s=>{const a=s.split('-');return new Date(Date.UTC(+a[0],a[1]-1,+a[2]))}, iso=d=>d.toISOString().slice(0,10), add=(d,n)=>new Date(d.getTime()+n*864e5);
+  const mon=add(D(today),-((D(today).getUTCDay()+6)%7));
+  const fDay=new Intl.DateTimeFormat(lang,{weekday:'short',timeZone:'UTC'}), fMD=ko?{format:d=>(d.getUTCMonth()+1)+'/'+d.getUTCDate()}:new Intl.DateTimeFormat(lang,{month:'numeric',day:'numeric',timeZone:'UTC'});
+  fetch('/display/api.php?a=state').then(r=>r.json()).then(j=>{
+    const st=j.state||{}, sc=st.schedule||{}, m=st.menu||{};
+    // price
+    const sp=(m.special||'').trim(), reg=(m.price||'').trim(), P=document.getElementById('amPrice');
+    if(sp&&(!m.specialUntil||today<=m.specialUntil)){
+      P.textContent=sp;
+      if(reg){const w=document.getElementById('amWas');w.textContent=reg;w.hidden=false}
+      const dl=document.getElementById('amDeal');
+      dl.textContent=((ko&&(m.specialLabel||'').trim())||T.wk_special)+(m.specialUntil?' · '+T.wk_until.replace('{d}',fMD.format(D(m.specialUntil))):'');
+      dl.hidden=false;
+    } else if(reg) P.textContent=reg;
+    // weekly menu
+    const pick=(e,k)=>{const a=(e[k]||'').trim(), b=(e[k+'En']||'').trim();return ko?(a||b):(b||a)};
+    const week=o=>{const out=[];for(let i=0;i<7;i++){const d=add(mon,o*7+i);out.push({d:d,e:sc[iso(d)]||{}})}return out};
+    const has=o=>week(o).some(x=>pick(x.e,'main')&&iso(x.d)>=today);
+    const avail=[0,1].filter(has); if(!avail.length) return;
+    const tabs=document.getElementById('wkTabs'), list=document.getElementById('wkList'), range=document.getElementById('wkRange');
+    if(avail.length<2) tabs.hidden=true;
+    const show=o=>{
+      const w=week(o);
+      range.textContent=fMD.format(w[0].d)+' – '+fMD.format(w[6].d);
+      // only days that have a menu, and for the current week only today onward
+      list.innerHTML=w.filter(x=>pick(x.e,'main')&&iso(x.d)>=today).map(x=>{
+        const e=x.e, main=pick(e,'main'), alt=(!ko&&(e.mainEn||'').trim()&&(e.main||'').trim())?e.main.trim():'', soup=pick(e,'soup'), sides=pick(e,'sides'), t=iso(x.d)===today;
+        return '<div class="wk-row'+(t?' today':'')+'"><div class="wk-d"><b>'+esc(fDay.format(x.d))+'</b><span>'+esc(fMD.format(x.d))+'</span>'+(t?'<em>'+esc(T.wk_today)+'</em>':'')+'</div>'+
+          '<div class="wk-m"><strong>'+esc(main||'—')+'</strong>'+(alt?'<small class="kr" lang="ko">'+esc(alt)+'</small>':'')+'</div>'+
+          '<div class="wk-x">'+(soup?'<span><i>'+esc(T.wk_soup)+'</i>'+esc(soup)+'</span>':'')+(sides?'<span><i>'+esc(T.wk_sides)+'</i>'+esc(sides)+'</span>':'')+'</div></div>';
+      }).join('');
+      tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.wk===o)));
+    };
+    tabs.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(+b.dataset.wk)});
+    show(avail[0]); box.hidden=false;
+  }).catch(()=>{});
+})();
 </script>
 <script>
 /* AnnanGol first-party analytics (no cookies, no IPs stored). Dashboard: /stats/ */

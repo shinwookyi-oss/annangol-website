@@ -84,5 +84,14 @@
  "copied": "복사됨",
  "selected": "선택됨",
  "menu_sub": "가격은 온라인 주문 페이지에서 확인하세요.",
- "lang_label": "언어"
+ "lang_label": "언어",
+ "wk_title": "K-짬밥 주간 메뉴",
+ "wk_this": "이번 주",
+ "wk_next": "다음 주",
+ "wk_today": "오늘",
+ "wk_soup": "국",
+ "wk_sides": "반찬",
+ "wk_note": "메뉴는 재료 사정에 따라 바뀔 수 있습니다.",
+ "wk_special": "특가",
+ "wk_until": "{d}까지"
 }
