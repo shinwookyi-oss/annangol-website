@@ -102,6 +102,7 @@
   #start .btns { display:flex; gap:calc(2 * var(--u)); flex-wrap:wrap; justify-content:center; }
   .big { font:inherit; font-size:calc(3 * var(--u)); font-weight:700; padding:calc(1.8 * var(--u)) calc(3.5 * var(--u));
     border-radius:calc(1.4 * var(--u)); border:2px solid var(--muted); background:transparent; color:var(--cream); cursor:pointer; }
+  .big:focus, .seg:focus { outline:calc(.5 * var(--u)) solid var(--gold); outline-offset:calc(.4 * var(--u)); }
   .big.go { background:var(--red); color:#fff; border-color:var(--red); }
   .dev { display:flex; flex-direction:column; gap:calc(1.4 * var(--u)); margin-top:calc(1 * var(--u)); padding:calc(2 * var(--u));
     border:1px solid rgba(255,255,255,.15); border-radius:calc(1.6 * var(--u)); }
@@ -185,7 +186,7 @@
 </div>
 
 <div id="corner"></div>
-<div id="mutebadge" class="hidden">🔇 화면을 한 번 터치하면 소리가 켜집니다</div>
+<div id="mutebadge" class="hidden">🔇 화면을 터치하거나 리모컨의 확인(OK) 버튼을 누르면 소리가 켜집니다</div>
 
 <div id="start">
   <h1>AnnanGol <span>Display</span></h1>
@@ -205,7 +206,7 @@
       <button class="seg" data-rot="270">270°</button>
     </div>
   </div>
-  <p>재생 중 이 화면으로 돌아오기: 오른쪽 위 모서리를 빠르게 3번 터치 (키보드는 Esc)</p>
+  <p>재생 중 이 화면으로 돌아오기: 오른쪽 위 모서리를 빠르게 3번 터치 · 리모컨은 위쪽(▲) 버튼을 빠르게 3번 · 키보드는 Esc</p>
 </div>
 
 <div id="wb" class="hidden">
@@ -413,11 +414,14 @@
   // 소리: 브라우저가 터치 없이 시작한 소리 재생을 막으면 음소거로 틀고, 화면을 터치하면 바로 소리를 켠다
   var media = null, badge = document.getElementById('mutebadge');
   function mutedFallback() { if (state.settings.sound) badge.classList.remove('hidden'); }
-  document.addEventListener('pointerdown', function () {
+  // 터치뿐 아니라 리모컨·키보드의 아무 버튼이나 눌러도 소리가 켜진다 (TV는 터치가 안 되므로)
+  function wake() {
     if (!running || !state.settings.sound) return;
     badge.classList.add('hidden');
     if (media) { try { media.unmute(); } catch (e) {} }
-  }, true);
+  }
+  document.addEventListener('pointerdown', wake, true);
+  document.addEventListener('keydown', wake, true);
   function clearLayer(el) {
     if (!el) return;
     if (el._cleanup) { try { el._cleanup(); } catch (e) {} el._cleanup = null; }
@@ -687,6 +691,8 @@
   function showStart(auto) {
     stopAll(); adminEl.classList.add('hidden'); wbEl.classList.add('hidden');
     startEl.classList.remove('hidden'); paintDev();
+    // 리모컨의 확인(OK) 버튼만 눌러도 시작되도록, 이 기기에 맞는 시작 버튼에 미리 초점을 둔다
+    var fb = startEl.querySelector('[data-go="' + screenKind() + '"]'); if (fb) { try { fb.focus(); } catch (e) {} }
     clearInterval(autoTimer); countdownEl.textContent = '이 화면에서 무엇을 할지 골라 주세요.';
     if (auto && dev.screen) {   // 한 번 고른 기기는 다음부터 자동으로 시작
       left = 12;
@@ -718,7 +724,15 @@
     var t = Date.now(); taps = taps.filter(function (x) { return t - x < 2000; }); taps.push(t);
     if (taps.length >= 3) { taps = []; showStart(false); }
   });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && running) showStart(false); });
+  var ups = [];
+  document.addEventListener('keydown', function (e) {
+    if (!running) return;
+    if (e.key === 'Escape') { showStart(false); return; }
+    if (e.key === 'ArrowUp') {   // 리모컨: 위쪽 방향 버튼을 빠르게 3번
+      var t = Date.now(); ups = ups.filter(function (x) { return t - x < 2000; }); ups.push(t);
+      if (ups.length >= 3) { ups = []; showStart(false); }
+    }
+  });
 
   /* ---------- 화이트보드 ---------- */
   var wbc = document.getElementById('wbc'), wctx = wbc.getContext('2d');
