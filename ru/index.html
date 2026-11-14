@@ -157,19 +157,21 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .wk-head h3{font:800 24px/1.2 var(--f-sans);letter-spacing:-.01em}
 .wk-tabs{display:flex;gap:6px}
 .wk-tabs button{font:600 14px var(--f-sans);color:inherit;background:transparent;border:1.5px solid currentColor;border-radius:999px;padding:6px 14px;cursor:pointer;opacity:.75}
-.wk-tabs button[aria-pressed=true]{background:var(--olive-ink);color:var(--olive);border-color:var(--olive-ink);opacity:1}
+.wk-card{background:var(--card);color:var(--ink);border-radius:18px;padding:28px 28px 22px;box-shadow:0 22px 44px -20px rgba(0,0,0,.55)}
+@media (max-width:700px){.wk-card{padding:20px 16px 16px;border-radius:14px}}
+.wk-tabs button[aria-pressed=true]{background:var(--olive);color:var(--olive-ink);border-color:var(--olive);opacity:1}
 .wk-range{opacity:.8;font-size:14px;margin-inline-start:auto}
 .wk-list{display:grid;gap:8px}
-.wk-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,1.5fr);gap:6px 22px;align-items:center;background:rgba(255,255,255,.08);border-radius:12px;padding:12px 18px}
-.wk-row.today{background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 2px #F2D28E}
+.wk-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,1.5fr);gap:6px 22px;align-items:center;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px 18px}
+.wk-row.today{border-color:var(--ember);box-shadow:inset 0 0 0 1px var(--ember)}
 .wk-d b{font-weight:800}
 .wk-d span{opacity:.8;margin-inline-start:6px;font-size:14px}
-.wk-d em{display:block;font-style:normal;font-weight:700;font-size:12px;color:#F2D28E}
+.wk-d em{display:block;font-style:normal;font-weight:700;font-size:12px;color:var(--ember)}
 .wk-m strong{font:800 20px/1.25 var(--f-sans);display:block}
 .wk-m small{opacity:.8;font-size:14px}
 .wk-x{font-size:14px;line-height:1.5;opacity:.92;display:grid;gap:2px}
-.wk-x i{font-style:normal;font-weight:700;color:#F2D28E;margin-inline-end:8px}
-.am .wk-note{margin-top:12px;font-size:13px;opacity:.75;max-width:none}
+.wk-x i{font-style:normal;font-weight:700;color:var(--ember);margin-inline-end:8px}
+.am .wk-note{margin-top:12px;font-size:13px;color:var(--muted);opacity:1;max-width:none}
 @media (max-width:700px){.wk-row{grid-template-columns:1fr;gap:4px}.wk-range{margin-inline-start:0;flex-basis:100%}}
 
 /* room */
@@ -334,6 +336,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
     </div>
     <!-- Weekly menu: filled from the in-store display schedule (/display/ admin). Hidden until there is a menu to show. -->
     <div class="wrap wk" id="weekmenu" hidden>
+     <div class="wk-card">
       <div class="wk-head">
         <h3>Меню K-JjamBab на неделю</h3>
         <div class="wk-tabs" id="wkTabs"><button type="button" data-wk="0" aria-pressed="true">Эта неделя</button><button type="button" data-wk="1" aria-pressed="false">Следующая неделя</button></div>
@@ -341,6 +344,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       </div>
       <div class="wk-list" id="wkList"></div>
       <p class="wk-note">Меню может меняться в зависимости от продуктов дня.</p>
+     </div>
     </div>
   </section>
 
