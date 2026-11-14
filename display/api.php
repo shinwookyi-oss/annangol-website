@@ -49,20 +49,40 @@ function need_auth(): void {
 function need_post(): void {
     if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') out(['error' => 'method'], 405);
 }
-// One-time import shipped with the site (display/import.json): its schedule days are written
-// into the saved state once per import id, so later edits in the admin are kept.
+// One-time import shipped with the site (display/import.json): schedule days and playlist
+// changes are written into the saved state once per import id, so later admin edits are kept.
 function apply_import(): void {
     $src = __DIR__ . '/import.json';
     if (!is_file($src)) return;
     $imp = json_decode((string)file_get_contents($src), true);
-    if (!is_array($imp) || empty($imp['id']) || !is_array($imp['schedule'] ?? null)) return;
+    if (!is_array($imp) || empty($imp['id'])) return;
     $mark = display_dir() . '/import-applied.txt';
     if (is_file($mark) && trim((string)file_get_contents($mark)) === (string)$imp['id']) return;
     $f = display_dir() . '/state.json';
     $state = is_file($f) ? (json_decode((string)file_get_contents($f), true) ?: []) : [];
-    if (!is_array($state['schedule'] ?? null)) $state['schedule'] = [];
-    foreach ($imp['schedule'] as $day => $entry) {
-        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$day) && is_array($entry)) $state['schedule'][$day] = $entry;
+    if (is_array($imp['schedule'] ?? null)) {
+        if (!is_array($state['schedule'] ?? null)) $state['schedule'] = [];
+        foreach ($imp['schedule'] as $day => $entry) {
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$day) && is_array($entry)) $state['schedule'][$day] = $entry;
+        }
+    }
+    if (is_array($state['items'] ?? null)) {
+        // items_set: change fields of existing items by id (null removes a field)
+        if (is_array($imp['items_set'] ?? null)) {
+            foreach ($state['items'] as &$it) {
+                $set = $imp['items_set'][$it['id'] ?? ''] ?? null;
+                if (!is_array($set)) continue;
+                foreach ($set as $k => $v) { if ($v === null) unset($it[$k]); else $it[$k] = $v; }
+            }
+            unset($it);
+        }
+        // items_add: append items whose id is not there yet
+        if (is_array($imp['items_add'] ?? null)) {
+            $have = array_column($state['items'], 'id');
+            foreach ($imp['items_add'] as $n) {
+                if (is_array($n) && !empty($n['id']) && !in_array($n['id'], $have, true)) $state['items'][] = $n;
+            }
+        }
     }
     $json = json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     if (file_put_contents("$f.tmp", $json, LOCK_EX) !== false && rename("$f.tmp", $f)) file_put_contents($mark, (string)$imp['id'], LOCK_EX);
