@@ -406,7 +406,7 @@
 
   /* ---------- 재생 ---------- */
   var stage = document.getElementById('stage');
-  var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now(), plIndex = {}, gap = {}, lastNormal = false;
+  var token = 0, timer = null, currentId = null, running = false, bootedAt = Date.now(), plIndex = {}, sinceInter = 0, lastInter = null, lastNormal = false;
   var resume = {}, bag = [];   // resume: 시간 제한으로 끊은 영상의 이어보기 위치, bag: 셔플 때 이번 바퀴에 남은 항목
   function shuffleArr(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function every(i) { return (i.type === 'youtube' || i.type === 'video') ? (parseInt(i.every, 10) || 0) : 0; }
@@ -454,10 +454,22 @@
     var list = all.filter(function (i) { return !(every(i) > 0); });
     var item = null;
     if (list.length) {
-      if (lastNormal) inters.forEach(function (i) { gap[i.id] = (gap[i.id] || 0) + 1; });
-      for (var k = 0; k < inters.length && !item; k++) if (gap[inters[k].id] >= every(inters[k])) item = inters[k];
+      // 사이사이 항목이 여러 개여도 한 번에 하나씩만 끼워 넣고, 차례대로(셔플이면 무작위로) 돌아가며 튼다
+      if (lastNormal) sinceInter++;
+      if (inters.length) {
+        var cand;
+        if (state.settings.shuffle && inters.length > 1) {
+          var pool = inters.filter(function (i) { return i.id !== lastInter; });
+          cand = pool[Math.floor(Math.random() * pool.length)];
+        } else {
+          var ip = -1;
+          for (var k = 0; k < inters.length; k++) if (inters[k].id === lastInter) ip = k;
+          cand = inters[(ip + 1) % inters.length];
+        }
+        if (sinceInter >= every(cand)) item = cand;
+      }
     } else { list = inters; }
-    if (item) { gap[item.id] = 0; lastNormal = false; }
+    if (item) { sinceInter = 0; lastInter = item.id; lastNormal = false; }
     else {
       if (state.settings.shuffle && list.length > 1) {   // 셔플: 한 바퀴 안에서는 겹치지 않게 무작위 순서
         bag = bag.filter(function (id) { return list.some(function (i) { return i.id === id; }); });
