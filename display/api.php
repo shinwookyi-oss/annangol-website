@@ -49,6 +49,25 @@ function need_auth(): void {
 function need_post(): void {
     if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') out(['error' => 'method'], 405);
 }
+// One-time import shipped with the site (display/import.json): its schedule days are written
+// into the saved state once per import id, so later edits in the admin are kept.
+function apply_import(): void {
+    $src = __DIR__ . '/import.json';
+    if (!is_file($src)) return;
+    $imp = json_decode((string)file_get_contents($src), true);
+    if (!is_array($imp) || empty($imp['id']) || !is_array($imp['schedule'] ?? null)) return;
+    $mark = display_dir() . '/import-applied.txt';
+    if (is_file($mark) && trim((string)file_get_contents($mark)) === (string)$imp['id']) return;
+    $f = display_dir() . '/state.json';
+    $state = is_file($f) ? (json_decode((string)file_get_contents($f), true) ?: []) : [];
+    if (!is_array($state['schedule'] ?? null)) $state['schedule'] = [];
+    foreach ($imp['schedule'] as $day => $entry) {
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$day) && is_array($entry)) $state['schedule'][$day] = $entry;
+    }
+    $json = json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if (file_put_contents("$f.tmp", $json, LOCK_EX) !== false && rename("$f.tmp", $f)) file_put_contents($mark, (string)$imp['id'], LOCK_EX);
+    clearstatcache();
+}
 function media_name(string $f): ?string {
     return preg_match('/^[a-f0-9]{16}\.(' . implode('|', array_keys(DISPLAY_EXT)) . ')$/', $f) ? $f : null;
 }
@@ -86,6 +105,7 @@ try {
     }
 
     if ($a === 'state') {                                  // public: what the board plays
+        apply_import();
         $f = display_dir() . '/state.json';
         $raw = is_file($f) ? (string)file_get_contents($f) : '';
         $state = $raw !== '' ? json_decode($raw, true) : null;
@@ -112,6 +132,10 @@ try {
         $state = json_decode($raw, true);
         if (!is_array($state) || !isset($state['items']) || !is_array($state['items'])) out(['error' => 'bad_state'], 400);
         $f = display_dir() . '/state.json';
+        // Refuse a save made from an out-of-date copy, so it cannot overwrite newer changes.
+        clearstatcache();
+        $cur = is_file($f) ? (string)filemtime($f) . '-' . filesize($f) : '0';
+        if (isset($_GET['v']) && (string)$_GET['v'] !== $cur) out(['error' => 'stale'], 409);
         $json = json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if (file_put_contents("$f.tmp", $json, LOCK_EX) === false || !rename("$f.tmp", $f)) out(['error' => 'write'], 500);
         clearstatcache();

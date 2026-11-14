@@ -37,6 +37,9 @@
   .m-dish { margin-top:calc(1.5 * var(--u)); font-size:calc(11 * var(--u)); font-weight:900; line-height:1.1; word-break:keep-all; }
   .m-extra { margin-top:calc(2 * var(--u)); font-size:calc(3.6 * var(--u)); line-height:1.5; word-break:keep-all; }
   .m-extra b { color:var(--gold); font-weight:700; margin-right:.5em; }
+  .m-en { font-size:calc(4 * var(--u)); color:var(--muted); font-weight:700; margin-top:calc(.6 * var(--u)); }
+  small.en { display:block; font-size:.62em; font-weight:400; color:var(--muted); line-height:1.3; }
+  .w-row.today small.en { color:#ffe1e1; }
   .m-sub { margin-top:calc(2 * var(--u)); font-size:calc(3.2 * var(--u)); color:var(--muted); }
   .m-price { margin-top:calc(3.5 * var(--u)); display:inline-block; background:var(--red); color:#fff; font-weight:900;
     font-size:calc(8 * var(--u)); padding:calc(.6 * var(--u)) calc(3 * var(--u)); border-radius:calc(1.2 * var(--u)); }
@@ -67,6 +70,10 @@
   .w-row .ex { font-size:calc(2.5 * var(--u)); color:var(--muted); margin-left:auto; text-align:right; word-break:keep-all; }
   .portrait .w-row { flex-wrap:wrap; gap:calc(.6 * var(--u)) calc(3 * var(--u)); padding:calc(2 * var(--u)) calc(2.5 * var(--u)); }
   .portrait .w-row .ex { margin-left:0; text-align:left; width:100%; padding-left:calc(5.2em * 1.2 + 3 * var(--u)); }
+  #root:not(.portrait) .slide.week { padding:calc(4 * var(--u)) calc(6 * var(--u)); gap:calc(2 * var(--u)); }
+  #root:not(.portrait) .w-rows { gap:calc(.8 * var(--u)); }
+  #root:not(.portrait) .w-row { padding:calc(1.1 * var(--u)) calc(2.5 * var(--u)); }
+  #root:not(.portrait) .w-row .mn small.en { display:inline; margin-left:.8em; }
   .w-row.today { background:var(--red); }
   .w-row.today .d, .w-row.today .ex { color:#fff; }
   .w-foot { display:flex; justify-content:space-between; align-items:center; font-size:calc(3 * var(--u)); color:var(--muted); }
@@ -148,6 +155,8 @@
   .warn { font-size:13px; color:#b3261e; }
   .thumb { max-height:90px; max-width:160px; border-radius:6px; border:1px solid #d9d2c6; display:block; }
   .sched .drow { display:grid; grid-template-columns:90px 1.2fr 1fr 1.6fr; gap:8px; align-items:center; margin-bottom:8px; }
+  .sched .drow.en { margin:-4px 0 14px; }
+  .sched .drow.en input { font-size:13px; padding:6px 10px; color:#6b6359; }
   .sched .drow.today .dl { color:var(--red); }
   .sched .dl { font-weight:700; font-size:14px; line-height:1.3; }
   .sched .dl small { display:block; font-weight:400; color:#6b6359; }
@@ -276,7 +285,8 @@
   }
   function normalize(s) {
     var d = defaults();
-    if (!s || !Array.isArray(s.items)) return d;
+    if (!s) return d;
+    if (!Array.isArray(s.items)) s.items = d.items;
     var k;
     if (s.settings) for (k in s.settings) d.settings[k] = s.settings[k];
     if (s.menu) for (k in s.menu) d.menu[k] = s.menu[k];
@@ -610,7 +620,11 @@
   }
 
   /* ---------- 짬밥 메뉴 슬라이드 ---------- */
-  function dayEntry(d) { var e = state.schedule[ymd(d)] || {}; return { main: (e.main || '').trim(), soup: (e.soup || '').trim(), sides: (e.sides || '').trim() }; }
+  function dayEntry(d) {
+    var e = state.schedule[ymd(d)] || {}, t = function (k) { return String(e[k] || '').trim(); };
+    return { main: t('main'), soup: t('soup'), sides: t('sides'), mainEn: t('mainEn'), soupEn: t('soupEn'), sidesEn: t('sidesEn') };
+  }
+  function en(txt) { return txt ? '<small class="en">' + esc(txt) + '</small>' : ''; }
   function weekHasAny(mon) { for (var i = 0; i < 7; i++) { var e = dayEntry(addDays(mon, i)); if (e.main || e.soup || e.sides) return true; } return false; }
   // 특가가 있고 종료일이 지나지 않았으면 특가를 크게, 정가는 취소선으로
   function deal() {
@@ -630,7 +644,7 @@
         d = addDays(mon, i); e = dayEntry(d);
         var ex = [e.soup, e.sides].filter(Boolean).join(' · ');
         h += '<div class="w-row' + (ymd(d) === tkey ? ' today' : '') + '"><span class="d">' + DAY_KO[d.getDay()] + ' ' + md(d) + '</span>' +
-          '<span class="mn">' + esc(e.main || '—') + '</span>' + (ex ? '<span class="ex">' + esc(ex) + '</span>' : '') + '</div>';
+          '<span class="mn">' + esc(e.main || '—') + en(e.mainEn) + '</span>' + (ex ? '<span class="ex">' + esc(ex) + '</span>' : '') + '</div>';
       }
       return h + '</div><div class="w-foot"><span>' + esc(m.note || '') + '</span>' + '<span>' + (dl ? (dl.label ? '<span class="deal">' + esc(dl.label) + '</span>' : '') + (dl.was ? '<span class="was">' + esc(dl.was) + '</span>' : '') + '<span class="p">' + esc(dl.price) + '</span>'
         : (m.price ? '<span class="p">' + esc(m.price) + '</span>' : '')) + '</span></div></div>';
@@ -638,8 +652,8 @@
     e = dayEntry(today); mon = mondayOf(today);
     h = '<div class="slide menu"><div class="m-left"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
       '<div class="m-day">' + DAY_KO[today.getDay()] + '요일 · ' + DAY_EN[today.getDay()] + ' ' + md(today) + '</div>' +
-      '<div class="m-dish">' + esc(e.main || '오늘의 백반') + '</div>' +
-      ((e.soup || e.sides) ? '<div class="m-extra">' + (e.soup ? '<div><b>국</b>' + esc(e.soup) + '</div>' : '') + (e.sides ? '<div><b>반찬</b>' + esc(e.sides) + '</div>' : '') + '</div>' : '') +
+      '<div class="m-dish">' + esc(e.main || '오늘의 백반') + '</div>' + (e.mainEn ? '<div class="m-en">' + esc(e.mainEn) + '</div>' : '') +
+      ((e.soup || e.sides) ? '<div class="m-extra">' + (e.soup ? '<div><b>국</b>' + esc(e.soup) + en(e.soupEn) + '</div>' : '') + (e.sides ? '<div><b>반찬</b>' + esc(e.sides) + en(e.sidesEn) + '</div>' : '') + '</div>' : '') +
       (m.note ? '<div class="m-sub">' + esc(m.note) + '</div>' : '') +
       (dl ? (dl.label ? '<div class="m-deal">' + esc(dl.label) + '</div>' : '') + '<div><span class="m-price">' + esc(dl.price) + '</span>' + (dl.was ? '<span class="m-was">' + esc(dl.was) + '</span>' : '') + '</div>'
           : (m.price ? '<div class="m-price">' + esc(m.price) + '</div>' : '')) +
@@ -797,7 +811,11 @@
     var cut = ymd(addDays(new Date(), -60));   // 두 달 지난 스케줄은 정리
     Object.keys(state.schedule).forEach(function (k) { var e = state.schedule[k]; if (k < cut || !(e.main || e.soup || e.sides)) delete state.schedule[k]; });
     setMsg('저장 중…');
-    return postJson('save', state).then(function (r) {
+    return postJson('save' + (version ? '&v=' + encodeURIComponent(version) : ''), state).then(function (r) {
+      if (r.status === 409) {   // 다른 곳에서 먼저 바뀜: 최신 내용을 다시 불러온다
+        version = null;
+        return pull().then(function () { renderAdmin(); setMsg('다른 곳에서 내용이 바뀌어 최신 내용을 다시 불러왔습니다. 방금 수정한 부분을 다시 입력해 주세요.'); });
+      }
       if (r.status === 401) { renderLogin('로그인이 만료되었습니다. 다시 로그인해 주세요.'); return; }
       if (!r.ok) { setMsg('저장하지 못했습니다. 다시 시도해 주세요.'); return; }
       version = r.data.version;
@@ -870,7 +888,11 @@
       h += '<div class="drow' + (k === tkey ? ' today' : '') + '"><span class="dl">' + DAY_KO[d.getDay()] + '요일<small>' + md(d) + (k === tkey ? ' · 오늘' : '') + '</small></span>' +
         '<input type="text" data-day="' + k + '" data-k="main" placeholder="메인 (예: 불고기 백반)" value="' + esc(e.main) + '">' +
         '<input type="text" data-day="' + k + '" data-k="soup" placeholder="국" value="' + esc(e.soup) + '">' +
-        '<input type="text" data-day="' + k + '" data-k="sides" placeholder="반찬" value="' + esc(e.sides) + '"></div>';
+        '<input type="text" data-day="' + k + '" data-k="sides" placeholder="반찬" value="' + esc(e.sides) + '"></div>' +
+        '<div class="drow en"><span></span>' +
+        '<input type="text" data-day="' + k + '" data-k="mainEn" placeholder="Main in English (선택)" value="' + esc(e.mainEn) + '">' +
+        '<input type="text" data-day="' + k + '" data-k="soupEn" placeholder="Soup" value="' + esc(e.soupEn) + '">' +
+        '<input type="text" data-day="' + k + '" data-k="sidesEn" placeholder="Sides" value="' + esc(e.sidesEn) + '"></div>';
     }
     h += '</div><div class="addrow"><button id="btnCopyWeek">바로 앞 주 내용을 이 주로 복사</button><button class="danger" id="btnClearWeek">이 주 비우기</button></div>';
     return h;
@@ -970,7 +992,7 @@
       var mon = addDays(mondayOf(new Date()), schedWeek * 7);
       for (var i = 0; i < 7; i++) {
         var k = ymd(addDays(mon, i)), p = state.schedule[ymd(addDays(mon, i - 7))];
-        if (t.id === 'btnCopyWeek' && p) state.schedule[k] = { main: p.main || '', soup: p.soup || '', sides: p.sides || '' };
+        if (t.id === 'btnCopyWeek' && p) state.schedule[k] = JSON.parse(JSON.stringify(p));
         else delete state.schedule[k];
       }
       document.getElementById('sched').innerHTML = schedHtml(); dirty(); return;
