@@ -1,0 +1,7 @@
+# Pages are always re-checked with the server, so a site update shows right away.
+# (Without this the CDN and browsers kept serving old copies of the HTML.)
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
