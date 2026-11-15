@@ -141,6 +141,9 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 /* breakfast band */
 .am{background:var(--olive);color:var(--olive-ink)}
 .am .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:44px;align-items:center}
+.am .kj-logo{display:inline-block;background:#fff;border-radius:14px;padding:11px 18px;margin-bottom:22px;box-shadow:0 10px 24px -12px rgba(0,0,0,.55)}
+.am .kj-logo img{height:42px;width:auto;display:block}
+@media (max-width:480px){.am .kj-logo img{height:34px}}
 .am .eyebrow{color:var(--gold)}
 .am .h2 span{color:#F2D28E}
 .am p{margin-top:14px;max-width:46ch;opacity:.9}
@@ -344,6 +347,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <section id="breakfast" class="am">
     <div class="wrap">
       <div>
+        <div class="kj-logo"><img src="../img/kjjambab_logo.png" alt="K-JjamBab" width="774" height="150"></div>
         <p class="eyebrow">Mornings only · 7–10 AM</p>
         <h2 class="h2">Burger NO. Omelet NO. <span>It's K-JjamBab!</span></h2>
         <p>Before lunch, AnnanGol serves K-JjamBab, a Korean military-style tray breakfast: rice with a fried egg, a warm soup, three side dishes and a main that changes every day. Roasted gim on the side.</p>
