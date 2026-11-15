@@ -99,6 +99,25 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .quick .wrap{display:flex;flex-wrap:wrap;gap:10px 36px;padding-block:16px;font-weight:600;font-size:15px}
 .quick a{text-decoration:none}
 
+/* K-DosiRock lunch box */
+.dr{background:var(--card);border-block:1px solid var(--rule)}
+.dr .dr-logo{display:inline-block;background:#fff;border:1px solid var(--rule);border-radius:14px;padding:11px 18px;margin-bottom:22px}
+.dr .dr-logo img{height:42px;width:auto;display:block}
+@media (max-width:480px){.dr .dr-logo img{height:32px}}
+.dr .lead{margin-top:14px;max-width:62ch;color:var(--muted)}
+.dr-grid{margin-top:32px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.dr-card{background:var(--paper);border:1px solid var(--rule);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.dr-card img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;display:block}
+.dr-card .b{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px}
+.dr-card .t{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.dr-card h3{font:800 20px/1.2 var(--f-sans)}
+.dr-card h3 .kr{font:700 18px var(--f-kr);color:var(--ember);margin-inline-end:8px}
+.dr-card .p{font:800 26px/1 var(--f-sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.dr-card .d{font-size:14.5px;color:var(--muted)}
+.dr-card .plus{align-self:flex-start;font:700 13px var(--f-sans);color:var(--ember-ink);background:var(--ember);border-radius:999px;padding:4px 12px}
+.dr-note{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;font-weight:600}
+@media (max-width:860px){.dr-grid{grid-template-columns:1fr}}
+
 /* signature grid */
 .sig{margin-top:36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .dish{background:var(--card);border:1px solid var(--rule);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
@@ -259,6 +278,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <a href="#signature">대표 메뉴</a>
       <a href="#menu">메뉴</a>
       <a href="#breakfast">아침 짬밥</a>
+      <a href="#dosirock">도시락</a>
       <a href="#inside">매장</a>
       <a href="#visit">오시는 길</a>
     </nav>
@@ -384,6 +404,30 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <input name="website" class="sg-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="sg-act"><button class="btn" type="submit">보내기</button><span id="sgMsg" role="status"></span></div>
      </form>
+    </div>
+  </section>
+
+  <section id="dosirock" class="dr">
+    <div class="wrap">
+      <div class="dr-logo"><img src="../img/kdosirock_logo.png" alt="K-DosiRock" width="800" height="144"></div>
+      <p class="eyebrow">포장 도시락</p>
+      <h2 class="h2">K-DosiRock, 매일 바뀌는 한식 도시락</h2>
+      <p class="lead">그날의 K-짬밥 메뉴를 그대로 담은 도시락입니다. 계란후라이를 올린 밥, 메인, 반찬을 세 가지 크기로 준비했습니다.</p>
+      <div class="dr-grid">
+        <article class="dr-card">
+          <img src="../img/dosirock_s.jpg" loading="lazy" width="442" height="297" alt="밥, 계란후라이, 불고기, 반찬이 담긴 K-DosiRock 소">
+          <div class="b"><div class="t"><h3><span class="kr" hidden>소</span>소</h3><span class="p">$8.99</span></div><p class="d">밥, 계란후라이, 메인, 반찬 3가지</p></div>
+        </article>
+        <article class="dr-card">
+          <img src="../img/dosirock_m.jpg" loading="lazy" width="496" height="333" alt="불고기를 넉넉히 담은 K-DosiRock 중과 국, 김">
+          <div class="b"><div class="t"><h3><span class="kr" hidden>중</span>중</h3><span class="p">$10.99</span></div><p class="d">메인을 넉넉히 담고 반찬 3가지</p><span class="plus">+ 국 · 김</span></div>
+        </article>
+        <article class="dr-card">
+          <img src="../img/dosirock_l.jpg" loading="lazy" width="1200" height="805" alt="밥, 불고기, 반찬 네 가지가 담긴 K-DosiRock 대와 국, 김">
+          <div class="b"><div class="t"><h3><span class="kr" hidden>대</span>대</h3><span class="p">$12.99</span></div><p class="d">메인 듬뿍, 반찬 4가지</p><span class="plus">+ 국 · 김</span></div>
+        </article>
+      </div>
+      <div class="dr-note"><span>메뉴는 매일 바뀝니다. 아난골 매장에서 받아 가세요.</span><a class="btn" href="tel:+17039144600">전화 (703) 914-4600</a></div>
     </div>
   </section>
 

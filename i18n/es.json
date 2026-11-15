@@ -104,5 +104,21 @@
  "sg_send": "Enviar",
  "sg_thanks": "¡Gracias! Leemos todos los mensajes.",
  "sg_err": "No se pudo enviar. Inténtalo de nuevo.",
- "wk_want": "Lo quiero"
+ "wk_want": "Lo quiero",
+ "nav_dosirock": "Lunch box",
+ "dr_eyebrow": "Lunch box para llevar",
+ "dr_title": "K-DosiRock: lunch box coreano, menú nuevo cada día",
+ "dr_p": "K-DosiRock lleva el menú K-JjamBab del día: arroz con huevo frito, un plato principal y acompañamientos coreanos. Tres tamaños.",
+ "dr_s": "Pequeño",
+ "dr_s_d": "Arroz, huevo frito, plato principal y 3 acompañamientos.",
+ "dr_m": "Mediano",
+ "dr_m_d": "Más plato principal y 3 acompañamientos.",
+ "dr_l": "Grande",
+ "dr_l_d": "La mayor porción de plato principal y 4 acompañamientos.",
+ "dr_plus": "+ Sopa y gim tostado",
+ "dr_note": "El menú cambia cada día. Recójalo en AnnanGol.",
+ "dr_call": "Llamar (703) 914-4600",
+ "dr_s_alt": "Lunch box K-DosiRock pequeño con arroz, huevo frito, bulgogi y acompañamientos",
+ "dr_m_alt": "Lunch box K-DosiRock mediano con más bulgogi, sopa y gim tostado",
+ "dr_l_alt": "Lunch box K-DosiRock grande con arroz, bulgogi, cuatro acompañamientos, sopa y gim tostado"
 }

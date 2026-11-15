@@ -104,5 +104,21 @@
  "sg_send": "发送",
  "sg_thanks": "谢谢！我们会阅读每一条留言。",
  "sg_err": "发送失败，请重试。",
- "wk_want": "想吃"
+ "wk_want": "想吃",
+ "nav_dosirock": "便当",
+ "dr_eyebrow": "外带便当",
+ "dr_title": "K-DosiRock：每天换菜单的韩式便当",
+ "dr_p": "K-DosiRock把当天的K-JjamBab菜单装进便当：米饭配煎蛋、主菜和韩式小菜。共三种份量。",
+ "dr_s": "小份",
+ "dr_s_d": "米饭、煎蛋、主菜、3样小菜。",
+ "dr_m": "中份",
+ "dr_m_d": "主菜加量，配3样小菜。",
+ "dr_l": "大份",
+ "dr_l_d": "主菜最多，配4样小菜。",
+ "dr_plus": "+ 汤和烤gim（海苔）",
+ "dr_note": "菜单每天更换。请到AnnanGol店内取餐。",
+ "dr_call": "致电 (703) 914-4600",
+ "dr_s_alt": "K-DosiRock小份便当：米饭、煎蛋、烤牛肉和小菜",
+ "dr_m_alt": "K-DosiRock中份便当：加量烤牛肉，配汤和烤海苔",
+ "dr_l_alt": "K-DosiRock大份便当：米饭、烤牛肉、四样小菜，配汤和烤海苔"
 }

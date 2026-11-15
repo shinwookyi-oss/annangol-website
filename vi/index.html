@@ -99,6 +99,25 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .quick .wrap{display:flex;flex-wrap:wrap;gap:10px 36px;padding-block:16px;font-weight:600;font-size:15px}
 .quick a{text-decoration:none}
 
+/* K-DosiRock lunch box */
+.dr{background:var(--card);border-block:1px solid var(--rule)}
+.dr .dr-logo{display:inline-block;background:#fff;border:1px solid var(--rule);border-radius:14px;padding:11px 18px;margin-bottom:22px}
+.dr .dr-logo img{height:42px;width:auto;display:block}
+@media (max-width:480px){.dr .dr-logo img{height:32px}}
+.dr .lead{margin-top:14px;max-width:62ch;color:var(--muted)}
+.dr-grid{margin-top:32px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.dr-card{background:var(--paper);border:1px solid var(--rule);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.dr-card img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;display:block}
+.dr-card .b{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px}
+.dr-card .t{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.dr-card h3{font:800 20px/1.2 var(--f-sans)}
+.dr-card h3 .kr{font:700 18px var(--f-kr);color:var(--ember);margin-inline-end:8px}
+.dr-card .p{font:800 26px/1 var(--f-sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.dr-card .d{font-size:14.5px;color:var(--muted)}
+.dr-card .plus{align-self:flex-start;font:700 13px var(--f-sans);color:var(--ember-ink);background:var(--ember);border-radius:999px;padding:4px 12px}
+.dr-note{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;font-weight:600}
+@media (max-width:860px){.dr-grid{grid-template-columns:1fr}}
+
 /* signature grid */
 .sig{margin-top:36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .dish{background:var(--card);border:1px solid var(--rule);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
@@ -259,6 +278,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <a href="#signature">Món đặc trưng</a>
       <a href="#menu">Thực đơn</a>
       <a href="#breakfast">Bữa sáng</a>
+      <a href="#dosirock">Lunch Box</a>
       <a href="#inside">Không gian</a>
       <a href="#visit">Ghé thăm</a>
     </nav>
@@ -384,6 +404,30 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <input name="website" class="sg-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="sg-act"><button class="btn" type="submit">Gửi</button><span id="sgMsg" role="status"></span></div>
      </form>
+    </div>
+  </section>
+
+  <section id="dosirock" class="dr">
+    <div class="wrap">
+      <div class="dr-logo"><img src="../img/kdosirock_logo.png" alt="K-DosiRock" width="800" height="144"></div>
+      <p class="eyebrow">Lunch box to go</p>
+      <h2 class="h2">K-DosiRock: a Korean lunch box, new every day</h2>
+      <p class="lead">K-DosiRock packs the day's K-JjamBab menu to go: rice with a fried egg, a main dish and Korean side dishes. Three sizes.</p>
+      <div class="dr-grid">
+        <article class="dr-card">
+          <img src="../img/dosirock_s.jpg" loading="lazy" width="442" height="297" alt="Small K-DosiRock lunch box with rice, fried egg, bulgogi and side dishes">
+          <div class="b"><div class="t"><h3><span class="kr" >소</span>Small</h3><span class="p">$8.99</span></div><p class="d">Rice, fried egg, main dish and 3 side dishes.</p></div>
+        </article>
+        <article class="dr-card">
+          <img src="../img/dosirock_m.jpg" loading="lazy" width="496" height="333" alt="Medium K-DosiRock lunch box with extra bulgogi, soup and roasted gim">
+          <div class="b"><div class="t"><h3><span class="kr" >중</span>Medium</h3><span class="p">$10.99</span></div><p class="d">A bigger portion of the main dish and 3 side dishes.</p><span class="plus">+ Soup & roasted gim</span></div>
+        </article>
+        <article class="dr-card">
+          <img src="../img/dosirock_l.jpg" loading="lazy" width="1200" height="805" alt="Large K-DosiRock lunch box with rice, bulgogi, four side dishes, soup and roasted gim">
+          <div class="b"><div class="t"><h3><span class="kr" >대</span>Large</h3><span class="p">$12.99</span></div><p class="d">The most main dish and 4 side dishes.</p><span class="plus">+ Soup & roasted gim</span></div>
+        </article>
+      </div>
+      <div class="dr-note"><span>The menu changes daily. Pick up at AnnanGol.</span><a class="btn" href="tel:+17039144600">Call (703) 914-4600</a></div>
     </div>
   </section>
 
