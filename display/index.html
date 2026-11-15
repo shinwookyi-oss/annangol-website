@@ -91,7 +91,9 @@
     align-items:center; justify-content:space-between; gap:calc(2 * var(--u)); padding:0 calc(2.5 * var(--u));
     font-size:calc(2.5 * var(--u)); border-top:calc(.4 * var(--u)) solid var(--red); white-space:nowrap; }
   #root.bar-on #bar { display:flex; }
-  #bar b { font-weight:900; }
+  #bar .brand img { height:calc(4.6 * var(--u)); width:auto; display:block; }
+  .layer img.idle-logo { width:calc(66 * var(--u)); max-width:86%; height:auto; background:transparent; }
+  #start .s-logo { width:calc(40 * var(--u)); max-width:80%; height:auto; }
   #bar .mid { color:var(--muted); overflow:hidden; text-overflow:ellipsis; }
   #clock { font-variant-numeric:tabular-nums; font-weight:700; }
 
@@ -182,7 +184,7 @@
 <div id="stage"></div>
 
 <div id="bar">
-  <div><b>AnnanGol 아난골</b></div>
+  <div class="brand"><img src="media/logo.png" alt="AnnanGol 아난골"></div>
   <div class="mid" id="barText"></div>
   <div id="clock"></div>
 </div>
@@ -191,6 +193,7 @@
 <div id="mutebadge" class="hidden">🔇 화면을 터치하거나 리모컨의 확인(OK) 버튼을 누르면 소리가 켜집니다</div>
 
 <div id="start">
+  <img class="s-logo" src="media/logo.png" alt="AnnanGol 아난골">
   <h1>AnnanGol <span>Display</span></h1>
   <p id="countdown">이 화면에서 무엇을 할지 골라 주세요.</p>
   <div class="btns">
@@ -355,7 +358,12 @@
   window.addEventListener('resize', layout);
 
   /* ---------- 주소 해석 ---------- */
-  function srcUrl(src) { return src && src.indexOf('up:') === 0 ? API + '?a=file&f=' + encodeURIComponent(src.slice(3)) : (src || ''); }
+  function srcUrl(src) {
+    if (src && src.indexOf('up:') === 0) return API + '?a=file&f=' + encodeURIComponent(src.slice(3));
+    // 사이트에 올려 둔 포스터는 페이지 버전을 붙여, 포스터가 교체되면 예전 그림이 남지 않게 한다
+    if (src && src.indexOf('media/') === 0 && appVer) return src + '?v=' + appVer;
+    return src || '';
+  }
   function ytParse(input) {
     // 한 줄에 하나씩 여러 주소를 넣을 수 있다. 재생목록 주소가 있으면 재생목록이 우선.
     var out = { video: '', videos: [], list: '' };
@@ -510,7 +518,7 @@
   function secs(item, fallback) { var n = parseFloat(item.seconds); return (n > 0 ? n : fallback) * 1000; }
   function showIdle() {
     var el = layer();
-    el.innerHTML = '<div class="slide text"><div class="t-title">AnnanGol 아난골</div><div class="t-rule"></div></div>';
+    el.innerHTML = '<div class="slide text"><img class="idle-logo" src="media/logo.png" alt="AnnanGol 아난골"><div class="t-rule"></div></div>';
     swapIn(el);
   }
 
