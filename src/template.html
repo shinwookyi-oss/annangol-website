@@ -82,6 +82,17 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .quick .wrap{display:flex;flex-wrap:wrap;gap:10px 36px;padding-block:16px;font-weight:600;font-size:15px}
 .quick a{text-decoration:none}
 
+/* event banner (managed in the display admin) */
+.evbar{display:block;background:var(--ember);color:var(--ember-ink);text-align:center;font:700 15px/1.35 var(--f-sans);padding:10px 16px;text-decoration:none}
+.evbar:hover{text-decoration:underline}
+.evbar[hidden]{display:none}
+.am .wrap.wk.ev{margin:0 auto 40px;scroll-margin-top:90px}
+.ev-card{background:var(--card);color:var(--ink);border-radius:18px;padding:24px 28px 26px;display:grid;gap:8px;box-shadow:0 22px 44px -20px rgba(0,0,0,.55)}
+.ev-card .ev-k{font:700 13px var(--f-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ember)}
+.ev-card h3{font:800 clamp(22px,3vw,30px)/1.15 var(--f-sans);letter-spacing:-.015em}
+.am .ev-card p{margin:0;max-width:none;opacity:1;color:var(--muted);font-size:16px}
+.ev-card h3:empty,.ev-card p:empty{display:none}
+
 /* K-DosiRock lunch box */
 .dr{background:var(--card);border-block:1px solid var(--rule)}
 .dr .dr-logo{display:inline-block;background:#fff;border:1px solid var(--rule);border-radius:14px;padding:11px 18px;margin-bottom:22px}
@@ -239,6 +250,7 @@ footer small{font-size:13px;opacity:.8}
 </style>
 </head>
 <body>
+<a class="evbar" id="evBar" href="#event" hidden></a>
 <header>
   <div class="wrap bar">
     <a href="#top" aria-label="AnnanGol home"><img src="img/annangol_logo.png" alt="AnnanGol Korean Barbecue 아난골"></a>
@@ -332,6 +344,7 @@ footer small{font-size:13px;opacity:.8}
   </section>
 
   <section id="breakfast" class="am">
+    <div class="wrap wk ev" id="event" hidden><div class="ev-card"><span class="ev-k" id="evK"></span><h3 id="evTitle"></h3><p id="evBody"></p></div></div>
     <div class="wrap">
       <div>
         <div class="kj-logo"><img src="img/kjjambab_logo.png" alt="K-JjamBab" width="774" height="150"></div>
@@ -475,6 +488,16 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   fetch('/display/api.php?a=state').then(r=>r.json()).then(j=>{
     const st=j.state||{}, sc=st.schedule||{}, m=st.menu||{}, likes=j.likes||{};
     let mine=[]; try{mine=JSON.parse(localStorage.getItem('ag_likes'))||[]}catch(e){}
+    // event banner: text and dates come from the display admin; until it has been saved there, the built-in event below is used
+    const EVD={evText:'11월 16일 – 30일 · 매일 선착순 10명 K-짬밥 아침 무료',evTextEn:'Nov 16 – 30 · Free K-JjamBab breakfast for the first 10 guests daily',evTitle:'K-짬밥 아침 무료 체험',evTitleEn:'Free K-JjamBab breakfast trial',evBody:'11월 16일 – 30일, 매일 아침 7:00에 5명, 8:30에 5명. K-짬밥을 처음 드시는 분, 매장 식사, 1인 1회. 식사 후 설문을 작성하시면 다음 방문 $2 할인권을 드립니다.',evBodyEn:'Nov 16 – 30. Every morning, 5 guests at 7:00 AM and 5 guests at 8:30 AM. First-time guests, dine-in, once per person. Fill out a short survey after your meal and get $2 off your next visit.',evStart:'2026-11-15',evEnd:'2026-11-30'};
+    const ev=(m.evText===undefined&&m.evTextEn===undefined)?EVD:m, pk=k=>((ko?(ev[k]||ev[k+'En']):(ev[k+'En']||ev[k]))||'').trim();
+    if(pk('evText')&&(!ev.evStart||today>=ev.evStart)&&(!ev.evEnd||today<=ev.evEnd)){
+      const bar=document.getElementById('evBar'); bar.textContent=pk('evText')+' \u2192'; bar.hidden=false;
+      document.getElementById('evK').textContent=ko?'\uD589\uC0AC':'Special event';
+      document.getElementById('evTitle').textContent=pk('evTitle')||pk('evText'); document.getElementById('evBody').textContent=pk('evBody');
+      document.getElementById('event').hidden=false;
+      bar.addEventListener('click',e=>{e.preventDefault();const el=document.getElementById('event'),go=()=>el.scrollIntoView({block:'start'});go();setTimeout(go,500);setTimeout(go,1500)});
+    }
     // price
     const sp=(m.special||'').trim(), reg=(m.price||'').trim(), P=document.getElementById('amPrice');
     if(sp&&(!m.specialUntil||today<=m.specialUntil)){
