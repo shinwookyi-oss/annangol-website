@@ -56,7 +56,7 @@
  "ds_yukjeon": "Piniritong hiwa ng baka",
  "am_eyebrow": "Umaga lang · 7–10 AM",
  "am_title": "Burger NO. Omelet NO. <span>K-JjamBab ito!</span>",
- "am_p": "Bago mag-tanghalian, naghahain ang AnnanGol ng K-JjamBab, isang Korean military-style na tray breakfast: kanin na may pritong itlog, mainit na sabaw, tatlong side dish at isang ulam na nagbabago araw-araw. May kasamang inihaw na gim.",
+ "am_p": "Bago mag-tanghalian, naghahain ang AnnanGol ng K-JjamBab, isang Korean military-style na tray breakfast: kanin na may pritong itlog, mainit na sabaw, tatlo o apat na side dish at isang ulam na nagbabago araw-araw. May kasamang inihaw na gim.",
  "am_every": "Tuwing umaga, 7–10 AM",
  "in_eyebrow": "Sa Loob",
  "in_title": "Mga mesang ginawa para sa ihawan, at may puwang para sa buong grupo.",
@@ -104,5 +104,18 @@
  "sg_send": "Ipadala",
  "sg_thanks": "Salamat! Binabasa namin ang bawat mensahe.",
  "sg_err": "Hindi naipadala. Pakisubukang muli.",
- "wk_want": "Gusto ko ito"
+ "wk_want": "Gusto ko ito",
+ "nav_dosirock": "Lunch Box",
+ "dr_eyebrow": "Lunch box na pang-takeout",
+ "dr_title": "K-DosiRock: Korean lunch box, bagong menu araw-araw",
+ "dr_p": "Inilalagay ng K-DosiRock sa kahon ang K-JjamBab menu ng araw: kanin na may pritong itlog, isang ulam at mga Korean side dish. May tatlong laki.",
+ "dr_s": "Maliit",
+ "dr_s_d": "Kanin, pritong itlog, ulam at 3 side dish.",
+ "dr_m": "Katamtaman",
+ "dr_m_d": "Mas maraming ulam at 3 side dish.",
+ "dr_l": "Malaki",
+ "dr_l_d": "Pinakamaraming ulam at 4 na side dish.",
+ "dr_plus": "+ Sabaw at inihaw na gim",
+ "dr_note": "Nagbabago ang menu araw-araw. Kunin sa AnnanGol.",
+ "dr_call": "Tumawag (703) 914-4600"
 }

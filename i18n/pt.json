@@ -57,7 +57,7 @@
  "ds_yukjeon": "Fatias de carne na frigideira",
  "am_eyebrow": "Só de manhã · 7h–10h",
  "am_title": "Hambúrguer? NO. Omelete? NO. <span>É K-JjamBab!</span>",
- "am_p": "Antes do almoço, o AnnanGol serve o K-JjamBab, um café da manhã coreano na bandeja, no estilo militar: arroz com ovo frito, uma sopa quentinha, três acompanhamentos e um prato principal que muda todo dia. Com gim tostado à parte.",
+ "am_p": "Antes do almoço, o AnnanGol serve o K-JjamBab, um café da manhã coreano na bandeja, no estilo militar: arroz com ovo frito, uma sopa quentinha, três ou quatro acompanhamentos e um prato principal que muda todo dia. Com gim tostado à parte.",
  "am_every": "Todas as manhãs, 7h–10h",
  "in_eyebrow": "O espaço",
  "in_title": "Mesas feitas para grelhar, e lugar para a turma toda.",
@@ -104,5 +104,18 @@
  "sg_send": "Enviar",
  "sg_thanks": "Obrigado! Lemos todas as mensagens.",
  "sg_err": "Não foi possível enviar. Tente novamente.",
- "wk_want": "Eu quero"
+ "wk_want": "Eu quero",
+ "nav_dosirock": "Marmita",
+ "dr_eyebrow": "Marmita para viagem",
+ "dr_title": "K-DosiRock: marmita coreana, cardápio novo todo dia",
+ "dr_p": "O K-DosiRock leva o cardápio K-JjamBab do dia para viagem: arroz com ovo frito, um prato principal e acompanhamentos coreanos. Três tamanhos.",
+ "dr_s": "Pequena",
+ "dr_s_d": "Arroz, ovo frito, prato principal e 3 acompanhamentos.",
+ "dr_m": "Média",
+ "dr_m_d": "Mais prato principal e 3 acompanhamentos.",
+ "dr_l": "Grande",
+ "dr_l_d": "A maior porção de prato principal e 4 acompanhamentos.",
+ "dr_plus": "+ Sopa e gim tostado",
+ "dr_note": "O cardápio muda todo dia. Retire no AnnanGol.",
+ "dr_call": "Ligar (703) 914-4600"
 }

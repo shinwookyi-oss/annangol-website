@@ -57,7 +57,7 @@
  "ds_yukjeon": "Tranches de bœuf poêlées",
  "am_eyebrow": "Le matin seulement · 7 h–10 h",
  "am_title": "Burger ? NO. Omelette ? NO. <span>C'est K-JjamBab !</span>",
- "am_p": "Avant le déjeuner, AnnanGol sert le K-JjamBab, un petit-déjeuner coréen sur plateau façon cantine militaire : riz et œuf au plat, une soupe chaude, trois accompagnements et un plat principal qui change chaque jour. Avec du gim grillé à côté.",
+ "am_p": "Avant le déjeuner, AnnanGol sert le K-JjamBab, un petit-déjeuner coréen sur plateau façon cantine militaire : riz et œuf au plat, une soupe chaude, trois ou quatre accompagnements et un plat principal qui change chaque jour. Avec du gim grillé à côté.",
  "am_every": "Tous les matins, 7 h–10 h",
  "in_eyebrow": "La salle",
  "in_title": "Des tables faites pour griller, et de la place pour tout le groupe.",
@@ -104,5 +104,18 @@
  "sg_send": "Envoyer",
  "sg_thanks": "Merci ! Nous lisons tous les messages.",
  "sg_err": "Envoi impossible. Veuillez réessayer.",
- "wk_want": "J'en veux"
+ "wk_want": "J'en veux",
+ "nav_dosirock": "Lunch box",
+ "dr_eyebrow": "Lunch box à emporter",
+ "dr_title": "K-DosiRock : la lunch box coréenne, un nouveau menu chaque jour",
+ "dr_p": "K-DosiRock met en boîte le menu K-JjamBab du jour : riz et œuf au plat, un plat principal et des accompagnements coréens. Trois tailles.",
+ "dr_s": "Petite",
+ "dr_s_d": "Riz, œuf au plat, plat principal et 3 accompagnements.",
+ "dr_m": "Moyenne",
+ "dr_m_d": "Plus de plat principal et 3 accompagnements.",
+ "dr_l": "Grande",
+ "dr_l_d": "La plus grande portion de plat principal et 4 accompagnements.",
+ "dr_plus": "+ Soupe et gim grillé",
+ "dr_note": "Le menu change chaque jour. À retirer chez AnnanGol.",
+ "dr_call": "Appeler le (703) 914-4600"
 }

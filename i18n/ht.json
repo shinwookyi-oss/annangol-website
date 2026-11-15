@@ -57,7 +57,7 @@
  "ds_yukjeon": "Tranch bèf fri nan pwèl",
  "am_eyebrow": "Maten sèlman · 7–10 AM",
  "am_title": "Hambègè? NO. Omlèt? NO. <span>Se K-JjamBab!</span>",
- "am_p": "Anvan midi, AnnanGol sèvi K-JjamBab, yon manje maten Koreyen sou plato, nan stil militè: diri ak yon ze fri, yon soup cho, twa ti akonpayman ak yon plat prensipal ki chanje chak jou. Ak gim griye sou kote.",
+ "am_p": "Anvan midi, AnnanGol sèvi K-JjamBab, yon manje maten Koreyen sou plato, nan stil militè: diri ak yon ze fri, yon soup cho, twa oswa kat ti akonpayman ak yon plat prensipal ki chanje chak jou. Ak gim griye sou kote.",
  "am_every": "Chak maten, 7–10 AM",
  "in_eyebrow": "Anndan",
  "in_title": "Tab fèt pou griye, ak plas pou tout gwoup la.",
@@ -104,5 +104,18 @@
  "sg_send": "Voye",
  "sg_thanks": "Mèsi! Nou li tout mesaj yo.",
  "sg_err": "Nou pa t ka voye l. Tanpri eseye ankò.",
- "wk_want": "Mwen vle sa"
+ "wk_want": "Mwen vle sa",
+ "nav_dosirock": "Bwat manje",
+ "dr_eyebrow": "Bwat manje pou pote ale",
+ "dr_title": "K-DosiRock: bwat manje Koreyen, nouvo meni chak jou",
+ "dr_p": "K-DosiRock mete meni K-JjamBab jou a nan yon bwat pou pote ale: diri ak yon ze fri, yon plat prensipal ak ti akonpayman Koreyen. Gen twa gwosè.",
+ "dr_s": "Piti",
+ "dr_s_d": "Diri, ze fri, plat prensipal ak 3 ti akonpayman.",
+ "dr_m": "Mwayen",
+ "dr_m_d": "Plis plat prensipal ak 3 ti akonpayman.",
+ "dr_l": "Gwo",
+ "dr_l_d": "Pi gwo pòsyon plat prensipal ak 4 ti akonpayman.",
+ "dr_plus": "+ Soup ak gim griye",
+ "dr_note": "Meni an chanje chak jou. Vin pran li nan AnnanGol.",
+ "dr_call": "Rele (703) 914-4600"
 }

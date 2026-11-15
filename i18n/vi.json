@@ -56,7 +56,7 @@
  "ds_yukjeon": "Thịt bò lát áp chảo",
  "am_eyebrow": "Chỉ buổi sáng · 7–10 giờ",
  "am_title": "Bánh burger NO. Trứng ốp la NO. <span>Là K-JjamBab đây!</span>",
- "am_p": "Trước giờ trưa, AnnanGol phục vụ K-JjamBab, bữa sáng khay kiểu quân đội Hàn Quốc: cơm với trứng ốp la, một bát canh nóng, ba món phụ và một món chính thay đổi mỗi ngày. Kèm gim nướng.",
+ "am_p": "Trước giờ trưa, AnnanGol phục vụ K-JjamBab, bữa sáng khay kiểu quân đội Hàn Quốc: cơm với trứng ốp la, một bát canh nóng, ba đến bốn món phụ và một món chính thay đổi mỗi ngày. Kèm gim nướng.",
  "am_every": "Mỗi sáng, 7–10 giờ",
  "in_eyebrow": "Không gian",
  "in_title": "Bàn thiết kế riêng để nướng, và đủ chỗ cho cả nhóm.",
@@ -104,5 +104,18 @@
  "sg_send": "Gửi",
  "sg_thanks": "Cảm ơn bạn! Chúng tôi đọc mọi tin nhắn.",
  "sg_err": "Không gửi được. Vui lòng thử lại.",
- "wk_want": "Tôi muốn món này"
+ "wk_want": "Tôi muốn món này",
+ "nav_dosirock": "Cơm hộp",
+ "dr_eyebrow": "Cơm hộp mang đi",
+ "dr_title": "K-DosiRock: cơm hộp Hàn Quốc, thực đơn mới mỗi ngày",
+ "dr_p": "K-DosiRock đóng hộp thực đơn K-JjamBab trong ngày để mang đi: cơm với trứng ốp la, một món chính và các món phụ Hàn Quốc. Có ba cỡ.",
+ "dr_s": "Nhỏ",
+ "dr_s_d": "Cơm, trứng ốp la, món chính và 3 món phụ.",
+ "dr_m": "Vừa",
+ "dr_m_d": "Nhiều món chính hơn và 3 món phụ.",
+ "dr_l": "Lớn",
+ "dr_l_d": "Nhiều món chính nhất và 4 món phụ.",
+ "dr_plus": "+ Canh và gim nướng",
+ "dr_note": "Thực đơn thay đổi mỗi ngày. Nhận tại AnnanGol.",
+ "dr_call": "Gọi (703) 914-4600"
 }
