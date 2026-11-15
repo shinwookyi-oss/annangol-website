@@ -69,7 +69,8 @@ section{padding-block:76px}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--char)}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--char);color:var(--char-ink)}
 .bar{display:flex;align-items:center;gap:24px;padding-block:12px}
-.bar img{height:34px;width:auto}
+.bar img{height:46px;width:auto;display:block;flex:none}
+@media (max-width:480px){.bar{gap:14px}.bar img{height:36px}}
 .bar nav{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:14px}
 .bar nav a{text-decoration:none;opacity:.8}
 .bar nav a:hover{opacity:1}
@@ -226,7 +227,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 
 footer{background:var(--char);color:var(--char-ink)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:center;justify-content:space-between;padding-block:26px}
-footer img{height:32px;width:auto}
+footer img{height:46px;width:auto}
 footer small{font-size:13px;opacity:.8}
 
 .lang{position:relative}
@@ -249,7 +250,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
 <body>
 <header>
   <div class="wrap bar">
-    <a href="#top" aria-label="AnnanGol home"><img src="../img/annangol_cream.png" alt="AnnanGol"></a>
+    <a href="#top" aria-label="AnnanGol home"><img src="../img/annangol_logo.png" alt="AnnanGol Korean Barbecue 아난골"></a>
     <nav aria-label="Sections">
       <a href="#signature">Món đặc trưng</a>
       <a href="#menu">Thực đơn</a>
@@ -430,7 +431,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
 
 <footer>
   <div class="wrap">
-    <img src="../img/annangol_cream.png" alt="AnnanGol">
+    <img src="../img/annangol_logo.png" alt="AnnanGol Korean Barbecue 아난골">
     <small>아난골 Korean BBQ Restaurant · 4215 Tom Davis Dr, Annandale, VA 22003 · (703) 914-4600</small>
   </div>
 </footer>
