@@ -1,5 +1,5 @@
 {
- "id": "free-trial-posters-2026-11-16",
+ "id": "free-trial-posters-2026-11-16-wide",
  "items_add": [
   {
    "id": "ft-poster-ko",
@@ -46,6 +46,54 @@
    "from": "",
    "to": "",
    "screens": "board",
+   "on": true,
+   "until": "2026-11-30"
+  },
+  {
+   "id": "ft-wide-ko",
+   "type": "image",
+   "label": "무료 체험 가로 포스터 (한국어)",
+   "src": "media/freetrial-wide-ko.jpg",
+   "seconds": 12,
+   "from": "",
+   "to": "",
+   "screens": "tv",
+   "on": true,
+   "until": "2026-11-30"
+  },
+  {
+   "id": "ft-wide-en",
+   "type": "image",
+   "label": "무료 체험 가로 포스터 (영어)",
+   "src": "media/freetrial-wide-en.jpg",
+   "seconds": 12,
+   "from": "",
+   "to": "",
+   "screens": "tv",
+   "on": true,
+   "until": "2026-11-30"
+  },
+  {
+   "id": "ft-wide-es",
+   "type": "image",
+   "label": "무료 체험 가로 포스터 (스페인어)",
+   "src": "media/freetrial-wide-es.jpg",
+   "seconds": 12,
+   "from": "",
+   "to": "",
+   "screens": "tv",
+   "on": true,
+   "until": "2026-11-30"
+  },
+  {
+   "id": "ft-wide-zh",
+   "type": "image",
+   "label": "무료 체험 가로 포스터 (중국어)",
+   "src": "media/freetrial-wide-zh.jpg",
+   "seconds": 12,
+   "from": "",
+   "to": "",
+   "screens": "tv",
    "on": true,
    "until": "2026-11-30"
   }
