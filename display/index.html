@@ -405,6 +405,7 @@
   }
   function playable(item) {
     if (!item.on) return false;
+    if (item.until && ymd(new Date()) > item.until) return false;
     if (item.type === 'youtube') { var y = ytParse(item.src); return !!(y.video || y.list); }
     if (item.type === 'image' || item.type === 'video') return !!item.src;
     return true;
@@ -894,6 +895,7 @@
       '<button data-act="toggle">' + (it.on ? '끄기' : '켜기') + '</button><button class="danger" data-act="del">삭제</button></div><div class="grid">';
     h += '<label class="c4">이름 (목록 표시용)<input type="text" data-f="label" value="' + esc(it.label) + '"></label>';
     h += '<label class="c2">나올 화면<select data-f="screens">' + opt('all', '모든 화면', it.screens) + opt('board', '보드만 (세로)', it.screens) + opt('tv', 'TV만 (가로)', it.screens) + '</select></label>';
+    h += '<label class="c2">종료일 (지나면 자동으로 안 나옴)<input type="date" data-f="until" value="' + esc(it.until || '') + '"></label>';
     if (it.type === 'youtube') {
       var lines = String(it.src || '').split('\n');
       h += '<div class="c6"><div class="note" style="margin-bottom:4px">유튜브 주소 (영상 또는 재생목록)</div>';
