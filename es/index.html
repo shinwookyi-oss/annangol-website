@@ -309,7 +309,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   </div>
   <div class="quick">
     <div class="wrap">
-      <a href="#breakfast">Mañanas de 7–10 AM: desayuno en bandeja K-JjamBab, $13.99, sin propina</a>
+      <a href="#breakfast" id="qAm">Mañanas de 7–10 AM: desayuno en bandeja K-JjamBab, $13.99, sin propina</a>
       <a href="#visit">4215 Tom Davis Dr, Annandale</a>
       <span>Abierto de 7 AM–10 PM, los 365 días</span>
       <span>(703) 914-4600</span>
@@ -513,6 +513,7 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     const sp=(m.special||'').trim(), reg=(m.price||'').trim(), P=document.getElementById('amPrice');
     if(sp&&(!m.specialUntil||today<=m.specialUntil)){
       P.textContent=sp;
+      const qa=document.getElementById('qAm'); if(qa&&reg&&qa.textContent.includes(reg)) qa.textContent=qa.textContent.replace(reg,sp);
       if(reg){const w=document.getElementById('amWas');w.textContent=reg;w.hidden=false}
       const dl=document.getElementById('amDeal');
       dl.textContent=((ko&&(m.specialLabel||'').trim())||T.wk_special)+(m.specialUntil?' · '+T.wk_until.replace('{d}',fMD.format(D(m.specialUntil))):'');

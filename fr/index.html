@@ -309,7 +309,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   </div>
   <div class="quick">
     <div class="wrap">
-      <a href="#breakfast">Le matin de 7 h à 10 h : petit-déjeuner sur plateau K-JjamBab, 13,99 $, sans pourboire</a>
+      <a href="#breakfast" id="qAm">Le matin de 7 h à 10 h : petit-déjeuner sur plateau K-JjamBab, 13,99 $, sans pourboire</a>
       <a href="#visit">4215 Tom Davis Dr, Annandale</a>
       <span>Ouvert de 7 h à 22 h, 365 jours par an</span>
       <span>(703) 914-4600</span>
@@ -513,6 +513,7 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     const sp=(m.special||'').trim(), reg=(m.price||'').trim(), P=document.getElementById('amPrice');
     if(sp&&(!m.specialUntil||today<=m.specialUntil)){
       P.textContent=sp;
+      const qa=document.getElementById('qAm'); if(qa&&reg&&qa.textContent.includes(reg)) qa.textContent=qa.textContent.replace(reg,sp);
       if(reg){const w=document.getElementById('amWas');w.textContent=reg;w.hidden=false}
       const dl=document.getElementById('amDeal');
       dl.textContent=((ko&&(m.specialLabel||'').trim())||T.wk_special)+(m.specialUntil?' · '+T.wk_until.replace('{d}',fMD.format(D(m.specialUntil))):'');
