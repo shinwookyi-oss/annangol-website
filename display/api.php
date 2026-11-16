@@ -121,6 +121,85 @@ function media_name(string $f): ?string {
     return preg_match('/^[a-f0-9]{16}\.(' . implode('|', array_keys(DISPLAY_EXT)) . ')$/', $f) ? $f : null;
 }
 
+// ---- Survey mail and scheduled reports (daily, weekly, monthly) ----
+function survey_mail(array $to, string $subject, string $body): bool {      // plain-text mail from the site's own domain
+    $h = "From: AnnanGol Survey <noreply@annangol.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit";
+    $ok = (bool)$to;
+    foreach ($to as $t) { $ok = @mail($t, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $h, '-fnoreply@annangol.com') && $ok; }
+    return $ok;
+}
+// The period a report covers: the last finished one (scheduled) or the current one so far ($current).
+function survey_period(string $kind, bool $current): array {
+    $t = new DateTimeImmutable('today');
+    if ($kind === 'weekly') { $mon = $t->modify('-' . ((int)$t->format('N') - 1) . ' days'); return $current ? [$mon->format('Y-m-d'), $t->format('Y-m-d')] : [$mon->modify('-7 days')->format('Y-m-d'), $mon->modify('-1 day')->format('Y-m-d')]; }
+    if ($kind === 'monthly') { $first = $t->modify('first day of this month'); return $current ? [$first->format('Y-m-d'), $t->format('Y-m-d')] : [$first->modify('-1 month')->format('Y-m-d'), $first->modify('-1 day')->format('Y-m-d')]; }
+    return $current ? [$t->format('Y-m-d'), $t->format('Y-m-d')] : [$t->modify('-1 day')->format('Y-m-d'), $t->modify('-1 day')->format('Y-m-d')];
+}
+// One report for every survey that was switched on during the period; null when there was none.
+function survey_report(string $kind, string $from, string $to): ?array {
+    $defs = json_decode((string)@file_get_contents(__DIR__ . '/../survey/surveys.json'), true) ?: [];
+    $store = json_read(display_dir() . '/survey.json');
+    $name = ['daily' => '일간', 'weekly' => '주간', 'monthly' => '월간'][$kind];
+    $days = (int)((strtotime($to) - strtotime($from)) / 86400) + 1;
+    $pfrom = date('Y-m-d', strtotime("$from -$days days")); $pto = date('Y-m-d', strtotime("$from -1 day"));
+    $out = []; $total = 0;
+    foreach ($defs as $id => $d) {
+        foreach (['on', 'start', 'end'] as $k) { if (array_key_exists($k, $store['cfg'][$id] ?? [])) $d[$k] = $store['cfg'][$id][$k]; }
+        if (empty($d['on']) || (!empty($d['start']) && $d['start'] > $to) || (!empty($d['end']) && $d['end'] < $from)) continue;
+        $rows = []; $prev = 0; $issued = 0; $used = 0; $langs = [];
+        foreach (($store['rows'] ?? []) as $r) {
+            if ($r['s'] !== $id) continue;
+            if (!empty($r['used']) && substr($r['used'], 0, 10) >= $from && substr($r['used'], 0, 10) <= $to) $used++;
+            if ($r['day'] >= $pfrom && $r['day'] <= $pto) $prev++;
+            if ($r['day'] < $from || $r['day'] > $to) continue;
+            $rows[] = $r; if (!empty($r['coupon'])) $issued++;
+            $l = $r['lang'] ?: '-'; $langs[$l] = ($langs[$l] ?? 0) + 1;
+        }
+        $n = count($rows); $total += $n;
+        $L = ['■ ' . ($d['title']['ko'] ?? $id), '응답 ' . $n . '건 (직전 같은 기간 ' . $prev . '건)  ·  쿠폰 발급 ' . $issued . '장  ·  쿠폰 사용 ' . $used . '장'];
+        if ($n) {
+            arsort($langs); $L[] = '언어: ' . implode(', ', array_map(function ($k, $v) { return "$k $v"; }, array_keys($langs), $langs));
+            foreach (($d['questions'] ?? []) as $q) {
+                $L[] = ''; $L[] = '· ' . ($q['label']['ko'] ?? $q['id']);
+                if ($q['type'] === 'text') {
+                    $c = 0;
+                    foreach ($rows as $r) { if (!empty($r['a'][$q['id']]) && $c < 40) { $L[] = '   - ' . str_replace(["\r", "\n"], ' ', $r['a'][$q['id']]); $c++; } }
+                    if (!$c) $L[] = '   (없음)';
+                    continue;
+                }
+                $cnt = []; $sum = 0; $num = 0; $numeric = true;
+                foreach ($q['options'] as $o) { $cnt[$o['v']] = 0; if (!is_numeric($o['v'])) $numeric = false; }
+                foreach ($rows as $r) { foreach ((array)($r['a'][$q['id']] ?? []) as $v) { if (isset($cnt[$v])) { $cnt[$v]++; if ($numeric) { $sum += (float)$v; $num++; } } } }
+                if ($numeric && $num) $L[] = '   평균 ' . number_format($sum / $num, 2) . ' (' . $num . '명)';
+                foreach ($q['options'] as $o) { $c = $cnt[$o['v']]; $L[] = '   ' . ($o['label']['ko'] ?? $o['v']) . ': ' . $c . '명 (' . round($c / $n * 100) . '%)'; }
+            }
+        }
+        $out[] = implode("\n", $L);
+    }
+    if (!$out) return null;
+    $range = $from === $to ? $from : "$from ~ $to";
+    return ['subject' => "[아난골] 설문 $name 보고서 — $range · 응답 {$total}건",
+            'body' => "아난골 설문 $name 보고서\n기간: $range\n\n" . implode("\n\n────────────────────\n\n", $out) . "\n\n전체 응답: https://annangol.com/display/survey.html"];
+}
+// Called on ordinary site traffic: sends each report that is switched on once per day / week / month, after 6 AM Eastern.
+function survey_reports_due(): void {
+    $f = display_dir() . '/survey-report.json';
+    $m = json_read($f);
+    if (empty($m['on']) || !array_filter($m['on']) || (int)date('G') < 6) return;
+    $keys = ['daily' => date('Y-m-d'), 'weekly' => date('Y-m-d', strtotime('-' . ((int)date('N') - 1) . ' days')), 'monthly' => date('Y-m-01')];
+    $due = [];
+    foreach ($keys as $k => $key) { if (!empty($m['on'][$k]) && ($m['sent'][$k] ?? '') !== $key) $due[] = $k; }
+    if (!$due) return;
+    $due = json_update($f, function (&$d) use ($keys) {               // claim under the lock, so each report goes out once
+        $mine = [];
+        foreach ($keys as $k => $key) { if (!empty($d['on'][$k]) && ($d['sent'][$k] ?? '') !== $key) { $d['sent'][$k] = $key; $mine[] = $k; } }
+        return $mine;
+    });
+    $to = array_values(array_filter((array)(json_read(display_dir() . '/survey.json')['notify'] ?? []), 'is_string'));
+    if (!$to) return;
+    foreach ($due as $k) { [$a, $b] = survey_period($k, false); $r = survey_report($k, $a, $b); if ($r) survey_mail($to, $r['subject'], $r['body']); }
+}
+
 try {
     $a = (string)($_GET['a'] ?? 'state');
 
@@ -155,6 +234,7 @@ try {
 
     if ($a === 'state') {                                  // public: what the board plays
         apply_import();
+        try { survey_reports_due(); } catch (Throwable $e) {}
         $f = display_dir() . '/state.json';
         $raw = is_file($f) ? (string)file_get_contents($f) : '';
         $state = $raw !== '' ? json_decode($raw, true) : null;
@@ -350,12 +430,7 @@ try {
             });
         };
         $notify = array_values(array_filter((array)($store['notify'] ?? []), 'is_string'));
-        $send = function (array $to, string $subject, string $body) {      // plain-text mail from the site's own domain
-            $h = "From: AnnanGol Survey <noreply@annangol.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit";
-            $ok = (bool)$to;
-            foreach ($to as $t) { $ok = @mail($t, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $h, '-fnoreply@annangol.com') && $ok; }
-            return $ok;
-        };
+        $send = 'survey_mail';
         $phone_of = function ($v) { $p = preg_replace('/\D/', '', (string)$v); return (strlen($p) === 11 && $p[0] === '1') ? substr($p, 1) : $p; };
         $in = ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' ? (json_decode((string)file_get_contents('php://input'), true) ?: []) : [];
 
@@ -438,7 +513,8 @@ try {
             $rows = array_reverse($store['rows'] ?? []);
             foreach ($rows as &$r) { if (!empty($r['coupon'])) $r['label'] = $coupon_view($r)['label']['ko']; }
             unset($r);
-            out(['today' => $today, 'surveys' => $list, 'campaigns' => $klist, 'rows' => $rows, 'notify' => $notify]);
+            out(['today' => $today, 'surveys' => $list, 'campaigns' => $klist, 'rows' => $rows, 'notify' => $notify,
+                 'report' => (object)(json_read(display_dir() . '/survey-report.json')['on'] ?? [])]);
         }
         if ($a === 'survey_notify') {                      // who is emailed about new answers; test=true also sends a test mail
             need_post(); $list = [];
@@ -449,9 +525,22 @@ try {
             $list = array_values(array_unique($list));
             if (count($list) > 10) out(['error' => 'many'], 400);
             json_update($file, function (&$st) use ($list) { $st['notify'] = $list; });
+            if (is_array($in['report'] ?? null)) {         // which scheduled reports are on; a newly switched-on one starts with the next period
+                $on = $in['report'];
+                json_update(display_dir() . '/survey-report.json', function (&$d) use ($on) {
+                    $keys = ['daily' => date('Y-m-d'), 'weekly' => date('Y-m-d', strtotime('-' . ((int)date('N') - 1) . ' days')), 'monthly' => date('Y-m-01')];
+                    foreach ($keys as $k => $key) { $new = !empty($on[$k]); if ($new && empty($d['on'][$k])) $d['sent'][$k] = $key; $d['on'][$k] = $new; }
+                });
+            }
             $sent = null;
             if (!empty($in['test'])) $sent = $send($list, '[아난골] 설문 알림 테스트', "설문 알림 이메일이 이 주소로 오도록 설정되었습니다.\n\n새 설문 응답이 들어올 때마다 이 주소로 알림이 옵니다.\n관리 화면: https://annangol.com/display/survey.html");
             out(['ok' => true, 'emails' => $list, 'sent' => $sent]);
+        }
+        if ($a === 'survey_report') {                      // preview a report for the current period so far, or send it now
+            need_post(); $k = in_array($in['kind'] ?? '', ['daily', 'weekly', 'monthly'], true) ? $in['kind'] : 'daily';
+            [$f1, $t1] = survey_period($k, true); $r = survey_report($k, $f1, $t1);
+            if (!$r) out(['error' => 'none'], 400);
+            out(['ok' => true, 'subject' => $r['subject'], 'body' => $r['body'], 'sent' => !empty($in['send']) ? survey_mail($notify, $r['subject'], $r['body']) : null]);
         }
         if ($a === 'survey_set') {                         // a survey's switch, period and coupon offer
             need_post(); $id = (string)($in['s'] ?? '');
