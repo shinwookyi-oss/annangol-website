@@ -275,6 +275,159 @@ try {
         out(['ok' => true]);
     }
 
+    // ---------------- Surveys (survey/surveys.json defines them; answers and coupons live in the data dir) ----------------
+    if (strpos($a, 'survey_') === 0) {
+        $defs = json_decode((string)@file_get_contents(__DIR__ . '/../survey/surveys.json'), true) ?: [];
+        $file = display_dir() . '/survey.json';
+        $today = date('Y-m-d');
+        $store = json_read($file);
+        if (empty($store['secret'])) {
+            json_update($file, function (&$d) { if (empty($d['secret'])) $d['secret'] = bin2hex(random_bytes(16)); if (!is_array($d['rows'] ?? null)) $d['rows'] = []; });
+            $store = json_read($file);
+        }
+        $merged = function (string $id) use ($defs, $store) {      // definition + admin overrides (on, start, end)
+            if (!isset($defs[$id])) return null;
+            $d = $defs[$id]; $o = $store['cfg'][$id] ?? [];
+            foreach (['on', 'start', 'end'] as $k) { if (array_key_exists($k, $o)) $d[$k] = $o[$k]; }
+            return $d;
+        };
+        $status = function (array $d) use ($today) {
+            if (empty($d['on'])) return 'off';
+            if (!empty($d['start']) && $today < $d['start']) return 'soon';
+            if (!empty($d['end']) && $today > $d['end']) return 'ended';
+            return 'open';
+        };
+        $daycode = function (string $id, string $day) use ($store) {
+            return str_pad((string)(hexdec(substr(hash_hmac('sha256', "$id|$day", (string)$store['secret']), 0, 7)) % 10000), 4, '0', STR_PAD_LEFT);
+        };
+        $coupon_view = function (array $r) use ($defs, $today) {
+            $c = $defs[$r['s']]['coupon'] ?? [];
+            $st = !empty($r['used']) ? 'used' : ((!empty($c['expires']) && $today > $c['expires']) ? 'expired' : 'valid');
+            return ['code' => $r['coupon'], 'status' => $st, 'used' => $r['used'] ?? null, 'issued' => $r['day'], 'survey' => $r['s'],
+                    'label' => $c['label'] ?? null, 'terms' => $c['terms'] ?? null, 'expires' => $c['expires'] ?? null];
+        };
+        $in = ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' ? (json_decode((string)file_get_contents('php://input'), true) ?: []) : [];
+
+        if ($a === 'survey_info') {                        // public: one survey, or the list of open ones
+            $id = (string)($_GET['s'] ?? '');
+            if ($id === '') {
+                $list = [];
+                foreach ($defs as $k => $_) { $d = $merged($k); if ($status($d) === 'open') $list[] = ['id' => $k, 'title' => $d['title'] ?? null]; }
+                out(['surveys' => $list]);
+            }
+            $d = $merged($id);
+            if (!$d) out(['error' => 'unknown'], 404);
+            out(['id' => $id, 'status' => $status($d), 'survey' => $d]);
+        }
+
+        if ($a === 'survey_submit') {
+            need_post();
+            $id = (string)($in['s'] ?? ''); $d = $merged($id);
+            if (!$d) out(['error' => 'unknown'], 404);
+            if (trim((string)($in['website'] ?? '')) !== '' || ag_is_bot((string)($_SERVER['HTTP_USER_AGENT'] ?? ''))) out(['error' => 'closed'], 400);
+            if ($status($d) !== 'open') out(['error' => 'closed', 'status' => $status($d)], 400);
+            $vid = visitor_id();
+            $ok = json_update(display_dir() . '/survey-rate.json', function (&$r) use ($today, $vid) {   // slows down code guessing
+                if (($r['day'] ?? '') !== $today) $r = ['day' => $today, 'n' => []];
+                $r['n'][$vid] = (int)($r['n'][$vid] ?? 0) + 1;
+                return $r['n'][$vid] <= 12 && count($r['n']) <= 500;
+            });
+            if (!$ok) out(['error' => 'rate'], 429);
+            if (!empty($d['code']) && !hash_equals($daycode($id, $today), preg_replace('/\D/', '', (string)($in['code'] ?? '')))) out(['error' => 'code'], 400);
+            $ans = [];
+            foreach (($d['questions'] ?? []) as $q) {
+                $v = $in['a'][$q['id']] ?? null; $opts = array_column($q['options'] ?? [], 'v');
+                if ($q['type'] === 'single') { $v = in_array($v, $opts, true) ? $v : null; }
+                elseif ($q['type'] === 'multi') { $v = array_values(array_intersect($opts, is_array($v) ? $v : [])); if (!$v) $v = null; }
+                else { $v = clip($v ?? '', 600); if ($v === '') $v = null; }
+                if ($v === null && !empty($q['required'])) out(['error' => 'missing', 'q' => $q['id']], 400);
+                if ($v !== null) $ans[$q['id']] = $v;
+            }
+            $name = clip($in['name'] ?? '', 60); $phone = preg_replace('/\D/', '', (string)($in['phone'] ?? ''));
+            if (strlen($phone) === 11 && $phone[0] === '1') $phone = substr($phone, 1);
+            if (!empty($d['contact']) && ($name === '' || strlen($phone) !== 10)) out(['error' => 'contact'], 400);
+            $row = ['id' => bin2hex(random_bytes(6)), 's' => $id, 't' => date('c'), 'day' => $today, 'lang' => clip($in['lang'] ?? '', 5), 'a' => $ans,
+                    'name' => $name, 'phone' => $phone, 'sms' => !empty($in['sms'])];
+            $res = json_update($file, function (&$st) use (&$row, $d, $id) {
+                if (!is_array($st['rows'] ?? null)) $st['rows'] = [];
+                $codes = [];
+                foreach ($st['rows'] as $r) {
+                    if ($r['s'] === $id && $row['phone'] !== '' && ($r['phone'] ?? '') === $row['phone']) return 'dup';   // one per phone number per survey
+                    if (!empty($r['coupon'])) $codes[$r['coupon']] = 1;
+                }
+                if (count($st['rows']) >= 20000) return 'full';
+                if (!empty($d['coupon'])) {
+                    $abc = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+                    do { $c = ($d['coupon']['prefix'] ?? 'AG') . '-'; for ($i = 0; $i < 6; $i++) $c .= $abc[random_int(0, strlen($abc) - 1)]; } while (isset($codes[$c]));
+                    $row['coupon'] = $c;
+                }
+                $st['rows'][] = $row; return 'ok';
+            });
+            if ($res !== 'ok') out(['error' => $res], $res === 'dup' ? 409 : 500);
+            out(['ok' => true, 'coupon' => isset($row['coupon']) ? $coupon_view($row) : null]);
+        }
+
+        if ($a === 'survey_coupon') {                      // public: show one coupon by its code
+            $c = strtoupper(clip($_GET['c'] ?? '', 20));
+            foreach (($store['rows'] ?? []) as $r) { if (($r['coupon'] ?? '') === $c && $c !== '') out(['coupon' => $coupon_view($r)]); }
+            out(['error' => 'unknown'], 404);
+        }
+
+        need_auth();                                       // everything below is admin only
+        if ($a === 'survey_admin') {
+            $list = [];
+            foreach ($defs as $k => $_) { $d = $merged($k); $list[] = ['id' => $k, 'status' => $status($d), 'today_code' => !empty($d['code']) ? $daycode($k, $today) : null, 'survey' => $d]; }
+            out(['today' => $today, 'surveys' => $list, 'rows' => array_reverse($store['rows'] ?? [])]);
+        }
+        if ($a === 'survey_set') {
+            need_post(); $id = (string)($in['s'] ?? '');
+            if (!isset($defs[$id])) out(['error' => 'unknown'], 404);
+            json_update($file, function (&$st) use ($id, $in) {
+                if (array_key_exists('on', $in)) $st['cfg'][$id]['on'] = !empty($in['on']);
+                foreach (['start', 'end'] as $k) { if (isset($in[$k]) && preg_match('/^(\d{4}-\d{2}-\d{2})?$/', (string)$in[$k])) $st['cfg'][$id][$k] = (string)$in[$k]; }
+            });
+            out(['ok' => true]);
+        }
+        if ($a === 'survey_redeem') {
+            need_post(); $c = strtoupper(trim((string)($in['code'] ?? ''))); $undo = !empty($in['undo']);
+            $res = json_update($file, function (&$st) use ($c, $undo) {
+                foreach (array_keys($st['rows'] ?? []) as $i) {
+                    if (($st['rows'][$i]['coupon'] ?? '') !== $c) continue;
+                    if ($undo) { unset($st['rows'][$i]['used']); return $st['rows'][$i]; }
+                    if (!empty($st['rows'][$i]['used'])) return ['already' => $st['rows'][$i]];
+                    $st['rows'][$i]['used'] = date('c'); return $st['rows'][$i];
+                }
+                return null;
+            });
+            if (!$res) out(['error' => 'unknown'], 404);
+            if (isset($res['already'])) out(['error' => 'used', 'coupon' => $coupon_view($res['already']), 'row' => $res['already']], 409);
+            out(['ok' => true, 'coupon' => $coupon_view($res), 'row' => $res]);
+        }
+        if ($a === 'survey_del') {
+            need_post(); $rid = (string)($in['id'] ?? '');
+            json_update($file, function (&$st) use ($rid) { $st['rows'] = array_values(array_filter($st['rows'] ?? [], function ($r) use ($rid) { return ($r['id'] ?? '') !== $rid; })); });
+            out(['ok' => true]);
+        }
+        if ($a === 'survey_csv') {
+            $id = (string)($_GET['s'] ?? ''); $d = $merged($id);
+            if (!$d) out(['error' => 'unknown'], 404);
+            header('Content-Type: text/csv; charset=utf-8'); header('Content-Disposition: attachment; filename="survey-' . $id . '-' . $today . '.csv"'); header('Cache-Control: no-store');
+            $fh = fopen('php://output', 'w'); fwrite($fh, "\xEF\xBB\xBF");
+            $qs = $d['questions'] ?? [];
+            $cell = function ($v) { $v = (string)$v; return preg_match('/^[=+\-@\t\r]/', $v) ? "'" . $v : $v; };   // no spreadsheet formulas from guests
+            fputcsv($fh, array_merge(['time', 'language'], array_column($qs, 'id'), ['name', 'phone', 'sms', 'coupon', 'used']));
+            foreach (($store['rows'] ?? []) as $r) {
+                if ($r['s'] !== $id) continue;
+                $line = [$r['t'], $r['lang'] ?? ''];
+                foreach ($qs as $q) { $v = $r['a'][$q['id']] ?? ''; $line[] = $cell(is_array($v) ? implode(' | ', $v) : $v); }
+                fputcsv($fh, array_merge($line, [$cell($r['name'] ?? ''), $r['phone'] ?? '', !empty($r['sms']) ? 'yes' : '', $r['coupon'] ?? '', $r['used'] ?? '']));
+            }
+            exit;
+        }
+        out(['error' => 'unknown'], 404);
+    }
+
+
     out(['error' => 'unknown'], 404);
 } catch (Throwable $e) {
     out(['error' => 'server'], 500);

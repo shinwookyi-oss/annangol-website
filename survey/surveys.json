@@ -1,0 +1,349 @@
+{
+ "freetrial": {
+  "on": true,
+  "start": "2026-11-15",
+  "end": "2026-11-30",
+  "code": true,
+  "contact": true,
+  "title": {
+   "ko": "K-JjamBab 무료 체험 설문",
+   "en": "K-JjamBab Free Trial Survey",
+   "es": "Encuesta de la prueba gratis K-JjamBab",
+   "zh": "K-JjamBab 免费体验问卷"
+  },
+  "intro": {
+   "ko": "1분이면 됩니다. 제출하면 다음 방문 $2 할인권이 바로 발급됩니다.",
+   "en": "It takes one minute. Submit it and get a $2 coupon for your next visit.",
+   "es": "Solo toma un minuto. Al enviarla recibe un cupón de $2 para su próxima visita.",
+   "zh": "只需一分钟。提交后立即获得下次光临的 $2 优惠券。"
+  },
+  "coupon": {
+   "prefix": "AG",
+   "expires": "2026-12-31",
+   "label": {
+    "ko": "$2 할인권",
+    "en": "$2 OFF coupon",
+    "es": "Cupón de $2 de descuento",
+    "zh": "$2 优惠券"
+   },
+   "terms": {
+    "ko": "아침 K-JjamBab 식판 1회 · 특가와 함께 사용 가능 · 1인 1매",
+    "en": "One K-JjamBab breakfast tray · Can be used with the special price · One per person",
+    "es": "Una bandeja de desayuno K-JjamBab · Se puede usar con el precio especial · Uno por persona",
+    "zh": "K-JjamBab 早餐餐盘一份 · 可与特价同时使用 · 每人一张"
+   }
+  },
+  "questions": [
+   {
+    "id": "slot",
+    "type": "single",
+    "required": true,
+    "label": {
+     "ko": "식사 시간",
+     "en": "Your seating",
+     "es": "Su turno",
+     "zh": "用餐时间"
+    },
+    "options": [
+     {
+      "v": "7:00",
+      "label": {
+       "ko": "7:00 AM",
+       "en": "7:00 AM",
+       "es": "7:00 AM",
+       "zh": "7:00 AM"
+      }
+     },
+     {
+      "v": "8:30",
+      "label": {
+       "ko": "8:30 AM",
+       "en": "8:30 AM",
+       "es": "8:30 AM",
+       "zh": "8:30 AM"
+      }
+     }
+    ]
+   },
+   {
+    "id": "overall",
+    "type": "single",
+    "required": true,
+    "label": {
+     "ko": "오늘 식사는 전체적으로 어떠셨습니까?",
+     "en": "How was your meal overall?",
+     "es": "¿Qué le pareció la comida en general?",
+     "zh": "今天的餐点总体如何？"
+    },
+    "options": [
+     {
+      "v": "5",
+      "label": {
+       "ko": "아주 좋음",
+       "en": "Great",
+       "es": "Excelente",
+       "zh": "非常好"
+      }
+     },
+     {
+      "v": "4",
+      "label": {
+       "ko": "좋음",
+       "en": "Good",
+       "es": "Buena",
+       "zh": "好"
+      }
+     },
+     {
+      "v": "3",
+      "label": {
+       "ko": "보통",
+       "en": "OK",
+       "es": "Regular",
+       "zh": "一般"
+      }
+     },
+     {
+      "v": "2",
+      "label": {
+       "ko": "아쉬움",
+       "en": "Poor",
+       "es": "Floja",
+       "zh": "不太好"
+      }
+     },
+     {
+      "v": "1",
+      "label": {
+       "ko": "나쁨",
+       "en": "Bad",
+       "es": "Mala",
+       "zh": "差"
+      }
+     }
+    ]
+   },
+   {
+    "id": "liked",
+    "type": "multi",
+    "label": {
+     "ko": "가장 좋았던 것은? (여러 개 가능)",
+     "en": "What did you like most? (choose any)",
+     "es": "¿Qué le gustó más? (puede elegir varios)",
+     "zh": "最喜欢什么？（可多选）"
+    },
+    "options": [
+     {
+      "v": "main",
+      "label": {
+       "ko": "메인",
+       "en": "Main dish",
+       "es": "Plato principal",
+       "zh": "主菜"
+      }
+     },
+     {
+      "v": "soup",
+      "label": {
+       "ko": "국",
+       "en": "Soup",
+       "es": "Sopa",
+       "zh": "汤"
+      }
+     },
+     {
+      "v": "sides",
+      "label": {
+       "ko": "반찬",
+       "en": "Side dishes",
+       "es": "Acompañamientos",
+       "zh": "小菜"
+      }
+     },
+     {
+      "v": "rice",
+      "label": {
+       "ko": "밥",
+       "en": "Rice",
+       "es": "Arroz",
+       "zh": "米饭"
+      }
+     },
+     {
+      "v": "portion",
+      "label": {
+       "ko": "양",
+       "en": "Portion",
+       "es": "Porción",
+       "zh": "分量"
+      }
+     },
+     {
+      "v": "tray",
+      "label": {
+       "ko": "식판 구성",
+       "en": "Tray style",
+       "es": "Estilo de bandeja",
+       "zh": "餐盘形式"
+      }
+     }
+    ]
+   },
+   {
+    "id": "price",
+    "type": "single",
+    "label": {
+     "ko": "이 식사의 적당한 가격은?",
+     "en": "What is a fair price for this meal?",
+     "es": "¿Cuál sería un precio justo por esta comida?",
+     "zh": "这份餐点的合理价格是？"
+    },
+    "options": [
+     {
+      "v": "<=10",
+      "label": {
+       "ko": "$10 이하",
+       "en": "$10 or less",
+       "es": "$10 o menos",
+       "zh": "$10 以下"
+      }
+     },
+     {
+      "v": "11-12",
+      "label": {
+       "ko": "$11 – 12",
+       "en": "$11 – 12",
+       "es": "$11 – 12",
+       "zh": "$11 – 12"
+      }
+     },
+     {
+      "v": "13-14",
+      "label": {
+       "ko": "$13 – 14",
+       "en": "$13 – 14",
+       "es": "$13 – 14",
+       "zh": "$13 – 14"
+      }
+     },
+     {
+      "v": ">=15",
+      "label": {
+       "ko": "$15 이상",
+       "en": "$15 or more",
+       "es": "$15 o más",
+       "zh": "$15 以上"
+      }
+     }
+    ]
+   },
+   {
+    "id": "again",
+    "type": "single",
+    "required": true,
+    "label": {
+     "ko": "돈을 내고 다시 드시겠습니까?",
+     "en": "Would you come back and pay for it?",
+     "es": "¿Volvería y pagaría por ella?",
+     "zh": "您愿意付费再来吗？"
+    },
+    "options": [
+     {
+      "v": "yes",
+      "label": {
+       "ko": "예",
+       "en": "Yes",
+       "es": "Sí",
+       "zh": "愿意"
+      }
+     },
+     {
+      "v": "maybe",
+      "label": {
+       "ko": "아마도",
+       "en": "Maybe",
+       "es": "Tal vez",
+       "zh": "也许"
+      }
+     },
+     {
+      "v": "no",
+      "label": {
+       "ko": "아니오",
+       "en": "No",
+       "es": "No",
+       "zh": "不愿意"
+      }
+     }
+    ]
+   },
+   {
+    "id": "heard",
+    "type": "single",
+    "label": {
+     "ko": "이 행사를 어떻게 아셨습니까?",
+     "en": "How did you hear about this?",
+     "es": "¿Cómo se enteró?",
+     "zh": "您是怎么知道这次活动的？"
+    },
+    "options": [
+     {
+      "v": "walkby",
+      "label": {
+       "ko": "지나가다",
+       "en": "Walked by",
+       "es": "Pasaba por aquí",
+       "zh": "路过"
+      }
+     },
+     {
+      "v": "friend",
+      "label": {
+       "ko": "지인",
+       "en": "A friend",
+       "es": "Un conocido",
+       "zh": "朋友介绍"
+      }
+     },
+     {
+      "v": "online",
+      "label": {
+       "ko": "구글 · 유튜브 · 인스타그램",
+       "en": "Google · YouTube · Instagram",
+       "es": "Google · YouTube · Instagram",
+       "zh": "谷歌 · YouTube · Instagram"
+      }
+     },
+     {
+      "v": "news",
+      "label": {
+       "ko": "신문",
+       "en": "Newspaper",
+       "es": "Periódico",
+       "zh": "报纸"
+      }
+     },
+     {
+      "v": "other",
+      "label": {
+       "ko": "기타",
+       "en": "Other",
+       "es": "Otro",
+       "zh": "其他"
+      }
+     }
+    ]
+   },
+   {
+    "id": "comment",
+    "type": "text",
+    "label": {
+     "ko": "아쉬운 점이나 먹고 싶은 메뉴",
+     "en": "Anything to improve, or a dish you want?",
+     "es": "¿Algo que mejorar, o un plato que quiera?",
+     "zh": "有什么需要改进，或想吃的菜？"
+    }
+   }
+  ]
+ }
+}

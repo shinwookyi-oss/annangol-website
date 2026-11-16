@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>설문 · 할인권 관리 — AnnanGol</title>
+<link rel="icon" href="/img/favicon.png">
+<style>
+:root { --ink: #2A211F; --red: #C5202B; --grey: #6B5F5B; --line: #DDD3C4; --bg: #FFF8EE; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: system-ui, 'Noto Sans KR', sans-serif; font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 18px 16px 60px; }
+h1 { font-size: 22px; margin: 0; } h2 { font-size: 18px; margin: 0 0 10px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 16px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+input, select, button { font: inherit; }
+input[type=text], input[type=password], input[type=date], select { padding: 10px 12px; border: 1.5px solid var(--ink); border-radius: 8px; background: #fff; color: var(--ink); }
+button { padding: 10px 16px; border-radius: 8px; border: 1.5px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; font-weight: 700; }
+button.pri { background: var(--red); border-color: var(--red); color: #fff; }
+button.sm { padding: 4px 10px; font-size: 13px; font-weight: 400; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.big { font-size: 44px; font-weight: 800; letter-spacing: 8px; font-variant-numeric: tabular-nums; }
+.muted { color: var(--grey); font-size: 14px; }
+.res { margin-top: 12px; padding: 12px 14px; border-radius: 10px; font-weight: 700; }
+.res.ok { background: #E3F3E6; color: #17602A; } .res.bad { background: #FDECEC; color: #8E1119; }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; background: #EEE; }
+.pill.open { background: #E3F3E6; color: #17602A; }
+.bars div { display: grid; grid-template-columns: 150px 1fr 70px; gap: 8px; align-items: center; font-size: 14px; margin: 3px 0; }
+.bars i { display: block; height: 14px; background: var(--ink); border-radius: 3px; min-width: 2px; }
+.stat { margin-bottom: 14px; } .stat b { display: block; margin-bottom: 4px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 8px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+td.wrapc { white-space: normal; min-width: 180px; }
+#coupon { text-transform: uppercase; font-weight: 700; letter-spacing: 2px; width: 190px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><h1>설문 · 할인권 관리</h1><div class="row"><a href="/display/#admin">디스플레이 관리</a><button class="sm" id="out" hidden>로그아웃</button></div></div>
+  <div id="app"></div>
+</div>
+<script>
+(function () {
+  var app = document.getElementById('app'), data = null, cur = null, msg = null;
+  function api(a, body) {
+    return fetch('api.php?a=' + a, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : { cache: 'no-store' })
+      .then(function (r) { return r.json().then(function (j) { j._status = r.status; return j; }); });
+  }
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    for (var k in (attrs || {})) { if (k === 'text') n.textContent = attrs[k]; else n.setAttribute(k, attrs[k]); }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function ko(o) { return o ? (o.ko || o.en || '') : ''; }
+  var ST = { open: '진행 중', off: '꺼짐', soon: '시작 전', ended: '종료' };
+  function login() {
+    document.getElementById('out').hidden = true; app.textContent = '';
+    var pw = el('input', { type: 'password', placeholder: '비밀번호', autocomplete: 'current-password', 'aria-label': '비밀번호' });
+    var b = el('button', { 'class': 'pri', type: 'submit', text: '로그인' }), err = el('div', { 'class': 'muted' });
+    var f = el('form', { 'class': 'card row' }, [pw, b, err]);
+    f.onsubmit = function (e) { e.preventDefault(); api('login', { password: pw.value }).then(function (r) { if (r.authed) load(); else err.textContent = '비밀번호가 맞지 않습니다.'; }); };
+    app.appendChild(el('p', { 'class': 'muted', text: '디스플레이 관리자와 같은 비밀번호입니다.' })); app.appendChild(f); pw.focus();
+  }
+  function load() {
+    return api('survey_admin').then(function (r) {
+      if (r._status === 401) return login();
+      data = r; if (!cur || !data.surveys.some(function (s) { return s.id === cur; })) cur = data.surveys[0] && data.surveys[0].id;
+      document.getElementById('out').hidden = false; render();
+    });
+  }
+  function redeem(code, undo) {
+    code = (code || '').trim().toUpperCase(); if (!code) return;
+    api('survey_redeem', { code: code, undo: !!undo }).then(function (r) {
+      var row = r.row || {}, who = row.name ? ' · ' + row.name + ' (' + row.phone + ')' : '';
+      if (r.ok && undo) msg = { ok: true, text: code + ' — 사용 처리를 취소했습니다.' };
+      else if (r.ok) msg = { ok: true, text: code + ' — ' + ko(r.coupon.label) + ' 사용 처리했습니다' + who + (r.coupon.status === 'expired' ? ' (주의: 기간이 지난 쿠폰)' : '') };
+      else if (r.error === 'used') msg = { ok: false, text: code + ' — 이미 사용된 쿠폰입니다 (' + (row.used || '').slice(0, 16).replace('T', ' ') + ')' + who };
+      else msg = { ok: false, text: code + ' — 없는 쿠폰번호입니다.' };
+      load();
+    });
+  }
+  function render() {
+    app.textContent = '';
+    var S = data.surveys.filter(function (s) { return s.id === cur; })[0];
+    // coupon desk
+    var inp = el('input', { type: 'text', id: 'coupon', placeholder: 'AG-XXXXXX', autocomplete: 'off', autocapitalize: 'characters', 'aria-label': '쿠폰번호' });
+    var pre = new URLSearchParams(location.search).get('redeem'); if (pre && !msg) inp.value = pre;
+    var go = el('button', { 'class': 'pri', type: 'submit', text: '사용 처리' });
+    var f = el('form', { 'class': 'row' }, [inp, go]); f.onsubmit = function (e) { e.preventDefault(); redeem(inp.value); history.replaceState(null, '', location.pathname); };
+    var desk = el('div', { 'class': 'card' }, [el('h2', { text: '할인권 사용 처리 (계산할 때)' }), f,
+      el('p', { 'class': 'muted', text: '손님 화면의 쿠폰번호를 입력하거나, 로그인한 휴대폰 카메라로 손님 화면의 QR을 찍으면 번호가 채워집니다.' })]);
+    if (msg) desk.appendChild(el('div', { 'class': 'res ' + (msg.ok ? 'ok' : 'bad'), role: 'status', text: msg.text }));
+    app.appendChild(desk);
+    if (!S) { app.appendChild(el('p', { text: '등록된 설문이 없습니다.' })); return; }
+    // survey picker + settings
+    var sel = el('select', { 'aria-label': '설문 선택' });
+    data.surveys.forEach(function (s) { var o = el('option', { value: s.id, text: ko(s.survey.title) + ' — ' + ST[s.status] }); if (s.id === cur) o.selected = true; sel.appendChild(o); });
+    sel.onchange = function () { cur = sel.value; render(); };
+    var on = el('input', { type: 'checkbox', id: 'on' }); on.checked = !!S.survey.on;
+    var st = el('input', { type: 'date', value: S.survey.start || '', 'aria-label': '시작일' }), en = el('input', { type: 'date', value: S.survey.end || '', 'aria-label': '종료일' });
+    var save = el('button', { text: '저장' });
+    save.onclick = function () { api('survey_set', { s: cur, on: on.checked, start: st.value, end: en.value }).then(load); };
+    var link = location.origin + '/survey/?s=' + cur;
+    app.appendChild(el('div', { 'class': 'card' }, [
+      el('div', { 'class': 'row' }, [sel, el('span', { 'class': 'pill ' + S.status, text: ST[S.status] })]),
+      el('div', { 'class': 'row', style: 'margin-top:12px' }, [el('label', { 'class': 'row', 'for': 'on' }, [on, el('span', { text: '설문 받기' })]), el('span', { text: '기간' }), st, el('span', { text: '~' }), en, save]),
+      el('p', { 'class': 'muted' }, [el('span', { text: '설문 주소: ' }), el('a', { href: link, target: '_blank', rel: 'noopener', text: link })])]));
+    if (S.today_code) app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: '오늘의 코드 (' + data.today + ')' }), el('div', { 'class': 'big', text: S.today_code }),
+      el('p', { 'class': 'muted', text: '식사하신 손님께만 알려 주세요. 매일 자정(동부 시간)에 자동으로 바뀝니다.' })]));
+    // results
+    var rows = data.rows.filter(function (r) { return r.s === cur; }), used = rows.filter(function (r) { return r.used; }).length;
+    var sum = el('div', { 'class': 'card' }, [el('h2', { text: '집계 — 응답 ' + rows.length + '건 · 할인권 사용 ' + used + '건' })]);
+    S.survey.questions.forEach(function (q) {
+      if (q.type === 'text') return;
+      var box = el('div', { 'class': 'stat' }, [el('b', { text: ko(q.label) })]), bars = el('div', { 'class': 'bars' });
+      q.options.forEach(function (o) {
+        var n = rows.filter(function (r) { var v = r.a[q.id]; return Array.isArray(v) ? v.indexOf(o.v) >= 0 : v === o.v; }).length;
+        var bar = el('i'); bar.style.width = (rows.length ? Math.round(n / rows.length * 100) : 0) + '%';
+        bars.appendChild(el('div', {}, [el('span', { text: ko(o.label) }), el('span', {}, [bar]), el('span', { text: n + ' (' + (rows.length ? Math.round(n / rows.length * 100) : 0) + '%)' })]));
+      });
+      box.appendChild(bars); sum.appendChild(box);
+    });
+    app.appendChild(sum);
+    var tb = el('tbody'), heads = ['시간', '언어'].concat(S.survey.questions.map(function (q) { return q.id; }), ['이름', '전화', '문자', '쿠폰', '사용', '']);
+    rows.forEach(function (r) {
+      var tr = el('tr', {}, [el('td', { text: r.t.slice(5, 16).replace('T', ' ') }), el('td', { text: r.lang || '' })]);
+      S.survey.questions.forEach(function (q) {
+        var v = r.a[q.id], lab = function (x) { var o = (q.options || []).filter(function (o) { return o.v === x; })[0]; return o ? ko(o.label) : x; };
+        tr.appendChild(el('td', q.type === 'text' ? { 'class': 'wrapc', text: v || '' } : { text: v == null ? '' : (Array.isArray(v) ? v.map(lab).join(', ') : lab(v)) }));
+      });
+      var useCell = el('td');
+      if (r.coupon) { var ub = el('button', { 'class': 'sm', text: r.used ? '취소' : '사용 처리' }); ub.onclick = function () { redeem(r.coupon, !!r.used); }; useCell.appendChild(el('span', { text: r.used ? r.used.slice(5, 16).replace('T', ' ') + ' ' : '' })); useCell.appendChild(ub); }
+      var del = el('button', { 'class': 'sm', text: '삭제' });
+      del.onclick = function () { if (del.dataset.sure) api('survey_del', { id: r.id }).then(load); else { del.dataset.sure = 1; del.textContent = '정말 삭제?'; } };
+      [el('td', { text: r.name || '' }), el('td', { text: r.phone || '' }), el('td', { text: r.sms ? '동의' : '' }), el('td', { text: r.coupon || '' }), useCell, el('td', {}, [del])].forEach(function (c) { tr.appendChild(c); });
+      tb.appendChild(tr);
+    });
+    var csv = el('a', { href: 'api.php?a=survey_csv&s=' + encodeURIComponent(cur), text: '엑셀용 CSV 내려받기' });
+    app.appendChild(el('div', { 'class': 'card' }, [el('div', { 'class': 'row', style: 'justify-content:space-between' }, [el('h2', { text: '응답 목록' }), csv]),
+      el('div', { 'class': 'scroll' }, [el('table', {}, [el('thead', {}, [el('tr', {}, heads.map(function (h) { return el('th', { text: h }); }))]), tb])])]));
+  }
+  document.getElementById('out').onclick = function () { api('logout', {}).then(login); };
+  api('me').then(function (r) { if (r.authed) load(); else login(); });
+})();
+</script>
+</body>
+</html>

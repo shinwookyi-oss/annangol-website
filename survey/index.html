@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>AnnanGol Survey</title>
+<link rel="icon" href="/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root { --ivory: #FFF8EE; --ink: #2A211F; --red: #C5202B; --grey: #6B5F5B; --line: #E4D9C8; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ivory); color: var(--ink); font-family: 'Noto Sans KR', 'Noto Sans SC', system-ui, sans-serif; font-size: 17px; line-height: 1.5; }
+.wrap { max-width: 560px; margin: 0 auto; padding: 20px 18px 60px; }
+header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+header img { height: 34px; width: auto; }
+.langs { display: flex; gap: 6px; }
+.langs button { white-space: nowrap; border: 1px solid var(--ink); background: none; color: var(--ink); border-radius: 999px; padding: 6px 10px; font: inherit; font-size: 14px; cursor: pointer; }
+.langs button[aria-pressed=true] { background: var(--ink); color: #fff; }
+h1 { font-size: 26px; font-weight: 900; line-height: 1.25; margin: 22px 0 6px; letter-spacing: -0.5px; }
+.intro { color: var(--grey); margin: 0 0 20px; }
+fieldset { border: 0; padding: 0; margin: 0 0 24px; }
+legend, .lab { font-weight: 700; padding: 0; margin-bottom: 10px; display: block; }
+.req { color: var(--red); }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts label { position: relative; }
+.opts input { position: absolute; opacity: 0; inset: 0; }
+.opts span { display: block; border: 1.5px solid var(--ink); border-radius: 10px; padding: 11px 14px; background: #fff; cursor: pointer; min-height: 48px; }
+.opts input:checked + span { background: var(--ink); color: #fff; }
+.opts input:focus-visible + span { outline: 3px solid var(--red); outline-offset: 2px; }
+input[type=text], input[type=tel], textarea { width: 100%; font: inherit; padding: 12px 14px; border: 1.5px solid var(--ink); border-radius: 10px; background: #fff; color: var(--ink); }
+textarea { min-height: 96px; resize: vertical; }
+.box { border: 2px solid var(--ink); border-radius: 14px; padding: 16px; margin-bottom: 24px; background: #fff; }
+.box .lab { margin-top: 12px; } .box .lab:first-child { margin-top: 0; }
+.note { font-size: 14px; color: var(--grey); margin: 8px 0 0; }
+.check { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; font-size: 15px; }
+.check input { width: 22px; height: 22px; margin-top: 1px; accent-color: var(--ink); flex: none; }
+.codebox { background: var(--ink); color: #fff; border-radius: 14px; padding: 16px; margin-bottom: 20px; }
+.codebox .lab { color: #fff; }
+.codebox input { font-family: Montserrat, sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 10px; text-align: center; border: 0; }
+.codebox .note { color: #E4D9C8; }
+button.go { width: 100%; border: 0; border-radius: 12px; background: var(--red); color: #fff; font: inherit; font-weight: 900; font-size: 19px; padding: 16px; cursor: pointer; }
+button.go:disabled { opacity: .5; }
+.err { background: #FDECEC; border: 1.5px solid var(--red); color: #8E1119; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; font-weight: 700; }
+.hp { position: absolute; left: -9999px; }
+.coupon { margin-top: 22px; border-radius: 18px; overflow: hidden; border: 2px solid var(--ink); background: #fff; text-align: center; }
+.coupon .top { background: var(--red); color: #fff; padding: 22px 16px 18px; }
+.coupon .amt { font-family: Montserrat, 'Noto Sans KR', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.1; }
+.coupon .brand { font-family: Montserrat, sans-serif; font-weight: 700; letter-spacing: 3px; font-size: 13px; margin-bottom: 6px; }
+.coupon .mid { padding: 18px 16px; border-bottom: 2px dashed var(--line); }
+.coupon .code { font-family: Montserrat, sans-serif; font-weight: 800; font-size: 34px; letter-spacing: 3px; }
+.coupon .state { display: inline-block; margin-top: 8px; border-radius: 999px; padding: 4px 14px; font-weight: 700; font-size: 15px; background: #E3F3E6; color: #17602A; }
+.coupon.used .state, .coupon.expired .state { background: #EEE; color: #555; }
+.coupon.used .top, .coupon.expired .top { background: #8A817D; }
+.coupon .qr { padding: 16px; } .coupon .qr svg { width: 168px; height: 168px; }
+.coupon .terms { padding: 0 16px 18px; font-size: 14px; color: var(--grey); }
+.how { margin-top: 18px; font-size: 15px; }
+.how b { display: block; margin-bottom: 4px; }
+footer { margin-top: 30px; font-size: 13px; color: var(--grey); text-align: center; }
+footer a { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="/"><img src="/img/annangol.png" alt="AnnanGol"></a>
+    <div class="langs" id="langs"></div>
+  </header>
+  <main id="main" aria-live="polite"></main>
+  <footer>AnnanGol Korean BBQ · 4215 Tom Davis Dr, Annandale, VA · <a href="tel:+17039144600">(703) 914-4600</a></footer>
+</div>
+<script src="qrcode.js"></script>
+<script>
+(function () {
+  var UI = {
+    ko: { name: '한국어', loading: '불러오는 중…', code: '오늘의 코드', codeNote: '식사하신 분께 직원이 알려 드리는 숫자 4자리입니다.', nameL: '이름', phone: '전화번호',
+      phoneNote: '전화번호는 1인 1회 확인에만 씁니다.', sms: '아난골 행사 소식을 문자로 받겠습니다 (선택)', send: '제출하고 할인권 받기', sendPlain: '제출하기', sending: '보내는 중…',
+      eMissing: '빨간 * 표시 문항에 답해 주세요.', eCode: '오늘의 코드가 맞지 않습니다. 직원에게 확인해 주세요.', eContact: '이름과 전화번호 10자리를 적어 주세요.',
+      eDup: '이 전화번호로는 이미 할인권이 발급되었습니다. 직원에게 말씀해 주세요.', eRate: '시도가 너무 많습니다. 잠시 후 다시 해 주세요.', eNet: '전송하지 못했습니다. 다시 눌러 주세요.',
+      closed: '지금은 받지 않는 설문입니다.', soon: '아직 시작하지 않은 설문입니다.', ended: '종료된 설문입니다. 감사합니다.', unknown: '설문을 찾을 수 없습니다.', pick: '설문을 골라 주세요', none: '지금 진행 중인 설문이 없습니다.',
+      thanks: '감사합니다!', thanksPlain: '소중한 의견 감사합니다.', couponNo: '쿠폰번호', valid: '사용 가능', used: '사용 완료', expired: '기간 만료', until: '사용 기한',
+      how: '이렇게 쓰세요', how1: '이 화면을 캡처하거나 이 페이지를 저장해 두세요.', how2: '다음에 오셔서 계산할 때 직원에게 보여 주세요.', noCoupon: '쿠폰을 찾을 수 없습니다.' },
+    en: { name: 'English', loading: 'Loading…', code: "Today's code", codeNote: 'A 4-digit number our staff gives to guests who dined in.', nameL: 'Name', phone: 'Phone number',
+      phoneNote: 'Your phone number is used only to confirm one per person.', sms: 'Text me AnnanGol offers (optional)', send: 'Submit and get my coupon', sendPlain: 'Submit', sending: 'Sending…',
+      eMissing: 'Please answer the questions marked with a red *.', eCode: "Today's code doesn't match. Please ask our staff.", eContact: 'Please enter your name and a 10-digit phone number.',
+      eDup: 'A coupon was already issued for this phone number. Please tell our staff.', eRate: 'Too many tries. Please try again in a little while.', eNet: "It didn't go through. Please tap again.",
+      closed: 'This survey is not open right now.', soon: 'This survey has not started yet.', ended: 'This survey has ended. Thank you.', unknown: 'Survey not found.', pick: 'Choose a survey', none: 'There is no open survey right now.',
+      thanks: 'Thank you!', thanksPlain: 'Thank you for your feedback.', couponNo: 'Coupon number', valid: 'Valid', used: 'Used', expired: 'Expired', until: 'Valid through',
+      how: 'How to use it', how1: 'Take a screenshot or save this page.', how2: 'Show it to our staff when you pay on your next visit.', noCoupon: 'Coupon not found.' },
+    es: { name: 'Español', loading: 'Cargando…', code: 'Código de hoy', codeNote: 'Un número de 4 dígitos que nuestro personal da a quienes comieron aquí.', nameL: 'Nombre', phone: 'Teléfono',
+      phoneNote: 'Su teléfono se usa solo para confirmar uno por persona.', sms: 'Quiero recibir ofertas de AnnanGol por mensaje (opcional)', send: 'Enviar y recibir mi cupón', sendPlain: 'Enviar', sending: 'Enviando…',
+      eMissing: 'Responda las preguntas marcadas con * rojo.', eCode: 'El código de hoy no coincide. Pregunte a nuestro personal.', eContact: 'Escriba su nombre y un teléfono de 10 dígitos.',
+      eDup: 'Ya se emitió un cupón para este teléfono. Avise a nuestro personal.', eRate: 'Demasiados intentos. Inténtelo de nuevo en un momento.', eNet: 'No se pudo enviar. Toque de nuevo.',
+      closed: 'Esta encuesta no está abierta ahora.', soon: 'Esta encuesta aún no ha comenzado.', ended: 'Esta encuesta ha terminado. Gracias.', unknown: 'No se encontró la encuesta.', pick: 'Elija una encuesta', none: 'No hay ninguna encuesta abierta ahora.',
+      thanks: '¡Gracias!', thanksPlain: 'Gracias por su opinión.', couponNo: 'Número de cupón', valid: 'Válido', used: 'Usado', expired: 'Vencido', until: 'Válido hasta',
+      how: 'Cómo usarlo', how1: 'Tome una captura de pantalla o guarde esta página.', how2: 'Muéstrelo a nuestro personal al pagar en su próxima visita.', noCoupon: 'No se encontró el cupón.' },
+    zh: { name: '中文', loading: '加载中…', code: '今日代码', codeNote: '店员告诉堂食客人的4位数字。', nameL: '姓名', phone: '电话号码',
+      phoneNote: '电话号码仅用于确认每人一次。', sms: '愿意通过短信接收 AnnanGol 优惠信息（可选）', send: '提交并领取优惠券', sendPlain: '提交', sending: '提交中…',
+      eMissing: '请回答带红色 * 的问题。', eCode: '今日代码不正确，请向店员确认。', eContact: '请填写姓名和10位电话号码。',
+      eDup: '该电话号码已领取过优惠券，请告知店员。', eRate: '尝试次数过多，请稍后再试。', eNet: '提交失败，请再点一次。',
+      closed: '此问卷目前未开放。', soon: '此问卷尚未开始。', ended: '此问卷已结束，谢谢。', unknown: '找不到问卷。', pick: '请选择问卷', none: '目前没有进行中的问卷。',
+      thanks: '谢谢！', thanksPlain: '感谢您的宝贵意见。', couponNo: '优惠券号码', valid: '可使用', used: '已使用', expired: '已过期', until: '有效期至',
+      how: '使用方法', how1: '请截图或保存此页面。', how2: '下次光临结账时出示给店员。', noCoupon: '找不到优惠券。' }
+  };
+  var qs = new URLSearchParams(location.search);
+  var saved = null; try { saved = localStorage.getItem('ag_survey_lang'); } catch (e) {}
+  var lang = qs.get('lang') || saved || (navigator.language || 'en').slice(0, 2).toLowerCase();
+  if (!UI[lang]) lang = 'en';
+  var main = document.getElementById('main'), view = { kind: 'loading' }, draft = {};
+  function t(k) { return UI[lang][k]; }
+  function tx(o) { return o ? (o[lang] || o.en || o.ko || '') : ''; }
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    for (var k in (attrs || {})) { if (k === 'text') n.textContent = attrs[k]; else if (k === 'html') n.innerHTML = attrs[k]; else n.setAttribute(k, attrs[k]); }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function api(a, body) {
+    return fetch('/display/api.php?a=' + a, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : { cache: 'no-store' })
+      .then(function (r) { return r.json().then(function (j) { j._status = r.status; return j; }); });
+  }
+  function langs() {
+    var box = document.getElementById('langs'); box.textContent = '';
+    Object.keys(UI).forEach(function (k) {
+      var b = el('button', { type: 'button', text: UI[k].name, 'aria-pressed': String(k === lang), lang: k });
+      b.onclick = function () { keep(); lang = k; try { localStorage.setItem('ag_survey_lang', k); } catch (e) {} render(); };
+      box.appendChild(b);
+    });
+    document.documentElement.lang = lang;
+  }
+  function keep() {                                   // remember what is typed when the language changes
+    var f = document.getElementById('f'); if (!f) return;
+    draft = { a: answers(f), code: f.code ? f.code.value : '', name: f.name_ ? f.name_.value : '', phone: f.phone ? f.phone.value : '', sms: f.sms ? f.sms.checked : false };
+  }
+  function answers(f) {
+    var a = {};
+    view.survey.questions.forEach(function (q) {
+      if (q.type === 'text') { a[q.id] = f['q_' + q.id].value; return; }
+      var picked = Array.prototype.filter.call(f.querySelectorAll('[name="q_' + q.id + '"]'), function (i) { return i.checked; }).map(function (i) { return i.value; });
+      if (q.type === 'single') { if (picked[0]) a[q.id] = picked[0]; } else if (picked.length) a[q.id] = picked;
+    });
+    return a;
+  }
+  function message(text) { main.textContent = ''; main.appendChild(el('h1', { text: text })); }
+  function render() {
+    langs();
+    if (view.kind === 'loading') return message(t('loading'));
+    if (view.kind === 'msg') return message(t(view.key));
+    if (view.kind === 'list') return list();
+    if (view.kind === 'coupon') return coupon();
+    if (view.kind === 'done') { main.textContent = ''; main.appendChild(el('h1', { text: t('thanks') })); main.appendChild(el('p', { 'class': 'intro', text: t('thanksPlain') })); return; }
+    form();
+  }
+  function list() {
+    main.textContent = ''; main.appendChild(el('h1', { text: view.items.length ? t('pick') : t('none') }));
+    view.items.forEach(function (s) {
+      var a = el('a', { href: '?s=' + encodeURIComponent(s.id), 'class': 'box', style: 'display:block;color:inherit;text-decoration:none;font-weight:700', text: tx(s.title) });
+      main.appendChild(a);
+    });
+  }
+  function form() {
+    var s = view.survey, d = draft.a || {};
+    document.title = tx(s.title) + ' · AnnanGol';
+    main.textContent = '';
+    main.appendChild(el('h1', { text: tx(s.title) }));
+    main.appendChild(el('p', { 'class': 'intro', text: tx(s.intro) }));
+    var f = el('form', { id: 'f', novalidate: '' });
+    if (view.error) f.appendChild(el('div', { 'class': 'err', role: 'alert', id: 'err', text: t(view.error) }));
+    if (s.code) {
+      f.appendChild(el('div', { 'class': 'codebox' }, [
+        el('label', { 'class': 'lab', 'for': 'code', text: t('code') }),
+        el('input', { id: 'code', name: 'code', type: 'text', inputmode: 'numeric', autocomplete: 'off', maxlength: '4', pattern: '[0-9]*', value: draft.code || '' }),
+        el('p', { 'class': 'note', text: t('codeNote') })]));
+    }
+    s.questions.forEach(function (q) {
+      var star = q.required ? el('span', { 'class': 'req', text: ' *' }) : null;
+      if (q.type === 'text') {
+        var ta = el('textarea', { id: 'q_' + q.id, name: 'q_' + q.id, maxlength: '600' }); ta.value = d[q.id] || '';
+        f.appendChild(el('fieldset', {}, [el('label', { 'class': 'lab', 'for': 'q_' + q.id, text: tx(q.label) }, [star]), ta])); return;
+      }
+      var opts = el('div', { 'class': 'opts' });
+      q.options.forEach(function (o) {
+        var i = el('input', { type: q.type === 'single' ? 'radio' : 'checkbox', name: 'q_' + q.id, value: o.v });
+        if (q.type === 'single' ? d[q.id] === o.v : (d[q.id] || []).indexOf(o.v) >= 0) i.checked = true;
+        opts.appendChild(el('label', {}, [i, el('span', { text: tx(o.label) })]));
+      });
+      f.appendChild(el('fieldset', {}, [el('legend', { text: tx(q.label) }, [star]), opts]));
+    });
+    if (s.contact) {
+      var sms = el('input', { type: 'checkbox', name: 'sms', id: 'sms' }); sms.checked = !!draft.sms;
+      f.appendChild(el('div', { 'class': 'box' }, [
+        el('label', { 'class': 'lab', 'for': 'name_', text: t('nameL') }, [el('span', { 'class': 'req', text: ' *' })]),
+        el('input', { id: 'name_', name: 'name_', type: 'text', autocomplete: 'name', maxlength: '60', value: draft.name || '' }),
+        el('label', { 'class': 'lab', 'for': 'phone', text: t('phone') }, [el('span', { 'class': 'req', text: ' *' })]),
+        el('input', { id: 'phone', name: 'phone', type: 'tel', autocomplete: 'tel', inputmode: 'tel', maxlength: '20', value: draft.phone || '' }),
+        el('p', { 'class': 'note', text: t('phoneNote') }),
+        el('label', { 'class': 'check' }, [sms, el('span', { text: t('sms') })])]));
+    }
+    f.appendChild(el('div', { 'class': 'hp', 'aria-hidden': 'true' }, [el('input', { type: 'text', name: 'website', tabindex: '-1', autocomplete: 'off' })]));
+    var go = el('button', { 'class': 'go', type: 'submit', text: s.coupon ? t('send') : t('sendPlain') });
+    f.appendChild(go);
+    f.onsubmit = function (e) {
+      e.preventDefault(); keep();
+      var body = { s: view.id, lang: lang, a: draft.a, code: draft.code, name: draft.name, phone: draft.phone, sms: draft.sms, website: f.website.value };
+      go.disabled = true; go.textContent = t('sending');
+      api('survey_submit', body).then(function (r) {
+        if (r.ok) {
+          draft = {};
+          if (r.coupon) { try { localStorage.setItem('ag_coupon', r.coupon.code); } catch (e2) {} history.replaceState(null, '', '?c=' + encodeURIComponent(r.coupon.code)); view = { kind: 'coupon', coupon: r.coupon, fresh: true }; }
+          else view = { kind: 'done' };
+          render(); window.scrollTo(0, 0); return;
+        }
+        if (r.error === 'closed') { view = { kind: 'msg', key: r.status === 'ended' ? 'ended' : 'closed' }; render(); return; }
+        view.error = { missing: 'eMissing', code: 'eCode', contact: 'eContact', dup: 'eDup', rate: 'eRate' }[r.error] || 'eNet';
+        render(); var er = document.getElementById('err'); if (er) er.scrollIntoView({ block: 'center' });
+      }).catch(function () { view.error = 'eNet'; render(); });
+    };
+    main.appendChild(f);
+  }
+  function coupon() {
+    var c = view.coupon; main.textContent = '';
+    document.title = tx(c.label) + ' · AnnanGol';
+    if (view.fresh) main.appendChild(el('h1', { text: t('thanks') }));
+    var qr = qrcode(0, 'M'); qr.addData(location.origin + '/display/survey.html?redeem=' + encodeURIComponent(c.code)); qr.make();
+    main.appendChild(el('div', { 'class': 'coupon ' + c.status }, [
+      el('div', { 'class': 'top' }, [el('div', { 'class': 'brand', text: 'ANNANGOL · K-JJAMBAB' }), el('div', { 'class': 'amt', text: tx(c.label) })]),
+      el('div', { 'class': 'mid' }, [el('div', { 'class': 'note', text: t('couponNo') }), el('div', { 'class': 'code', text: c.code }),
+        el('div', { 'class': 'state', text: t(c.status) + (c.status === 'valid' && c.expires ? ' · ' + t('until') + ' ' + c.expires.slice(5).replace('-', '/') + '/' + c.expires.slice(0, 4) : '') })]),
+      el('div', { 'class': 'qr', 'aria-hidden': 'true', html: qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true }) }),
+      el('div', { 'class': 'terms', text: tx(c.terms) })]));
+    main.appendChild(el('div', { 'class': 'how' }, [el('b', { text: t('how') }), el('div', { text: '1. ' + t('how1') }), el('div', { text: '2. ' + t('how2') })]));
+  }
+  function start() {
+    if (qs.get('c')) {
+      api('survey_coupon&c=' + encodeURIComponent(qs.get('c'))).then(function (r) { view = r.coupon ? { kind: 'coupon', coupon: r.coupon } : { kind: 'msg', key: 'noCoupon' }; render(); }).catch(function () { view = { kind: 'msg', key: 'eNet' }; render(); });
+      return;
+    }
+    if (!qs.get('s')) {
+      api('survey_info').then(function (r) {
+        var items = r.surveys || [];
+        if (items.length === 1) { location.replace('?s=' + encodeURIComponent(items[0].id)); return; }
+        view = { kind: 'list', items: items }; render();
+      }).catch(function () { view = { kind: 'msg', key: 'eNet' }; render(); });
+      return;
+    }
+    api('survey_info&s=' + encodeURIComponent(qs.get('s'))).then(function (r) {
+      if (r.error) view = { kind: 'msg', key: 'unknown' };
+      else if (r.status !== 'open') view = { kind: 'msg', key: r.status === 'off' ? 'closed' : r.status };
+      else view = { kind: 'form', id: r.id, survey: r.survey };
+      render();
+    }).catch(function () { view = { kind: 'msg', key: 'eNet' }; render(); });
+  }
+  render(); start();
+})();
+</script>
+</body>
+</html>
