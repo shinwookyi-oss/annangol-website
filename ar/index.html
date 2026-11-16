@@ -245,7 +245,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .rev q{font:500 17px/1.55 var(--f-sans);quotes:none}
 .rev q.kr{font-family:var(--f-kr)}
 .rev .who{margin-top:auto;font-size:14px;color:var(--muted)}
-.rev-cta{margin-top:28px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.rev-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 32px}
+.rev-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
 .rev-cta p{font-size:16px;color:var(--muted)}
 @media (max-width:860px){.revs{grid-template-columns:1fr}}
 
@@ -291,6 +292,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
     <a href="#top" aria-label="AnnanGol home"><img src="../img/annangol_logo.png" alt="AnnanGol Korean Barbecue 아난골"></a>
     <nav aria-label="Sections">
       <a href="#signature">الأطباق المميزة</a>
+      <a href="#reviews">التقييمات</a>
       <a href="#menu">القائمة</a>
       <a href="#breakfast">الفطور</a>
       <a href="#dosirock">علبة الغداء</a>
@@ -342,6 +344,21 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <article class="dish"><img src="../img/m_agujjim.jpg" loading="lazy" alt="Braised monkfish with bean sprouts in spicy sauce"><div class="b"><h3>Ah Gwi Jjim <span class="hot">🌶</span></h3><span class="k">아귀찜</span><p class="d">سمك الراهب مطهو ببطء في صلصة حارة مع براعم الفاصوليا.</p></div></article>
         <article class="dish"><img src="../img/m_buldakbal.jpg" loading="lazy" alt="Spicy stir-fried chicken feet with chili and sesame"><div class="b"><h3>Bul Dak Bal <span class="hot">🌶🌶🌶</span></h3><span class="k">불닭발</span><p class="d">أقدام دجاج حارة مقلية سريعًا.</p></div></article>
         <article class="dish"><img src="../img/m_gamjatang.jpg" loading="lazy" alt="Pork backbone soup with perilla seed powder"><div class="b"><h3>Gamja Tang <span class="hot">🌶</span></h3><span class="k">감자탕</span><p class="d">حساء عظم ظهر الخنزير مع البطاطس والملفوف والسمسم البري.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" style="padding-top:0">
+    <div class="wrap">
+      <div class="rev-head">
+        <div><p class="eyebrow">التقييمات</p>
+        <h2 class="h2">ماذا يقول ضيوفنا.</h2></div>
+        <div class="rev-cta"><p>هل تناولت الطعام عندنا؟ أخبرنا برأيك.</p><a class="btn" href="https://g.page/r/CbFyaprUaqgNEAE/review" target="_blank" rel="noopener">اكتب تقييمًا على Google</a></div>
+      </div>
+      <div class="revs">
+        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Hidden gem in Annandale! This restaurant reminds me of a traditional Korean food when I was a child. I recommend any of the soups with rice!</q><figcaption class="who">Joon Y. · تقييم على Google</figcaption></figure>
+        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q class="kr">소머리+도가니 국밥 너무 맛있어요!</q><figcaption class="who">Janice K. · تقييم على Google</figcaption></figure>
+        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Nice food, nice service, nice price.</q><figcaption class="who">Dae Hyun K. · تقييم على Google</figcaption></figure>
       </div>
     </div>
   </section>
@@ -457,19 +474,6 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <figure><img src="../img/p_room.jpg" loading="lazy" alt="Long party tables in the back room"><figcaption>غرفة حفلات للمجموعات</figcaption></figure>
         <figure><img src="../img/m_banchan.jpg" loading="lazy" alt="Korean side dishes (banchan) in small white bowls"><figcaption>أطباق جانبية كورية (banchan) مع كل وجبة</figcaption></figure>
       </div>
-    </div>
-  </section>
-
-  <section id="reviews" style="padding-top:0">
-    <div class="wrap">
-      <p class="eyebrow">التقييمات</p>
-      <h2 class="h2">ماذا يقول ضيوفنا.</h2>
-      <div class="revs">
-        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Hidden gem in Annandale! This restaurant reminds me of a traditional Korean food when I was a child. I recommend any of the soups with rice!</q><figcaption class="who">Joon Y. · تقييم على Google</figcaption></figure>
-        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q class="kr">소머리+도가니 국밥 너무 맛있어요!</q><figcaption class="who">Janice K. · تقييم على Google</figcaption></figure>
-        <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Nice food, nice service, nice price.</q><figcaption class="who">Dae Hyun K. · تقييم على Google</figcaption></figure>
-      </div>
-      <div class="rev-cta"><p>هل تناولت الطعام عندنا؟ أخبرنا برأيك.</p><a class="btn" href="https://g.page/r/CbFyaprUaqgNEAE/review" target="_blank" rel="noopener">اكتب تقييمًا على Google</a></div>
     </div>
   </section>
 
