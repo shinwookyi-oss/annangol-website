@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>설문 · 할인권 관리 — AnnanGol</title>
+<title>설문 · 쿠폰 관리 — AnnanGol</title>
 <link rel="icon" href="/img/favicon.png">
 <style>
 :root { --ink: #2A211F; --red: #C5202B; --grey: #6B5F5B; --line: #DDD3C4; --bg: #FFF8EE; }
@@ -22,6 +22,10 @@ button.sm { padding: 4px 10px; font-size: 13px; font-weight: 400; }
 .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .big { font-size: 44px; font-weight: 800; letter-spacing: 8px; font-variant-numeric: tabular-nums; }
 .muted { color: var(--grey); font-size: 14px; }
+.fld { display: flex; flex-direction: column; gap: 4px; font-size: 14px; margin: 8px 0; } .fld > span { color: var(--grey); }
+.card .row { margin: 6px 0; }
+input[type=number] { padding: 10px 12px; border: 1.5px solid var(--ink); border-radius: 8px; background: #fff; color: var(--ink); }
+input[type=checkbox] { width: 20px; height: 20px; }
 .res { margin-top: 12px; padding: 12px 14px; border-radius: 10px; font-weight: 700; }
 .res.ok { background: #E3F3E6; color: #17602A; } .res.bad { background: #FDECEC; color: #8E1119; }
 .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; background: #EEE; }
@@ -38,7 +42,7 @@ td.wrapc { white-space: normal; min-width: 180px; }
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><h1>설문 · 할인권 관리</h1><div class="row"><a href="/display/#admin">디스플레이 관리</a><button class="sm" id="out" hidden>로그아웃</button></div></div>
+  <div class="top"><h1>설문 · 쿠폰 관리</h1><div class="row"><a href="/display/#admin">디스플레이 관리</a><button class="sm" id="out" hidden>로그아웃</button></div></div>
   <div id="app"></div>
 </div>
 <script>
@@ -55,7 +59,7 @@ td.wrapc { white-space: normal; min-width: 180px; }
     return n;
   }
   function ko(o) { return o ? (o.ko || o.en || '') : ''; }
-  var ST = { open: '진행 중', off: '꺼짐', soon: '시작 전', ended: '종료' };
+  var ST = { open: '진행 중', off: '꺼짐', soon: '시작 전', ended: '종료', full: '발급 마감' };
   function login() {
     document.getElementById('out').hidden = true; app.textContent = '';
     var pw = el('input', { type: 'password', placeholder: '비밀번호', autocomplete: 'current-password', 'aria-label': '비밀번호' });
@@ -67,7 +71,7 @@ td.wrapc { white-space: normal; min-width: 180px; }
   function load() {
     return api('survey_admin').then(function (r) {
       if (r._status === 401) return login();
-      data = r; if (!cur || !data.surveys.some(function (s) { return s.id === cur; })) cur = data.surveys[0] && data.surveys[0].id;
+      data = r;
       document.getElementById('out').hidden = false; render();
     });
   }
@@ -76,58 +80,122 @@ td.wrapc { white-space: normal; min-width: 180px; }
     api('survey_redeem', { code: code, undo: !!undo }).then(function (r) {
       var row = r.row || {}, who = row.name ? ' · ' + row.name + ' (' + row.phone + ')' : '';
       if (r.ok && undo) msg = { ok: true, text: code + ' — 사용 처리를 취소했습니다.' };
-      else if (r.ok) msg = { ok: true, text: code + ' — ' + ko(r.coupon.label) + ' 사용 처리했습니다' + who + (r.coupon.status === 'expired' ? ' (주의: 기간이 지난 쿠폰)' : '') };
+      else if (r.ok) msg = { ok: true, text: code + ' — ' + ko(r.coupon.label) + ' 사용 처리했습니다' + (r.coupon.title ? ' [' + ko(r.coupon.title) + ']' : '') + who + (r.coupon.status === 'expired' ? ' (주의: 기간이 지난 쿠폰)' : '') };
       else if (r.error === 'used') msg = { ok: false, text: code + ' — 이미 사용된 쿠폰입니다 (' + (row.used || '').slice(0, 16).replace('T', ' ') + ')' + who };
       else msg = { ok: false, text: code + ' — 없는 쿠폰번호입니다.' };
       load();
     });
   }
+  function field(label, node) { return el('label', { 'class': 'fld' }, [el('span', { text: label }), node]); }
+  function offerFields(o) {                             // inputs for a coupon offer; read() returns what was typed
+    o = o || { kind: 'amount', value: 2, expires: '', terms: {} };
+    var kind = el('select', {}, [el('option', { value: 'amount', text: '금액 ($)' }), el('option', { value: 'percent', text: '퍼센트 (%)' })]); kind.value = o.kind || 'amount';
+    var val = el('input', { type: 'number', min: '0', step: '0.01', value: String(o.value == null ? '' : o.value), style: 'width:110px' });
+    var exp = el('input', { type: 'date', value: o.expires || '' });
+    var tk = el('input', { type: 'text', value: (o.terms || {}).ko || '', maxlength: '200', style: 'width:100%' }), te = el('input', { type: 'text', value: (o.terms || {}).en || '', maxlength: '200', style: 'width:100%' });
+    return { nodes: [el('div', { 'class': 'row' }, [field('할인 방식', kind), field('할인 값', val), field('사용 기한', exp)]), field('사용 조건 (한국어)', tk), field('사용 조건 (영어 — 스페인어·중국어 손님에게도 표시)', te)],
+             read: function () { return { kind: kind.value, value: parseFloat(val.value), expires: exp.value, terms: { ko: tk.value, en: te.value } }; } };
+  }
+  function saved(r) { if (r.ok) { msg = null; return load(); } alert({ offer: '할인 값과 사용 기한을 확인해 주세요. (금액 0~1000, 퍼센트 0~100)', title: '이름을 적어 주세요.', date: '날짜를 확인해 주세요.' }[r.error] || '저장하지 못했습니다.'); }
   function render() {
     app.textContent = '';
-    var S = data.surveys.filter(function (s) { return s.id === cur; })[0];
+    var all = data.surveys.map(function (s) { return { key: s.id, kind: 's', name: '설문: ' + ko(s.survey.title), o: s }; })
+      .concat(data.campaigns.map(function (c) { return { key: 'k:' + c.id, kind: 'k', name: '쿠폰: ' + ko(c.campaign.title), o: c }; }));
+    if (cur !== 'new' && !all.some(function (x) { return x.key === cur; })) cur = all[0] ? all[0].key : 'new';
+    var X = all.filter(function (x) { return x.key === cur; })[0];
     // coupon desk
     var inp = el('input', { type: 'text', id: 'coupon', placeholder: 'AG-XXXXXX', autocomplete: 'off', autocapitalize: 'characters', 'aria-label': '쿠폰번호' });
     var pre = new URLSearchParams(location.search).get('redeem'); if (pre && !msg) inp.value = pre;
-    var go = el('button', { 'class': 'pri', type: 'submit', text: '사용 처리' });
-    var f = el('form', { 'class': 'row' }, [inp, go]); f.onsubmit = function (e) { e.preventDefault(); redeem(inp.value); history.replaceState(null, '', location.pathname); };
+    var f = el('form', { 'class': 'row' }, [inp, el('button', { 'class': 'pri', type: 'submit', text: '사용 처리' })]);
+    f.onsubmit = function (e) { e.preventDefault(); redeem(inp.value); history.replaceState(null, '', location.pathname); };
     var desk = el('div', { 'class': 'card' }, [el('h2', { text: '할인권 사용 처리 (계산할 때)' }), f,
       el('p', { 'class': 'muted', text: '손님 화면의 쿠폰번호를 입력하거나, 로그인한 휴대폰 카메라로 손님 화면의 QR을 찍으면 번호가 채워집니다.' })]);
     if (msg) desk.appendChild(el('div', { 'class': 'res ' + (msg.ok ? 'ok' : 'bad'), role: 'status', text: msg.text }));
     app.appendChild(desk);
-    if (!S) { app.appendChild(el('p', { text: '등록된 설문이 없습니다.' })); return; }
-    // survey picker + settings
-    var sel = el('select', { 'aria-label': '설문 선택' });
-    data.surveys.forEach(function (s) { var o = el('option', { value: s.id, text: ko(s.survey.title) + ' — ' + ST[s.status] }); if (s.id === cur) o.selected = true; sel.appendChild(o); });
-    sel.onchange = function () { cur = sel.value; render(); };
-    var on = el('input', { type: 'checkbox', id: 'on' }); on.checked = !!S.survey.on;
-    var st = el('input', { type: 'date', value: S.survey.start || '', 'aria-label': '시작일' }), en = el('input', { type: 'date', value: S.survey.end || '', 'aria-label': '종료일' });
-    var save = el('button', { text: '저장' });
-    save.onclick = function () { api('survey_set', { s: cur, on: on.checked, start: st.value, end: en.value }).then(load); };
-    var link = location.origin + '/survey/?s=' + cur;
-    app.appendChild(el('div', { 'class': 'card' }, [
-      el('div', { 'class': 'row' }, [sel, el('span', { 'class': 'pill ' + S.status, text: ST[S.status] })]),
-      el('div', { 'class': 'row', style: 'margin-top:12px' }, [el('label', { 'class': 'row', 'for': 'on' }, [on, el('span', { text: '설문 받기' })]), el('span', { text: '기간' }), st, el('span', { text: '~' }), en, save]),
-      el('p', { 'class': 'muted' }, [el('span', { text: '설문 주소: ' }), el('a', { href: link, target: '_blank', rel: 'noopener', text: link })])]));
-    if (S.today_code) app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: '오늘의 코드 (' + data.today + ')' }), el('div', { 'class': 'big', text: S.today_code }),
-      el('p', { 'class': 'muted', text: '식사하신 손님께만 알려 주세요. 매일 자정(동부 시간)에 자동으로 바뀝니다.' })]));
+    // picker
+    var sel = el('select', { 'aria-label': '설문 또는 쿠폰 선택' });
+    all.forEach(function (x) { var o = el('option', { value: x.key, text: x.name + ' — ' + ST[x.o.status] }); sel.appendChild(o); });
+    sel.appendChild(el('option', { value: 'new', text: '＋ 새 쿠폰 만들기 (VIP, 가족, 행사 …)' })); sel.value = cur;
+    sel.onchange = function () { cur = sel.value; msg = null; render(); };
+    app.appendChild(el('div', { 'class': 'card row' }, [sel, X ? el('span', { 'class': 'pill ' + X.o.status, text: ST[X.o.status] }) : null]));
+
+    if (cur === 'new' || (X && X.kind === 'k')) {       // ---- coupon campaign ----
+      var C = X ? X.o.campaign : { title: {}, on: true, start: '', end: '', public: false, code: false, limit: 0, offer: null };
+      var tk = el('input', { type: 'text', value: C.title.ko || '', maxlength: '80', placeholder: '예: VIP 쿠폰' }), te = el('input', { type: 'text', value: C.title.en || '', maxlength: '80', placeholder: 'e.g. VIP coupon' });
+      var on = el('input', { type: 'checkbox' }); on.checked = !!C.on;
+      var st = el('input', { type: 'date', value: C.start || '' }), en = el('input', { type: 'date', value: C.end || '' });
+      var pub = el('input', { type: 'checkbox' }); pub.checked = !!C.public;
+      var code = el('input', { type: 'checkbox' }); code.checked = !!C.code;
+      var lim = el('input', { type: 'number', min: '0', step: '1', value: String(C.limit || 0), style: 'width:110px' });
+      var of = offerFields(C.offer), save = el('button', { 'class': 'pri', text: X ? '저장' : '쿠폰 만들기' });
+      save.onclick = function () {
+        api('campaign_save', { id: X ? X.o.id : '', title: { ko: tk.value, en: te.value }, on: on.checked, start: st.value, end: en.value, public: pub.checked, code: code.checked, limit: parseInt(lim.value, 10) || 0, offer: of.read() })
+          .then(function (r) { if (r.ok) cur = 'k:' + r.id; saved(r); });
+      };
+      app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: X ? '쿠폰 설정' + (X.o.label ? ' — ' + X.o.label.ko : '') : '새 쿠폰' }),
+        el('div', { 'class': 'row' }, [field('이름 (한국어)', tk), field('이름 (영어)', te)])].concat(of.nodes, [
+        el('div', { 'class': 'row' }, [el('label', { 'class': 'row' }, [on, el('span', { text: '발급 켜기' })]), field('발급 시작', st), field('발급 종료', en)]),
+        el('div', { 'class': 'row' }, [el('label', { 'class': 'row' }, [pub, el('span', { text: '손님이 링크·QR로 직접 받기 허용' })]), el('label', { 'class': 'row' }, [code, el('span', { text: '받을 때 오늘의 코드 필요' })]), field('최대 발급 수 (0 = 제한 없음)', lim)]),
+        el('p', { 'class': 'muted', text: '저장 후 바꾼 내용은 새로 발급되는 쿠폰에만 적용됩니다. 이미 나간 쿠폰은 발급 당시 조건 그대로입니다.' }), save])));
+      if (!X) return;
+      // hand one out
+      var nm = el('input', { type: 'text', placeholder: '이름 (선택)', maxlength: '60', 'aria-label': '이름' }), ph = el('input', { type: 'text', placeholder: '전화 (선택)', inputmode: 'tel', 'aria-label': '전화' });
+      var give = el('button', { 'class': 'pri', type: 'submit', text: '쿠폰 1장 발급' }), outb = el('div');
+      var gf = el('form', { 'class': 'row' }, [nm, ph, give]);
+      gf.onsubmit = function (e) {
+        e.preventDefault();
+        api('campaign_issue', { id: X.o.id, name: nm.value, phone: ph.value }).then(function (r) {
+          if (!r.ok) { outb.className = 'res bad'; outb.textContent = r.error === 'contact' ? '전화번호는 10자리로 적어 주세요.' : '발급하지 못했습니다.'; return; }
+          var link = location.origin + '/survey/?c=' + r.coupon.code;
+          load().then(function () { msg = { ok: true, text: r.coupon.label.ko + ' 발급: ' + r.coupon.code + ' — 손님에게 보낼 링크: ' + link }; render(); });
+        });
+      };
+      app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: '직접 발급 (손님 한 분에게)' }), gf, outb,
+        el('p', { 'class': 'muted', text: '발급된 쿠폰 링크를 문자·카카오톡으로 보내거나, 그 화면을 열어 손님에게 보여 주세요. 쿠폰은 1회 사용입니다.' })]));
+      if (C.public) {
+        var plink = location.origin + '/survey/?k=' + X.o.id;
+        app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: '손님이 직접 받는 주소' }), el('a', { href: plink, target: '_blank', rel: 'noopener', text: plink }),
+          X.o.today_code ? el('div', {}, [el('div', { 'class': 'muted', text: '오늘의 코드 (' + data.today + ')' }), el('div', { 'class': 'big', text: X.o.today_code })]) : null,
+          el('p', { 'class': 'muted', text: '이름과 전화번호를 적으면 쿠폰이 발급됩니다. 전화번호 1개당 1장입니다.' })]));
+      }
+    } else if (X) {                                     // ---- survey ----
+      var S = X.o;
+      var on2 = el('input', { type: 'checkbox' }); on2.checked = !!S.survey.on;
+      var st2 = el('input', { type: 'date', value: S.survey.start || '' }), en2 = el('input', { type: 'date', value: S.survey.end || '' });
+      var con = el('input', { type: 'checkbox' }); con.checked = !!S.survey.coupon;
+      var of2 = offerFields(S.survey.coupon), save2 = el('button', { 'class': 'pri', text: '저장' });
+      save2.onclick = function () { var o = of2.read(); o.on = con.checked; api('survey_set', { s: S.id, on: on2.checked, start: st2.value, end: en2.value, coupon: o }).then(saved); };
+      var link2 = location.origin + '/survey/?s=' + S.id;
+      app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: '설문 설정' }),
+        el('div', { 'class': 'row' }, [el('label', { 'class': 'row' }, [on2, el('span', { text: '설문 받기' })]), field('시작', st2), field('종료', en2)]),
+        el('p', { 'class': 'muted' }, [el('span', { text: '설문 주소: ' }), el('a', { href: link2, target: '_blank', rel: 'noopener', text: link2 })]),
+        el('h2', { text: '설문 완료 쿠폰' + (S.survey.coupon ? ' — ' + S.survey.coupon.label.ko : ' — 없음'), style: 'margin-top:14px' }),
+        el('label', { 'class': 'row' }, [con, el('span', { text: '설문을 내면 쿠폰 발급' })])].concat(of2.nodes, [
+        el('p', { 'class': 'muted', text: '바꾼 내용은 저장 이후 발급되는 쿠폰에만 적용됩니다. 이미 나간 쿠폰은 발급 당시 조건 그대로입니다.' }), save2])));
+      if (S.today_code) app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: '오늘의 코드 (' + data.today + ')' }), el('div', { 'class': 'big', text: S.today_code }),
+        el('p', { 'class': 'muted', text: '식사하신 손님께만 알려 주세요. 매일 자정(동부 시간)에 자동으로 바뀝니다.' })]));
+    }
     // results
+    var Q = X.kind === 's' ? X.o.survey.questions : [];
     var rows = data.rows.filter(function (r) { return r.s === cur; }), used = rows.filter(function (r) { return r.used; }).length;
-    var sum = el('div', { 'class': 'card' }, [el('h2', { text: '집계 — 응답 ' + rows.length + '건 · 할인권 사용 ' + used + '건' })]);
-    S.survey.questions.forEach(function (q) {
-      if (q.type === 'text') return;
-      var box = el('div', { 'class': 'stat' }, [el('b', { text: ko(q.label) })]), bars = el('div', { 'class': 'bars' });
-      q.options.forEach(function (o) {
-        var n = rows.filter(function (r) { var v = r.a[q.id]; return Array.isArray(v) ? v.indexOf(o.v) >= 0 : v === o.v; }).length;
-        var bar = el('i'); bar.style.width = (rows.length ? Math.round(n / rows.length * 100) : 0) + '%';
-        bars.appendChild(el('div', {}, [el('span', { text: ko(o.label) }), el('span', {}, [bar]), el('span', { text: n + ' (' + (rows.length ? Math.round(n / rows.length * 100) : 0) + '%)' })]));
+    if (X.kind === 's') {
+      var sum = el('div', { 'class': 'card' }, [el('h2', { text: '집계 — 응답 ' + rows.length + '건 · 할인권 사용 ' + used + '건' })]);
+      Q.forEach(function (q) {
+        if (q.type === 'text') return;
+        var box = el('div', { 'class': 'stat' }, [el('b', { text: ko(q.label) })]), bars = el('div', { 'class': 'bars' });
+        q.options.forEach(function (o) {
+          var n = rows.filter(function (r) { var v = r.a[q.id]; return Array.isArray(v) ? v.indexOf(o.v) >= 0 : v === o.v; }).length;
+          var bar = el('i'); bar.style.width = (rows.length ? Math.round(n / rows.length * 100) : 0) + '%';
+          bars.appendChild(el('div', {}, [el('span', { text: ko(o.label) }), el('span', {}, [bar]), el('span', { text: n + ' (' + (rows.length ? Math.round(n / rows.length * 100) : 0) + '%)' })]));
+        });
+        box.appendChild(bars); sum.appendChild(box);
       });
-      box.appendChild(bars); sum.appendChild(box);
-    });
-    app.appendChild(sum);
-    var tb = el('tbody'), heads = ['시간', '언어'].concat(S.survey.questions.map(function (q) { return q.id; }), ['이름', '전화', '문자', '쿠폰', '사용', '']);
+      app.appendChild(sum);
+    }
+    var tb = el('tbody'), heads = ['시간', '언어'].concat(Q.map(function (q) { return q.id; }), ['이름', '전화', '문자', '쿠폰', '할인', '사용', '']);
     rows.forEach(function (r) {
-      var tr = el('tr', {}, [el('td', { text: r.t.slice(5, 16).replace('T', ' ') }), el('td', { text: r.lang || '' })]);
-      S.survey.questions.forEach(function (q) {
+      var tr = el('tr', {}, [el('td', { text: r.t.slice(5, 16).replace('T', ' ') }), el('td', { text: r.lang === 'staff' ? '직원 발급' : (r.lang || '') })]);
+      Q.forEach(function (q) {
         var v = r.a[q.id], lab = function (x) { var o = (q.options || []).filter(function (o) { return o.v === x; })[0]; return o ? ko(o.label) : x; };
         tr.appendChild(el('td', q.type === 'text' ? { 'class': 'wrapc', text: v || '' } : { text: v == null ? '' : (Array.isArray(v) ? v.map(lab).join(', ') : lab(v)) }));
       });
@@ -135,11 +203,12 @@ td.wrapc { white-space: normal; min-width: 180px; }
       if (r.coupon) { var ub = el('button', { 'class': 'sm', text: r.used ? '취소' : '사용 처리' }); ub.onclick = function () { redeem(r.coupon, !!r.used); }; useCell.appendChild(el('span', { text: r.used ? r.used.slice(5, 16).replace('T', ' ') + ' ' : '' })); useCell.appendChild(ub); }
       var del = el('button', { 'class': 'sm', text: '삭제' });
       del.onclick = function () { if (del.dataset.sure) api('survey_del', { id: r.id }).then(load); else { del.dataset.sure = 1; del.textContent = '정말 삭제?'; } };
-      [el('td', { text: r.name || '' }), el('td', { text: r.phone || '' }), el('td', { text: r.sms ? '동의' : '' }), el('td', { text: r.coupon || '' }), useCell, el('td', {}, [del])].forEach(function (c) { tr.appendChild(c); });
+      var cc = el('td'); if (r.coupon) cc.appendChild(el('a', { href: '/survey/?c=' + r.coupon, target: '_blank', rel: 'noopener', text: r.coupon }));
+      [el('td', { text: r.name || '' }), el('td', { text: r.phone || '' }), el('td', { text: r.sms ? '동의' : '' }), cc, el('td', { text: r.label || '' }), useCell, el('td', {}, [del])].forEach(function (c) { tr.appendChild(c); });
       tb.appendChild(tr);
     });
     var csv = el('a', { href: 'api.php?a=survey_csv&s=' + encodeURIComponent(cur), text: '엑셀용 CSV 내려받기' });
-    app.appendChild(el('div', { 'class': 'card' }, [el('div', { 'class': 'row', style: 'justify-content:space-between' }, [el('h2', { text: '응답 목록' }), csv]),
+    app.appendChild(el('div', { 'class': 'card' }, [el('div', { 'class': 'row', style: 'justify-content:space-between' }, [el('h2', { text: (X.kind === 's' ? '응답 목록' : '발급 목록') + ' — ' + rows.length + '건 · 사용 ' + used + '건' }), csv]),
       el('div', { 'class': 'scroll' }, [el('table', {}, [el('thead', {}, [el('tr', {}, heads.map(function (h) { return el('th', { text: h }); }))]), tb])])]));
   }
   document.getElementById('out').onclick = function () { api('logout', {}).then(login); };

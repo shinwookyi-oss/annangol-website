@@ -20,18 +20,14 @@
   "coupon": {
    "prefix": "AG",
    "expires": "2026-12-31",
-   "label": {
-    "ko": "$2 할인권",
-    "en": "$2 OFF coupon",
-    "es": "Cupón de $2 de descuento",
-    "zh": "$2 优惠券"
-   },
    "terms": {
     "ko": "아침 K-JjamBab 식판 1회 · 특가와 함께 사용 가능 · 1인 1매",
     "en": "One K-JjamBab breakfast tray · Can be used with the special price · One per person",
     "es": "Una bandeja de desayuno K-JjamBab · Se puede usar con el precio especial · Uno por persona",
     "zh": "K-JjamBab 早餐餐盘一份 · 可与特价同时使用 · 每人一张"
-   }
+   },
+   "kind": "amount",
+   "value": 2
   },
   "questions": [
    {
