@@ -1,5 +1,5 @@
 {
- "id": "free-trial-posters-2026-11-16-wide",
+ "id": "google-review-2026-11-16",
  "items_add": [
   {
    "id": "ft-poster-ko",
@@ -96,6 +96,28 @@
    "screens": "tv",
    "on": true,
    "until": "2026-11-30"
+  },
+  {
+   "id": "google-review-portrait",
+   "type": "image",
+   "label": "구글 리뷰 QR (세로)",
+   "src": "media/review-portrait.jpg",
+   "seconds": 15,
+   "from": "",
+   "to": "",
+   "screens": "board",
+   "on": true
+  },
+  {
+   "id": "google-review-landscape",
+   "type": "image",
+   "label": "구글 리뷰 QR (가로)",
+   "src": "media/review-landscape.jpg",
+   "seconds": 15,
+   "from": "",
+   "to": "",
+   "screens": "tv",
+   "on": true
   }
  ]
 }

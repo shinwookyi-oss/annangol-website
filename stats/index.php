@@ -170,7 +170,7 @@ th{color:var(--text-secondary);font-weight:600;font-size:12px}
 </div>
 <script>
 const PAGE_NAMES={'/':'홈 (영어 기본)','/en/':'English','/ko/':'한국어','/es/':'Español','/vi/':'Tiếng Việt','/zh/':'中文','/mn/':'Монгол','/tl/':'Filipino','/ar/':'العربية','/fr/':'Français','/am/':'አማርኛ','/fa/':'فارسی','/bn/':'বাংলা','/ht/':'Kreyòl','/pt/':'Português','/ru/':'Русский'};
-const EV_NAMES={order_click:'온라인 주문 클릭',directions_click:'길찾기(지도) 클릭',phone_copy:'전화번호 복사',phone_call:'전화 걸기',lang_switch:'언어 변경',outbound_click:'기타 외부 링크'};
+const EV_NAMES={order_click:'온라인 주문 클릭',directions_click:'길찾기(지도) 클릭',review_click:'구글 리뷰 쓰기 클릭',phone_copy:'전화번호 복사',phone_call:'전화 걸기',lang_switch:'언어 변경',outbound_click:'기타 외부 링크'};
 const DEV={mobile:'모바일',desktop:'데스크톱',tablet:'태블릿'};
 const $=s=>document.querySelector(s), fmt=n=>(n||0).toLocaleString('ko-KR');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

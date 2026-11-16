@@ -245,6 +245,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .rev q{font:500 17px/1.55 var(--f-sans);quotes:none}
 .rev q.kr{font-family:var(--f-kr)}
 .rev .who{margin-top:auto;font-size:14px;color:var(--muted)}
+.rev-cta{margin-top:28px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.rev-cta p{font-size:16px;color:var(--muted)}
 @media (max-width:860px){.revs{grid-template-columns:1fr}}
 
 /* visit */
@@ -467,6 +469,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q class="kr">소머리+도가니 국밥 너무 맛있어요!</q><figcaption class="who">Janice K. · Avaliação no Google</figcaption></figure>
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Nice food, nice service, nice price.</q><figcaption class="who">Dae Hyun K. · Avaliação no Google</figcaption></figure>
       </div>
+      <div class="rev-cta"><p>Já comeu conosco? Conte como foi.</p><a class="btn" href="https://g.page/r/CbFyaprUaqgNEAE/review" target="_blank" rel="noopener">Escrever uma avaliação no Google</a></div>
     </div>
   </section>
 
@@ -614,6 +617,7 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     if(a.matches('button.copy'))n='phone_copy';
     else if(/^tel:/.test(h))n='phone_call';
     else if(/menu11\.com/.test(h))n='order_click';
+    else if(/g\.page\/r\//.test(h))n='review_click';
     else if(/google\.[^/]+\/maps|maps\.app|maps\.google/.test(h))n='directions_click';
     else if(a.closest('.lang'))n='lang_switch';
     else if(/^https?:/.test(h)&&a.host!==location.host)n='outbound_click';

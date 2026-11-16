@@ -121,5 +121,7 @@
  "dr_s_alt": "Lunch box K-DosiRock pequeño con arroz, huevo frito, bulgogi y acompañamientos",
  "dr_m_alt": "Lunch box K-DosiRock mediano con más bulgogi, sopa y gim tostado",
  "dr_l_alt": "Lunch box K-DosiRock grande con arroz, bulgogi, cuatro acompañamientos, sopa y gim tostado",
- "am_health": "Empiece sano con K-JjamBab. Carne y verduras, un desayuno coreano equilibrado."
+ "am_health": "Empiece sano con K-JjamBab. Carne y verduras, un desayuno coreano equilibrado.",
+ "rv_ask": "¿Comió con nosotros? Cuéntenos qué le pareció.",
+ "rv_cta": "Escribir una reseña en Google"
 }
