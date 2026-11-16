@@ -179,10 +179,10 @@ td.wrapc { white-space: normal; min-width: 180px; }
       var em = el('input', { type: 'text', value: (data.notify || []).join(', '), placeholder: 'owner@example.com, manager@example.com', style: 'width:100%', 'aria-label': '알림 받을 이메일' });
       var nres = el('div'), nsave = el('button', { 'class': 'pri', text: '저장' }), ntest = el('button', { text: '저장하고 테스트 메일 보내기' });
       var rp = data.report || {}, cks = {};
-      [['daily', '매일 아침 (전날 결과)'], ['weekly', '매주 월요일 (지난주 결과)'], ['monthly', '매월 1일 (지난달 결과)']].forEach(function (k) { var c = el('input', { type: 'checkbox' }); c.checked = !!rp[k[0]]; cks[k[0]] = { box: c, label: k[1] }; });
+      [['code', '오늘의 코드 (매일)'], ['daily', '매일 아침 (전날 결과)'], ['weekly', '매주 월요일 (지난주 결과)'], ['monthly', '매월 1일 (지난달 결과)']].forEach(function (k) { var c = el('input', { type: 'checkbox' }); c.checked = !!rp[k[0]]; cks[k[0]] = { box: c, label: k[1] }; });
       var nsend = function (test) {
-        api('survey_notify', { emails: em.value, test: test, report: { daily: cks.daily.box.checked, weekly: cks.weekly.box.checked, monthly: cks.monthly.box.checked } }).then(function (r) {
-          if (r.ok) data.report = { daily: cks.daily.box.checked, weekly: cks.weekly.box.checked, monthly: cks.monthly.box.checked };
+        api('survey_notify', { emails: em.value, test: test, report: { code: cks.code.box.checked, daily: cks.daily.box.checked, weekly: cks.weekly.box.checked, monthly: cks.monthly.box.checked } }).then(function (r) {
+          if (r.ok) data.report = { code: cks.code.box.checked, daily: cks.daily.box.checked, weekly: cks.weekly.box.checked, monthly: cks.monthly.box.checked };
           if (!r.ok) { nres.className = 'res bad'; nres.textContent = r.error === 'email' ? '이메일 주소를 확인해 주세요: ' + r.bad : (r.error === 'many' ? '주소는 10개까지 넣을 수 있습니다.' : '저장하지 못했습니다.'); return; }
           data.notify = r.emails; em.value = r.emails.join(', ');
           nres.className = 'res ' + (test && !r.sent ? 'bad' : 'ok');
@@ -192,9 +192,9 @@ td.wrapc { white-space: normal; min-width: 180px; }
       nsave.onclick = function () { nsend(false); }; ntest.onclick = function () { nsend(true); };
       app.appendChild(el('div', { 'class': 'card' }, [el('h2', { text: '새 응답 이메일 알림' }), em,
         el('p', { 'class': 'muted', text: '여러 주소는 쉼표로 구분합니다. 비워 두면 알림을 보내지 않습니다. 메일에는 응답 내용·이름·쿠폰번호가 들어가고 전화번호는 들어가지 않습니다. 모든 설문에 공통입니다.' }),
-        el('h2', { text: '분석 보고서 이메일', style: 'margin-top:14px' }),
+        el('h2', { text: '매일 코드 · 분석 보고서 이메일', style: 'margin-top:14px' }),
         el('div', { 'class': 'row' }, Object.keys(cks).map(function (k) { return el('label', { 'class': 'row' }, [cks[k].box, el('span', { text: cks[k].label })]); })),
-        el('p', { 'class': 'muted', text: '위 주소로 보냅니다. 그 기간에 켜져 있던 설문만 들어가고, 오전 6시(동부 시간) 이후에 발송됩니다.' }),
+        el('p', { 'class': 'muted', text: '위 주소로 보냅니다. 오늘의 코드는 자정 이후, 보고서는 오전 6시(동부 시간) 이후에 발송됩니다. 보고서에는 그 기간에 켜져 있던 설문만 들어갑니다.' }),
         el('div', { 'class': 'row' }, [nsave, ntest]), nres]));
       var rk = el('select', { 'aria-label': '보고서 종류' }, [el('option', { value: 'daily', text: '오늘' }), el('option', { value: 'weekly', text: '이번 주 (월요일부터)' }), el('option', { value: 'monthly', text: '이번 달' })]);
       var pv = el('pre', { style: 'white-space:pre-wrap;font:inherit;font-size:14px;background:#FAF5EC;border-radius:8px;padding:12px;margin:10px 0 0', hidden: '' }), rres = el('div');

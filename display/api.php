@@ -181,23 +181,44 @@ function survey_report(string $kind, string $from, string $to): ?array {
     return ['subject' => "[아난골] 설문 $name 보고서 — $range · 응답 {$total}건",
             'body' => "아난골 설문 $name 보고서\n기간: $range\n\n" . implode("\n\n────────────────────\n\n", $out) . "\n\n전체 응답: https://annangol.com/display/survey.html"];
 }
-// Called on ordinary site traffic: sends each report that is switched on once per day / week / month, after 6 AM Eastern.
+// Today's code of every open survey and coupon campaign that asks for one; null when there is none.
+function survey_codes_mail(): ?array {
+    $defs = json_decode((string)@file_get_contents(__DIR__ . '/../survey/surveys.json'), true) ?: [];
+    $store = json_read(display_dir() . '/survey.json'); $today = date('Y-m-d'); $L = [];
+    $open = function (array $d) use ($today) { return !empty($d['on']) && !empty($d['code']) && (empty($d['start']) || $d['start'] <= $today) && (empty($d['end']) || $d['end'] >= $today); };
+    $code = function (string $key) use ($store, $today) { return str_pad((string)(hexdec(substr(hash_hmac('sha256', "$key|$today", (string)($store['secret'] ?? '')), 0, 7)) % 10000), 4, '0', STR_PAD_LEFT); };
+    foreach ($defs as $id => $d) {
+        foreach (['on', 'start', 'end'] as $k) { if (array_key_exists($k, $store['cfg'][$id] ?? [])) $d[$k] = $store['cfg'][$id][$k]; }
+        if ($open($d)) $L[] = $code($id) . '   ' . ($d['title']['ko'] ?? $id);
+    }
+    foreach ((array)($store['campaigns'] ?? []) as $id => $c) { if (!empty($c['public']) && $open($c)) $L[] = $code("k:$id") . '   ' . ($c['title']['ko'] ?: ($c['title']['en'] ?? $id)); }
+    if (!$L || empty($store['secret'])) return null;
+    return ['subject' => "[아난골] 오늘의 코드 $today — " . substr($L[0], 0, 4) . (count($L) > 1 ? ' 외 ' . (count($L) - 1) . '개' : ''),
+            'body' => "오늘의 코드 ($today)\n\n" . implode("\n", $L) . "\n\n식사하신 손님께만 알려 주세요. 코드는 매일 자정(동부 시간)에 바뀝니다.\n관리 화면: https://annangol.com/display/survey.html"];
+}
+// Called on ordinary site traffic: sends what is switched on once per day / week / month.
+// Today's code goes out from midnight; the reports go out after 6 AM Eastern.
 function survey_reports_due(): void {
     $f = display_dir() . '/survey-report.json';
     $m = json_read($f);
-    if (empty($m['on']) || !array_filter($m['on']) || (int)date('G') < 6) return;
-    $keys = ['daily' => date('Y-m-d'), 'weekly' => date('Y-m-d', strtotime('-' . ((int)date('N') - 1) . ' days')), 'monthly' => date('Y-m-01')];
+    if (empty($m['on']) || !array_filter($m['on'])) return;
+    $keys = ['code' => date('Y-m-d')];
+    if ((int)date('G') >= 6) $keys += ['daily' => date('Y-m-d'), 'weekly' => date('Y-m-d', strtotime('-' . ((int)date('N') - 1) . ' days')), 'monthly' => date('Y-m-01')];
     $due = [];
     foreach ($keys as $k => $key) { if (!empty($m['on'][$k]) && ($m['sent'][$k] ?? '') !== $key) $due[] = $k; }
     if (!$due) return;
-    $due = json_update($f, function (&$d) use ($keys) {               // claim under the lock, so each report goes out once
+    $due = json_update($f, function (&$d) use ($keys) {               // claim under the lock, so each mail goes out once
         $mine = [];
         foreach ($keys as $k => $key) { if (!empty($d['on'][$k]) && ($d['sent'][$k] ?? '') !== $key) { $d['sent'][$k] = $key; $mine[] = $k; } }
         return $mine;
     });
     $to = array_values(array_filter((array)(json_read(display_dir() . '/survey.json')['notify'] ?? []), 'is_string'));
     if (!$to) return;
-    foreach ($due as $k) { [$a, $b] = survey_period($k, false); $r = survey_report($k, $a, $b); if ($r) survey_mail($to, $r['subject'], $r['body']); }
+    foreach ($due as $k) {
+        if ($k === 'code') $r = survey_codes_mail();
+        else { [$a, $b] = survey_period($k, false); $r = survey_report($k, $a, $b); }
+        if ($r) survey_mail($to, $r['subject'], $r['body']);
+    }
 }
 
 try {
@@ -530,8 +551,10 @@ try {
                 json_update(display_dir() . '/survey-report.json', function (&$d) use ($on) {
                     $keys = ['daily' => date('Y-m-d'), 'weekly' => date('Y-m-d', strtotime('-' . ((int)date('N') - 1) . ' days')), 'monthly' => date('Y-m-01')];
                     foreach ($keys as $k => $key) { $new = !empty($on[$k]); if ($new && empty($d['on'][$k])) $d['sent'][$k] = $key; $d['on'][$k] = $new; }
+                    $d['on']['code'] = !empty($on['code']);   // today's code: the first one goes out right away
                 });
             }
+            try { survey_reports_due(); } catch (Throwable $e) {}
             $sent = null;
             if (!empty($in['test'])) $sent = $send($list, '[아난골] 설문 알림 테스트', "설문 알림 이메일이 이 주소로 오도록 설정되었습니다.\n\n새 설문 응답이 들어올 때마다 이 주소로 알림이 옵니다.\n관리 화면: https://annangol.com/display/survey.html");
             out(['ok' => true, 'emails' => $list, 'sent' => $sent]);
