@@ -42,6 +42,8 @@ textarea { min-height: 96px; resize: vertical; }
 .codebox .note { color: #E4D9C8; }
 button.go { width: 100%; border: 0; border-radius: 12px; background: var(--red); color: #fff; font: inherit; font-weight: 900; font-size: 19px; padding: 16px; cursor: pointer; }
 button.go:disabled { opacity: .5; }
+.acts { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+button.alt { width: 100%; border: 1.5px solid var(--ink); border-radius: 12px; background: #fff; color: var(--ink); font: inherit; font-weight: 700; padding: 13px; cursor: pointer; }
 .err { background: #FDECEC; border: 1.5px solid var(--red); color: #8E1119; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; font-weight: 700; }
 .hp { position: absolute; left: -9999px; }
 .coupon { margin-top: 22px; border-radius: 18px; overflow: hidden; border: 2px solid var(--ink); background: #fff; text-align: center; }
@@ -80,28 +82,28 @@ footer a { color: var(--ink); }
       eDup: '이 전화번호로는 이미 할인권이 발급되었습니다. 직원에게 말씀해 주세요.', eRate: '시도가 너무 많습니다. 잠시 후 다시 해 주세요.', eNet: '전송하지 못했습니다. 다시 눌러 주세요.',
       closed: '지금은 받지 않는 설문입니다.', soon: '아직 시작하지 않은 설문입니다.', ended: '종료된 설문입니다. 감사합니다.', unknown: '설문을 찾을 수 없습니다.', pick: '설문을 골라 주세요', none: '지금 진행 중인 설문이 없습니다.',
       thanks: '감사합니다!', thanksPlain: '소중한 의견 감사합니다.', couponNo: '쿠폰번호', valid: '사용 가능', used: '사용 완료', expired: '기간 만료', until: '사용 기한',
-      how: '이렇게 쓰세요', how1: '이 화면을 캡처하거나 이 페이지를 저장해 두세요.', how2: '다음에 오셔서 계산할 때 직원에게 보여 주세요.', noCoupon: '쿠폰을 찾을 수 없습니다.' },
+      how: '이렇게 쓰세요', how1: '아래 버튼으로 쿠폰 이미지를 저장하거나 화면을 캡처해 두세요.', save: '쿠폰 이미지 저장', copy: '쿠폰 링크 복사', copied: '복사했습니다', lost: '잃어버려도 전화번호로 찾아 드립니다.', how2: '다음에 오셔서 계산할 때 직원에게 보여 주세요.', noCoupon: '쿠폰을 찾을 수 없습니다.' },
     en: { name: 'English', loading: 'Loading…', code: "Today's code", codeNote: 'A 4-digit number our staff gives to guests who dined in.', nameL: 'Name', phone: 'Phone number',
       phoneNote: 'Your phone number is used only to confirm one per person.', sms: 'Text me AnnanGol offers (optional)', send: 'Submit and get my coupon', sendPlain: 'Submit', sending: 'Sending…',
       eMissing: 'Please answer the questions marked with a red *.', eCode: "Today's code doesn't match. Please ask our staff.", eContact: 'Please enter your name and a 10-digit phone number.',
       eDup: 'A coupon was already issued for this phone number. Please tell our staff.', eRate: 'Too many tries. Please try again in a little while.', eNet: "It didn't go through. Please tap again.",
       closed: 'This survey is not open right now.', soon: 'This survey has not started yet.', ended: 'This survey has ended. Thank you.', unknown: 'Survey not found.', pick: 'Choose a survey', none: 'There is no open survey right now.',
       thanks: 'Thank you!', thanksPlain: 'Thank you for your feedback.', couponNo: 'Coupon number', valid: 'Valid', used: 'Used', expired: 'Expired', until: 'Valid through',
-      how: 'How to use it', how1: 'Take a screenshot or save this page.', how2: 'Show it to our staff when you pay on your next visit.', noCoupon: 'Coupon not found.' },
+      how: 'How to use it', how1: 'Save the coupon image with the button below, or take a screenshot.', save: 'Save coupon image', copy: 'Copy coupon link', copied: 'Copied', lost: 'If you lose it, we can find it by your phone number.', how2: 'Show it to our staff when you pay on your next visit.', noCoupon: 'Coupon not found.' },
     es: { name: 'Español', loading: 'Cargando…', code: 'Código de hoy', codeNote: 'Un número de 4 dígitos que nuestro personal da a quienes comieron aquí.', nameL: 'Nombre', phone: 'Teléfono',
       phoneNote: 'Su teléfono se usa solo para confirmar uno por persona.', sms: 'Quiero recibir ofertas de AnnanGol por mensaje (opcional)', send: 'Enviar y recibir mi cupón', sendPlain: 'Enviar', sending: 'Enviando…',
       eMissing: 'Responda las preguntas marcadas con * rojo.', eCode: 'El código de hoy no coincide. Pregunte a nuestro personal.', eContact: 'Escriba su nombre y un teléfono de 10 dígitos.',
       eDup: 'Ya se emitió un cupón para este teléfono. Avise a nuestro personal.', eRate: 'Demasiados intentos. Inténtelo de nuevo en un momento.', eNet: 'No se pudo enviar. Toque de nuevo.',
       closed: 'Esta encuesta no está abierta ahora.', soon: 'Esta encuesta aún no ha comenzado.', ended: 'Esta encuesta ha terminado. Gracias.', unknown: 'No se encontró la encuesta.', pick: 'Elija una encuesta', none: 'No hay ninguna encuesta abierta ahora.',
       thanks: '¡Gracias!', thanksPlain: 'Gracias por su opinión.', couponNo: 'Número de cupón', valid: 'Válido', used: 'Usado', expired: 'Vencido', until: 'Válido hasta',
-      how: 'Cómo usarlo', how1: 'Tome una captura de pantalla o guarde esta página.', how2: 'Muéstrelo a nuestro personal al pagar en su próxima visita.', noCoupon: 'No se encontró el cupón.' },
+      how: 'Cómo usarlo', how1: 'Guarde la imagen del cupón con el botón de abajo, o tome una captura de pantalla.', save: 'Guardar imagen del cupón', copy: 'Copiar enlace del cupón', copied: 'Copiado', lost: 'Si lo pierde, lo buscamos con su teléfono.', how2: 'Muéstrelo a nuestro personal al pagar en su próxima visita.', noCoupon: 'No se encontró el cupón.' },
     zh: { name: '中文', loading: '加载中…', code: '今日代码', codeNote: '店员告诉堂食客人的4位数字。', nameL: '姓名', phone: '电话号码',
       phoneNote: '电话号码仅用于确认每人一次。', sms: '愿意通过短信接收 AnnanGol 优惠信息（可选）', send: '提交并领取优惠券', sendPlain: '提交', sending: '提交中…',
       eMissing: '请回答带红色 * 的问题。', eCode: '今日代码不正确，请向店员确认。', eContact: '请填写姓名和10位电话号码。',
       eDup: '该电话号码已领取过优惠券，请告知店员。', eRate: '尝试次数过多，请稍后再试。', eNet: '提交失败，请再点一次。',
       closed: '此问卷目前未开放。', soon: '此问卷尚未开始。', ended: '此问卷已结束，谢谢。', unknown: '找不到问卷。', pick: '请选择问卷', none: '目前没有进行中的问卷。',
       thanks: '谢谢！', thanksPlain: '感谢您的宝贵意见。', couponNo: '优惠券号码', valid: '可使用', used: '已使用', expired: '已过期', until: '有效期至',
-      how: '使用方法', how1: '请截图或保存此页面。', how2: '下次光临结账时出示给店员。', noCoupon: '找不到优惠券。' }
+      how: '使用方法', how1: '请用下方按钮保存优惠券图片，或截图保存。', save: '保存优惠券图片', copy: '复制优惠券链接', copied: '已复制', lost: '如果丢失，可凭电话号码查找。', how2: '下次光临结账时出示给店员。', noCoupon: '找不到优惠券。' }
   };
   var qs = new URLSearchParams(location.search);
   var saved = null; try { saved = localStorage.getItem('ag_survey_lang'); } catch (e) {}
@@ -229,7 +231,44 @@ footer a { color: var(--ink); }
         el('div', { 'class': 'state', text: t(c.status) + (c.status === 'valid' && c.expires ? ' · ' + t('until') + ' ' + c.expires.slice(5).replace('-', '/') + '/' + c.expires.slice(0, 4) : '') })]),
       el('div', { 'class': 'qr', 'aria-hidden': 'true', html: qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true }) }),
       el('div', { 'class': 'terms', text: tx(c.terms) })]));
-    main.appendChild(el('div', { 'class': 'how' }, [el('b', { text: t('how') }), el('div', { text: '1. ' + t('how1') }), el('div', { text: '2. ' + t('how2') })]));
+    var stateText = t(c.status) + (c.status === 'valid' && c.expires ? ' · ' + t('until') + ' ' + c.expires.slice(5).replace('-', '/') + '/' + c.expires.slice(0, 4) : '');
+    var save = el('button', { 'class': 'go', type: 'button', text: t('save') }), copy = el('button', { 'class': 'alt', type: 'button', text: t('copy') });
+    save.onclick = function () {
+      couponImage(c, qr, stateText).then(function (blob) {
+        var file = new File([blob], 'AnnanGol-coupon-' + c.code + '.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) return navigator.share({ files: [file] }).catch(function () {});
+        var a = el('a', { href: URL.createObjectURL(blob), download: file.name }); document.body.appendChild(a); a.click(); a.remove();
+      });
+    };
+    copy.onclick = function () {
+      var url = location.origin + '/survey/?c=' + encodeURIComponent(c.code);
+      (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { copy.textContent = t('copied'); }, function () { window.prompt('', url); });
+    };
+    main.appendChild(el('div', { 'class': 'acts' }, [save, copy]));
+    main.appendChild(el('div', { 'class': 'how' }, [el('b', { text: t('how') }), el('div', { text: '1. ' + t('how1') }), el('div', { text: '2. ' + t('how2') }), el('div', { 'class': 'note', text: t('lost') })]));
+  }
+  function couponImage(c, qr, stateText) {              // the coupon as a PNG the guest can keep in their photos
+    var W = 720, H = 1090, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var g = cv.getContext('2d'), F = "'Noto Sans KR','Noto Sans SC',sans-serif", M = 'Montserrat,' + F;
+    function fit(text, font, size, max) { do { g.font = font.replace('%', size); size -= 2; } while (g.measureText(text).width > max && size > 14); }
+    return (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
+      g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+      g.fillStyle = c.status === 'valid' ? '#C5202B' : '#8A817D'; g.fillRect(0, 0, W, 250);
+      g.fillStyle = '#fff'; g.textAlign = 'center';
+      g.font = '700 24px ' + M; g.fillText('ANNANGOL · K-JJAMBAB', W / 2, 78);
+      fit(tx(c.label), '800 %px ' + M, 96, W - 80); g.fillText(tx(c.label), W / 2, 190);
+      g.fillStyle = '#6B5F5B'; g.font = '400 26px ' + F; g.fillText(t('couponNo'), W / 2, 318);
+      g.fillStyle = '#2A211F'; g.font = '800 76px ' + M; g.fillText(c.code, W / 2, 400);
+      g.fillStyle = c.status === 'valid' ? '#17602A' : '#555'; g.font = '700 30px ' + F; g.fillText(stateText, W / 2, 458);
+      var n = qr.getModuleCount(), cell = Math.floor(330 / n), x0 = (W - cell * n) / 2, y0 = 510;
+      g.fillStyle = '#2A211F';
+      for (var r = 0; r < n; r++) for (var k = 0; k < n; k++) if (qr.isDark(r, k)) g.fillRect(x0 + k * cell, y0 + r * cell, cell, cell);
+      g.fillStyle = '#6B5F5B'; var terms = tx(c.terms).split(' · '), y = y0 + cell * n + 60;
+      terms.forEach(function (line) { fit(line, '400 %px ' + F, 26, W - 80); g.fillText(line, W / 2, y); y += 38; });
+      g.fillStyle = '#2A211F'; g.font = '700 24px ' + M; g.fillText('4215 Tom Davis Dr, Annandale, VA · annangol.com', W / 2, H - 36);
+      g.strokeStyle = '#2A211F'; g.lineWidth = 6; g.strokeRect(3, 3, W - 6, H - 6);
+      return new Promise(function (res) { cv.toBlob(res, 'image/png'); });
+    });
   }
   function start() {
     if (qs.get('c')) {
