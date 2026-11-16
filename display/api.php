@@ -349,6 +349,13 @@ try {
                 $st['rows'][] = $row; return 'ok';
             });
         };
+        $notify = array_values(array_filter((array)($store['notify'] ?? []), 'is_string'));
+        $send = function (array $to, string $subject, string $body) {      // plain-text mail from the site's own domain
+            $h = "From: AnnanGol Survey <noreply@annangol.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit";
+            $ok = (bool)$to;
+            foreach ($to as $t) { $ok = @mail($t, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $h, '-fnoreply@annangol.com') && $ok; }
+            return $ok;
+        };
         $phone_of = function ($v) { $p = preg_replace('/\D/', '', (string)$v); return (strlen($p) === 11 && $p[0] === '1') ? substr($p, 1) : $p; };
         $in = ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' ? (json_decode((string)file_get_contents('php://input'), true) ?: []) : [];
 
@@ -402,6 +409,18 @@ try {
                     'name' => $name, 'phone' => $phone, 'sms' => !empty($in['sms'])];
             $res = $add_row($row, $kid !== '' ? $d['offer'] + ['title' => $d['title']] : $survey_offer($id), $kid !== '' ? (int)($d['limit'] ?? 0) : 0);
             if ($res !== 'ok') out(['error' => $res === 'full' ? 'closed' : $res, 'status' => $res], $res === 'dup' ? 409 : 400);
+            if ($kid === '' && $notify) {                  // tell the owner; the phone number stays in the admin only
+                $lines = ['새 설문 응답: ' . ($d['title']['ko'] ?? $id), '시간: ' . date('Y-m-d H:i') . ' (' . ($row['lang'] ?: '-') . ')', ''];
+                foreach (($d['questions'] ?? []) as $q) {
+                    $v = $ans[$q['id']] ?? null; if ($v === null) continue;
+                    $lab = []; foreach (($q['options'] ?? []) as $o) $lab[$o['v']] = $o['label']['ko'] ?? $o['v'];
+                    $lines[] = ($q['label']['ko'] ?? $q['id']) . "\n  → " . (is_array($v) ? implode(', ', array_map(function ($x) use ($lab) { return $lab[$x] ?? $x; }, $v)) : ($lab[$v] ?? $v));
+                }
+                $lines[] = ''; if ($name !== '') $lines[] = '이름: ' . $name;
+                if (isset($row['coupon'])) $lines[] = '발급 쿠폰: ' . $row['coupon'] . ' (' . $coupon_view($row)['label']['ko'] . ')';
+                $lines[] = ''; $lines[] = '전체 응답과 전화번호: https://annangol.com/display/survey.html';
+                $send($notify, '[아난골] 새 설문 응답' . (isset($ans['overall']) ? ' — 만족도 ' . $ans['overall'] . '/5' : ''), implode("\n", $lines));
+            }
             out(['ok' => true, 'coupon' => isset($row['coupon']) ? $coupon_view($row) : null]);
         }
 
@@ -419,7 +438,20 @@ try {
             $rows = array_reverse($store['rows'] ?? []);
             foreach ($rows as &$r) { if (!empty($r['coupon'])) $r['label'] = $coupon_view($r)['label']['ko']; }
             unset($r);
-            out(['today' => $today, 'surveys' => $list, 'campaigns' => $klist, 'rows' => $rows]);
+            out(['today' => $today, 'surveys' => $list, 'campaigns' => $klist, 'rows' => $rows, 'notify' => $notify]);
+        }
+        if ($a === 'survey_notify') {                      // who is emailed about new answers; test=true also sends a test mail
+            need_post(); $list = [];
+            foreach (preg_split('/[\s,;]+/', (string)($in['emails'] ?? ''), -1, PREG_SPLIT_NO_EMPTY) as $e) {
+                if (!filter_var($e, FILTER_VALIDATE_EMAIL) || strlen($e) > 120) out(['error' => 'email', 'bad' => clip($e, 120)], 400);
+                $list[] = strtolower($e);
+            }
+            $list = array_values(array_unique($list));
+            if (count($list) > 10) out(['error' => 'many'], 400);
+            json_update($file, function (&$st) use ($list) { $st['notify'] = $list; });
+            $sent = null;
+            if (!empty($in['test'])) $sent = $send($list, '[아난골] 설문 알림 테스트', "설문 알림 이메일이 이 주소로 오도록 설정되었습니다.\n\n새 설문 응답이 들어올 때마다 이 주소로 알림이 옵니다.\n관리 화면: https://annangol.com/display/survey.html");
+            out(['ok' => true, 'emails' => $list, 'sent' => $sent]);
         }
         if ($a === 'survey_set') {                         // a survey's switch, period and coupon offer
             need_post(); $id = (string)($in['s'] ?? '');
