@@ -41,17 +41,18 @@
   .m-nu small { font-size:.72em; font-weight:400; color:var(--muted); margin-left:.6em; }
   .slide.nutri { flex-direction:column; align-items:stretch; justify-content:center; gap:calc(3 * var(--u)); }
   .n-grid { display:grid; grid-template-columns:auto 1fr 1fr 1fr; gap:calc(1 * var(--u)); }
-  .n-grid > div { background:rgba(255,255,255,.06); border-radius:calc(1.2 * var(--u)); padding:calc(1.8 * var(--u)) calc(2 * var(--u)); display:flex; flex-direction:column; justify-content:center; }
+  .n-grid > div { background:rgba(255,255,255,.06); border-radius:calc(1.2 * var(--u)); padding:calc(1.3 * var(--u)) calc(2 * var(--u)); display:flex; flex-direction:column; justify-content:center; }
   .n-grid .h { font-size:calc(2.6 * var(--u)); font-weight:900; line-height:1.25; word-break:keep-all; }
   .n-grid .h small, .n-grid .r small { display:block; font-size:.72em; font-weight:400; color:var(--muted); }
-  .n-grid .r { font-size:calc(3 * var(--u)); font-weight:700; color:var(--gold); background:transparent; padding-left:0; }
-  .n-grid .v { font-size:calc(5.2 * var(--u)); font-weight:900; line-height:1.1; }
+  .n-grid .r { font-size:calc(2.7 * var(--u)); font-weight:700; color:var(--gold); background:transparent; padding-left:0; }
+  .n-grid .v { font-size:calc(4.6 * var(--u)); font-weight:900; line-height:1.1; flex-direction:row; align-items:baseline; justify-content:flex-start; }
   .n-grid .v small { font-size:.45em; font-weight:700; color:var(--muted); margin-left:.2em; }
   .n-grid .us { background:var(--red); color:#fff; }
   .n-grid .us small { color:#ffe1e1; }
   .n-foot { font-size:calc(1.9 * var(--u)); color:var(--muted); line-height:1.45; word-break:keep-all; }
   .portrait .n-grid { grid-template-columns:auto 1fr 1fr 1fr; }
-  .portrait .n-grid .v { font-size:calc(4.6 * var(--u)); }
+  .portrait .n-grid .v { font-size:calc(4 * var(--u)); }
+  .portrait .n-grid .r { font-size:calc(2.2 * var(--u)); }
   .portrait .n-grid .h { font-size:calc(2.2 * var(--u)); }
   .m-en { font-size:calc(4 * var(--u)); color:var(--muted); font-weight:700; margin-top:calc(.6 * var(--u)); }
   small.en { display:block; font-size:.62em; font-weight:400; color:var(--muted); line-height:1.3; }
@@ -708,15 +709,18 @@
   }
   var CMP = { mcd: { kcal: 540, pro: 17, fat: 28 }, ihop: { kcal: 980, pro: 57, fat: 76 } };   // 공개 영양정보 평균 (2026-11)
   function nutriHtml(a) {
-    function row(ko, enn, k, unit) {
-      return '<div class="r">' + ko + '<small>' + enn + '</small></div><div class="v us">' + a[k] + '<small>' + unit + '</small></div>' +
-        '<div class="v">' + CMP.mcd[k] + '<small>' + unit + '</small></div><div class="v">' + CMP.ihop[k] + '<small>' + unit + '</small></div>';
-    }
+    var cols = [a, CMP.mcd, CMP.ihop];
+    function cells(fn, unit) { return cols.map(function (c, i) { return '<div class="v' + (i ? '' : ' us') + '">' + fn(c) + '<small>' + unit + '</small></div>'; }).join(''); }
+    function row(ko, enn, k, unit) { return '<div class="r">' + ko + '<small>' + enn + '</small></div>' + cells(function (c) { return c[k]; }, unit); }
+    // 비율: 열량 중 지방(지방 1g = 9kcal), 지방 대비 단백질
+    function pct(ko, enn, fn) { return '<div class="r">' + ko + '<small>' + enn + '</small></div>' + cells(function (c) { return Math.round(fn(c)); }, '%'); }
     return '<div class="slide nutri"><div class="w-head"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
       '<div class="w-title">한 끼 영양 비교<small>Nutrition per meal</small></div></div><div class="n-grid">' +
       '<div class="r"></div><div class="h us">K-짬밥<small>주간 평균 · weekly average</small></div>' +
       '<div class="h">McDonald\'s<small>아침 메뉴 평균 · breakfast item avg.</small></div><div class="h">IHOP<small>오믈렛 평균 · omelette avg.</small></div>' +
-      row('열량', 'Calories', 'kcal', 'kcal') + row('단백질', 'Protein', 'pro', 'g') + row('지방', 'Fat', 'fat', 'g') + '</div>' +
+      row('열량', 'Calories', 'kcal', 'kcal') + row('단백질', 'Protein', 'pro', 'g') + row('지방', 'Fat', 'fat', 'g') +
+      pct('열량 중 지방', 'Calories from fat', function (c) { return c.fat * 9 / c.kcal * 100; }) +
+      pct('지방 대비 단백질', 'Protein vs. fat', function (c) { return c.pro / c.fat * 100; }) + '</div>' +
       '<div class="n-foot">K-짬밥 수치는 추정치입니다. 맥도날드는 아침 메뉴 15종, IHOP은 오믈렛 5종(곁들임 제외)의 공개 영양정보 평균입니다 · 2026년 11월 기준.<br>' +
       'K-JjamBab figures are estimates. McDonald\'s: average of 15 breakfast items. IHOP: average of 5 omelettes, sides not included. Published nutrition information, Nov 2026.</div></div>';
   }

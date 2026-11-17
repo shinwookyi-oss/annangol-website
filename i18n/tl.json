@@ -137,5 +137,7 @@
  "cmp_kj": "K-JjamBab (average ngayong linggo)",
  "cmp_mcd": "Almusal ng McDonald's (average kada item)",
  "cmp_ihop": "Omelette ng IHOP (average)",
- "cmp_note": "Tantiya ang mga numero ng K-JjamBab. McDonald's: average ng 15 almusal na item. IHOP: average ng 5 omelette, hindi kasama ang sides. Batay sa nailathalang impormasyon sa nutrisyon, Nobyembre 2026."
+ "cmp_note": "Tantiya ang mga numero ng K-JjamBab. McDonald's: average ng 15 almusal na item. IHOP: average ng 5 omelette, hindi kasama ang sides. Batay sa nailathalang impormasyon sa nutrisyon, Nobyembre 2026.",
+ "cmp_fatpct": "Calories mula sa taba",
+ "cmp_pf": "Protina kumpara sa taba"
 }

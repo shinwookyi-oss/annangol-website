@@ -221,6 +221,9 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .wk-cmp thead th{font-size:12.5px;font-weight:700;line-height:1.3}
 .wk-cmp .us{background:var(--paper);font-weight:800;color:var(--ember)}
 .wk-cmp td{white-space:nowrap}
+.wk-cmp td:first-child{white-space:normal}
+.wk-cmp{overflow-x:auto}
+@media (max-width:700px){.wk-cmp table{font-size:13px}.wk-cmp th,.wk-cmp td{padding:8px 4px}.wk-cmp thead th{font-size:11.5px}.wk-cmp td b{font-size:15px}.wk-cmp td:first-child,.wk-cmp th:first-child{width:27%}}
 .wk-cmp td b{font-size:17px}
 .wk-cmp p{margin-top:10px;font-size:12px;line-height:1.5;color:var(--muted)}
 .wk-like{font:700 14px var(--f-sans);color:var(--ember);background:transparent;border:1.5px solid var(--ember);border-radius:999px;padding:7px 14px;cursor:pointer;white-space:nowrap;justify-self:end}
@@ -579,7 +582,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="다음 사진">›</button>
 </dialog>
 <script>
-const T={"copy": "복사", "copied": "복사됨", "selected": "선택됨", "wk_today": "오늘", "wk_soup": "국", "wk_sides": "반찬", "wk_special": "특가", "wk_until": "{d}까지", "wk_want": "원해요", "sg_thanks": "감사합니다! 보내주신 내용은 모두 읽고 있습니다.", "sg_err": "보내지 못했습니다. 다시 시도해 주세요.", "dr_s": "소", "dr_m": "중", "dr_l": "대", "ph_view": "사진 크게 보기", "nu_pro": "단백질", "nu_fat": "지방", "nu_est": "추정치", "cmp_title": "한 끼 영양 비교", "cmp_cal": "열량", "cmp_kj": "K-짬밥 (주간 평균)", "cmp_mcd": "맥도날드 아침 메뉴 (평균)", "cmp_ihop": "IHOP 오믈렛 (평균)", "cmp_note": "K-짬밥 수치는 추정치입니다. 맥도날드는 아침 메뉴 15종, IHOP은 오믈렛 5종(곁들임 제외)의 평균입니다. 2026년 11월 공개 영양정보 기준."};
+const T={"copy": "복사", "copied": "복사됨", "selected": "선택됨", "wk_today": "오늘", "wk_soup": "국", "wk_sides": "반찬", "wk_special": "특가", "wk_until": "{d}까지", "wk_want": "원해요", "sg_thanks": "감사합니다! 보내주신 내용은 모두 읽고 있습니다.", "sg_err": "보내지 못했습니다. 다시 시도해 주세요.", "dr_s": "소", "dr_m": "중", "dr_l": "대", "ph_view": "사진 크게 보기", "nu_pro": "단백질", "nu_fat": "지방", "nu_est": "추정치", "cmp_title": "한 끼 영양 비교", "cmp_cal": "열량", "cmp_kj": "K-짬밥 (주간 평균)", "cmp_mcd": "맥도날드 아침 메뉴 (평균)", "cmp_ihop": "IHOP 오믈렛 (평균)", "cmp_note": "K-짬밥 수치는 추정치입니다. 맥도날드는 아침 메뉴 15종, IHOP은 오믈렛 5종(곁들임 제외)의 평균입니다. 2026년 11월 공개 영양정보 기준.", "cmp_fatpct": "열량 중 지방 비율", "cmp_pf": "지방 대비 단백질"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
@@ -688,8 +691,9 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
       const box=document.getElementById('wkCmp'), ds=w.map(x=>x.e).filter(e=>num(e.kcal)); if(!ds.length){box.hidden=true;return}
       const av=k=>ds.reduce((s,e)=>s+num(e[k]),0)/ds.length, a={kcal:Math.round(av('kcal')/10)*10,pro:Math.round(av('pro')),fat:Math.round(av('fat'))};
       const row=(lab,k,u)=>'<tr><td>'+esc(lab)+'</td><td class="us"><b>'+a[k]+'</b> '+u+'</td><td><b>'+CMP.mcd[k]+'</b> '+u+'</td><td><b>'+CMP.ihop[k]+'</b> '+u+'</td></tr>';
+      const pct=(lab,fn)=>'<tr><td>'+esc(lab)+'</td>'+[a,CMP.mcd,CMP.ihop].map((c,i)=>'<td'+(i?'':' class="us"')+'><b>'+Math.round(fn(c))+'</b> %</td>').join('')+'</tr>';
       box.innerHTML='<h4>'+esc(T.cmp_title)+'</h4><table><thead><tr><th></th><th class="us">'+esc(T.cmp_kj)+'</th><th>'+esc(T.cmp_mcd)+'</th><th>'+esc(T.cmp_ihop)+'</th></tr></thead><tbody>'+
-        row(T.cmp_cal,'kcal','kcal')+row(T.nu_pro,'pro','g')+row(T.nu_fat,'fat','g')+'</tbody></table><p>'+esc(T.cmp_note)+'</p>';
+        row(T.cmp_cal,'kcal','kcal')+row(T.nu_pro,'pro','g')+row(T.nu_fat,'fat','g')+pct(T.cmp_fatpct,c=>c.fat*9/c.kcal*100)+pct(T.cmp_pf,c=>c.pro/c.fat*100)+'</tbody></table><p>'+esc(T.cmp_note)+'</p>';
       box.hidden=false;
     };
     const show=o=>{

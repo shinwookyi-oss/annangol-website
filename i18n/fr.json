@@ -137,5 +137,7 @@
  "cmp_kj": "K-JjamBab (moyenne de la semaine)",
  "cmp_mcd": "Petit-déjeuner McDonald's (moyenne par article)",
  "cmp_ihop": "Omelette IHOP (moyenne)",
- "cmp_note": "Les chiffres de K-JjamBab sont des estimations. McDonald's : moyenne de 15 articles du petit-déjeuner. IHOP : moyenne de 5 omelettes, sans accompagnements. D'après les informations nutritionnelles publiées, novembre 2026."
+ "cmp_note": "Les chiffres de K-JjamBab sont des estimations. McDonald's : moyenne de 15 articles du petit-déjeuner. IHOP : moyenne de 5 omelettes, sans accompagnements. D'après les informations nutritionnelles publiées, novembre 2026.",
+ "cmp_fatpct": "Calories provenant des lipides",
+ "cmp_pf": "Protéines par rapport aux lipides"
 }
