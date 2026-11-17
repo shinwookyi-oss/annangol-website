@@ -214,7 +214,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .wk-x i{font-style:normal;font-weight:700;color:var(--ember);margin-inline-end:8px}
 .wk-x .wk-nu{font-size:13px;color:var(--muted);margin-top:2px}
 .wk-cmp{margin-top:18px;border-top:1px solid var(--rule);padding-top:16px}
-.wk-cmp h4{font:800 17px/1.3 var(--f-sans);margin-bottom:10px}
+.wk-cmp h4{font:800 17px/1.3 var(--f-sans);margin-bottom:10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.wk-cmp h4 span{font-size:14px;font-weight:700;color:var(--ember)}
 .wk-cmp table{width:100%;border-collapse:collapse;font-size:14px}
 .wk-cmp th,.wk-cmp td{padding:9px 10px;text-align:center;border-bottom:1px solid var(--rule);vertical-align:middle}
 .wk-cmp th:first-child,.wk-cmp td:first-child{text-align:start;font-weight:700}
@@ -585,7 +586,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="Foto apre">›</button>
 </dialog>
 <script>
-const T={"copy": "Kopye", "copied": "Kopye!", "selected": "Chwazi", "wk_today": "Jodi a", "wk_soup": "Soup", "wk_sides": "Akonpayman", "wk_special": "Pri espesyal", "wk_until": "jiska {d}", "wk_want": "Mwen vle sa", "sg_thanks": "Mèsi! Nou li tout mesaj yo.", "sg_err": "Nou pa t ka voye l. Tanpri eseye ankò.", "dr_s": "Piti", "dr_m": "Mwayen", "dr_l": "Gwo", "ph_view": "Gade foto", "nu_pro": "Pwoteyin", "nu_fat": "Grès", "nu_est": "estimasyon", "cmp_title": "Konparezon yon repa", "cmp_cal": "Kalori", "cmp_kj": "K-JjamBab (mwayèn semèn sa a)", "cmp_mcd": "Dejene McDonald's (mwayèn pa atik)", "cmp_ihop": "Omlèt IHOP (mwayèn)", "cmp_note": "Chif K-JjamBab yo se estimasyon. McDonald's: mwayèn 15 atik dejene. IHOP: mwayèn 5 omlèt, san akonpayman. Dapre enfòmasyon nitrisyonèl ki pibliye, novanm 2026.", "cmp_fatpct": "Kalori ki soti nan grès", "cmp_pf": "Pwoteyin konpare ak grès"};
+const T={"copy": "Kopye", "copied": "Kopye!", "selected": "Chwazi", "wk_today": "Jodi a", "wk_soup": "Soup", "wk_sides": "Akonpayman", "wk_special": "Pri espesyal", "wk_until": "jiska {d}", "wk_want": "Mwen vle sa", "sg_thanks": "Mèsi! Nou li tout mesaj yo.", "sg_err": "Nou pa t ka voye l. Tanpri eseye ankò.", "dr_s": "Piti", "dr_m": "Mwayen", "dr_l": "Gwo", "ph_view": "Gade foto", "nu_pro": "Pwoteyin", "nu_fat": "Grès", "nu_est": "estimasyon", "cmp_title": "Konparezon yon repa", "cmp_cal": "Kalori", "cmp_kj": "K-JjamBab (mwayèn semèn sa a)", "cmp_mcd": "Dejene McDonald's (mwayèn pa atik)", "cmp_ihop": "Omlèt IHOP (mwayèn)", "cmp_note": "Chif K-JjamBab yo se estimasyon. McDonald's: mwayèn 15 atik dejene. IHOP: mwayèn 5 omlèt, san akonpayman. Dapre enfòmasyon nitrisyonèl ki pibliye, novanm 2026.", "cmp_fatpct": "Kalori ki soti nan grès", "cmp_pf": "Pwoteyin konpare ak grès", "cmp_tag": "Anpil pwoteyin, mwens pati grès: yon repa ki plen vant"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
@@ -694,7 +695,7 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
       const box=document.getElementById('wkCmp'), ds=w.map(x=>x.e).filter(e=>num(e.kcal)); if(!ds.length){box.hidden=true;return}
       const av=k=>ds.reduce((s,e)=>s+num(e[k]),0)/ds.length, a={kcal:Math.round(av('kcal')/10)*10,pro:Math.round(av('pro')),fat:Math.round(av('fat'))};
       const row=(lab,k,u,sub,fn)=>'<tr><td>'+esc(lab)+(sub?'<small>'+esc(sub)+' (%)</small>':'')+'</td>'+[a,CMP.mcd,CMP.ihop].map((c,i)=>'<td'+(i?'':' class="us"')+'><b>'+c[k]+'</b> '+u+(fn?' <em>'+Math.round(fn(c))+'%</em>':'')+'</td>').join('')+'</tr>';
-      box.innerHTML='<h4>'+esc(T.cmp_title)+'</h4><table><thead><tr><th></th><th class="us">'+esc(T.cmp_kj)+'</th><th>'+esc(T.cmp_mcd)+'</th><th>'+esc(T.cmp_ihop)+'</th></tr></thead><tbody>'+
+      box.innerHTML='<h4>'+esc(T.cmp_title)+'<span>'+esc(T.cmp_tag)+'</span></h4><table><thead><tr><th></th><th class="us">'+esc(T.cmp_kj)+'</th><th>'+esc(T.cmp_mcd)+'</th><th>'+esc(T.cmp_ihop)+'</th></tr></thead><tbody>'+
         row(T.cmp_cal,'kcal','kcal')+row(T.nu_pro,'pro','g',T.cmp_pf,c=>c.pro/c.fat*100)+row(T.nu_fat,'fat','g',T.cmp_fatpct,c=>c.fat*9/c.kcal*100)+'</tbody></table><p>'+esc(T.cmp_note)+'</p>';
       box.hidden=false;
     };

@@ -139,5 +139,6 @@
  "cmp_ihop": "Omelette IHOP (moyenne)",
  "cmp_note": "Les chiffres de K-JjamBab sont des estimations. McDonald's : moyenne de 15 articles du petit-déjeuner. IHOP : moyenne de 5 omelettes, sans accompagnements. D'après les informations nutritionnelles publiées, novembre 2026.",
  "cmp_fatpct": "Calories provenant des lipides",
- "cmp_pf": "Protéines par rapport aux lipides"
+ "cmp_pf": "Protéines par rapport aux lipides",
+ "cmp_tag": "Riche en protéines, avec une part de lipides plus faible : un repas copieux"
 }

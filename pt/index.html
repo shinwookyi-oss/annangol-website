@@ -214,7 +214,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .wk-x i{font-style:normal;font-weight:700;color:var(--ember);margin-inline-end:8px}
 .wk-x .wk-nu{font-size:13px;color:var(--muted);margin-top:2px}
 .wk-cmp{margin-top:18px;border-top:1px solid var(--rule);padding-top:16px}
-.wk-cmp h4{font:800 17px/1.3 var(--f-sans);margin-bottom:10px}
+.wk-cmp h4{font:800 17px/1.3 var(--f-sans);margin-bottom:10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.wk-cmp h4 span{font-size:14px;font-weight:700;color:var(--ember)}
 .wk-cmp table{width:100%;border-collapse:collapse;font-size:14px}
 .wk-cmp th,.wk-cmp td{padding:9px 10px;text-align:center;border-bottom:1px solid var(--rule);vertical-align:middle}
 .wk-cmp th:first-child,.wk-cmp td:first-child{text-align:start;font-weight:700}
@@ -585,7 +586,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="Próxima foto">›</button>
 </dialog>
 <script>
-const T={"copy": "Copiar", "copied": "Copiado", "selected": "Selecionado", "wk_today": "Hoje", "wk_soup": "Sopa", "wk_sides": "Acompanhamentos", "wk_special": "Preço especial", "wk_until": "até {d}", "wk_want": "Eu quero", "sg_thanks": "Obrigado! Lemos todas as mensagens.", "sg_err": "Não foi possível enviar. Tente novamente.", "dr_s": "Pequena", "dr_m": "Média", "dr_l": "Grande", "ph_view": "Ver foto", "nu_pro": "Proteína", "nu_fat": "Gordura", "nu_est": "estimativa", "cmp_title": "Como uma refeição se compara", "cmp_cal": "Calorias", "cmp_kj": "K-JjamBab (média da semana)", "cmp_mcd": "Café da manhã do McDonald's (média por item)", "cmp_ihop": "Omelete do IHOP (média)", "cmp_note": "Os números do K-JjamBab são estimativas. McDonald's: média de 15 itens do café da manhã. IHOP: média de 5 omeletes, sem acompanhamentos. Com base em informações nutricionais publicadas, novembro de 2026.", "cmp_fatpct": "Calorias da gordura", "cmp_pf": "Proteína em relação à gordura"};
+const T={"copy": "Copiar", "copied": "Copiado", "selected": "Selecionado", "wk_today": "Hoje", "wk_soup": "Sopa", "wk_sides": "Acompanhamentos", "wk_special": "Preço especial", "wk_until": "até {d}", "wk_want": "Eu quero", "sg_thanks": "Obrigado! Lemos todas as mensagens.", "sg_err": "Não foi possível enviar. Tente novamente.", "dr_s": "Pequena", "dr_m": "Média", "dr_l": "Grande", "ph_view": "Ver foto", "nu_pro": "Proteína", "nu_fat": "Gordura", "nu_est": "estimativa", "cmp_title": "Como uma refeição se compara", "cmp_cal": "Calorias", "cmp_kj": "K-JjamBab (média da semana)", "cmp_mcd": "Café da manhã do McDonald's (média por item)", "cmp_ihop": "Omelete do IHOP (média)", "cmp_note": "Os números do K-JjamBab são estimativas. McDonald's: média de 15 itens do café da manhã. IHOP: média de 5 omeletes, sem acompanhamentos. Com base em informações nutricionais publicadas, novembro de 2026.", "cmp_fatpct": "Calorias da gordura", "cmp_pf": "Proteína em relação à gordura", "cmp_tag": "Rica em proteína, com menor proporção de gordura: uma refeição que sustenta"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
@@ -694,7 +695,7 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
       const box=document.getElementById('wkCmp'), ds=w.map(x=>x.e).filter(e=>num(e.kcal)); if(!ds.length){box.hidden=true;return}
       const av=k=>ds.reduce((s,e)=>s+num(e[k]),0)/ds.length, a={kcal:Math.round(av('kcal')/10)*10,pro:Math.round(av('pro')),fat:Math.round(av('fat'))};
       const row=(lab,k,u,sub,fn)=>'<tr><td>'+esc(lab)+(sub?'<small>'+esc(sub)+' (%)</small>':'')+'</td>'+[a,CMP.mcd,CMP.ihop].map((c,i)=>'<td'+(i?'':' class="us"')+'><b>'+c[k]+'</b> '+u+(fn?' <em>'+Math.round(fn(c))+'%</em>':'')+'</td>').join('')+'</tr>';
-      box.innerHTML='<h4>'+esc(T.cmp_title)+'</h4><table><thead><tr><th></th><th class="us">'+esc(T.cmp_kj)+'</th><th>'+esc(T.cmp_mcd)+'</th><th>'+esc(T.cmp_ihop)+'</th></tr></thead><tbody>'+
+      box.innerHTML='<h4>'+esc(T.cmp_title)+'<span>'+esc(T.cmp_tag)+'</span></h4><table><thead><tr><th></th><th class="us">'+esc(T.cmp_kj)+'</th><th>'+esc(T.cmp_mcd)+'</th><th>'+esc(T.cmp_ihop)+'</th></tr></thead><tbody>'+
         row(T.cmp_cal,'kcal','kcal')+row(T.nu_pro,'pro','g',T.cmp_pf,c=>c.pro/c.fat*100)+row(T.nu_fat,'fat','g',T.cmp_fatpct,c=>c.fat*9/c.kcal*100)+'</tbody></table><p>'+esc(T.cmp_note)+'</p>';
       box.hidden=false;
     };
