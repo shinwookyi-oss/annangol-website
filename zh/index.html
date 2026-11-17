@@ -586,7 +586,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="下一张">›</button>
 </dialog>
 <script>
-const T={"copy": "复制", "copied": "已复制", "selected": "已选择", "wk_today": "今天", "wk_soup": "汤", "wk_sides": "小菜", "wk_special": "特价", "wk_until": "至 {d}", "wk_want": "想吃", "sg_thanks": "谢谢！我们会阅读每一条留言。", "sg_err": "发送失败，请重试。", "dr_s": "小份", "dr_m": "中份", "dr_l": "大份", "ph_view": "查看照片", "nu_pro": "蛋白质", "nu_fat": "脂肪", "nu_est": "估算值", "cmp_title": "一餐营养对比", "cmp_cal": "热量", "cmp_kj": "K-JjamBab（本周平均）", "cmp_mcd": "麦当劳早餐（单品平均）", "cmp_ihop": "IHOP 煎蛋卷（平均）", "cmp_note": "K-JjamBab 的数值为估算值。麦当劳：15 种早餐单品的平均值。IHOP：5 种煎蛋卷的平均值，不含配餐。依据 2026 年 11 月公布的营养信息。", "cmp_fatpct": "脂肪供能比", "cmp_pf": "蛋白质与脂肪之比", "cmp_tag": "高蛋白、脂肪占比更低的均衡一餐"};
+const T={"copy": "复制", "copied": "已复制", "selected": "已选择", "wk_today": "今天", "wk_soup": "汤", "wk_sides": "小菜", "wk_special": "特价", "wk_until": "至 {d}", "wk_want": "想吃", "sg_thanks": "谢谢！我们会阅读每一条留言。", "sg_err": "发送失败，请重试。", "dr_s": "小份", "dr_m": "中份", "dr_l": "大份", "ph_view": "查看照片", "nu_pro": "蛋白质", "nu_fat": "脂肪", "nu_est": "估算值", "cmp_title": "一餐营养对比", "cmp_cal": "热量", "cmp_kj": "K-JjamBab（本周平均）", "cmp_mcd": "麦当劳早餐（单品平均）", "cmp_ihop": "IHOP 煎蛋卷（平均）", "cmp_note": "K-JjamBab 的数值为估算值。麦当劳：15 种早餐单品的平均值。IHOP：5 种煎蛋卷的平均值，不含配餐。依据 2026 年 11 月公布的营养信息。", "cmp_fatpct": "脂肪供能比", "cmp_pf": "蛋白质与脂肪之比", "cmp_tag": "高蛋白、脂肪占比本来就低的均衡韩式一餐"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
