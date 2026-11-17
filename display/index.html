@@ -52,7 +52,8 @@
   .n-grid .us { background:var(--red); color:#fff; }
   .n-grid .us small { color:#ffe1e1; }
   .n-tag { font-size:calc(3.6 * var(--u)); font-weight:900; color:var(--cream); word-break:keep-all; }
-  .n-tag small { display:block; font-size:.6em; font-weight:400; color:var(--muted); margin-top:.2em; }
+  .n-tag span { padding:0 .25em; border-radius:.15em; background:linear-gradient(transparent 52%, rgba(224,179,84,.6) 52%); -webkit-box-decoration-break:clone; box-decoration-break:clone; }
+  .n-tag small { display:block; font-size:.6em; font-weight:700; color:var(--gold); margin-top:.35em; }
   .n-foot { font-size:calc(1.9 * var(--u)); color:var(--muted); line-height:1.45; word-break:keep-all; }
   .portrait .n-grid { grid-template-columns:auto 1fr 1fr 1fr; }
   .portrait .n-grid .v { font-size:calc(4 * var(--u)); }
@@ -721,7 +722,7 @@
     }
     return '<div class="slide nutri"><div class="w-head"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
       '<div class="w-title">한 끼 영양 비교<small>Nutrition per meal</small></div></div>' +
-      '<div class="n-tag">고단백에 지방 비율이 낮은, 균형 잡힌 한식 한 끼<small>High in protein, with a naturally lower share of fat: a balanced Korean meal</small></div><div class="n-grid">' +
+      '<div class="n-tag"><span>고단백에 지방 비율이 낮은, 균형 잡힌 한식 한 끼</span><small>High in protein, with a naturally lower share of fat: a balanced Korean meal</small></div><div class="n-grid">' +
       '<div class="r"></div><div class="h us">K-짬밥<small>주간 평균 · weekly average</small></div>' +
       '<div class="h">McDonald\'s<small>아침 메뉴 평균 · breakfast item avg.</small></div><div class="h">IHOP<small>오믈렛 평균 · omelette avg.</small></div>' +
       row('열량', 'Calories', 'kcal', 'kcal') +
