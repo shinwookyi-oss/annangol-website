@@ -128,5 +128,14 @@
  "ph_view": "Ver foto",
  "ph_close": "Fechar",
  "ph_prev": "Foto anterior",
- "ph_next": "Próxima foto"
+ "ph_next": "Próxima foto",
+ "nu_pro": "Proteína",
+ "nu_fat": "Gordura",
+ "nu_est": "estimativa",
+ "cmp_title": "Como uma refeição se compara",
+ "cmp_cal": "Calorias",
+ "cmp_kj": "K-JjamBab (média da semana)",
+ "cmp_mcd": "Café da manhã do McDonald's (média por item)",
+ "cmp_ihop": "Omelete do IHOP (média)",
+ "cmp_note": "Os números do K-JjamBab são estimativas. McDonald's: média de 15 itens do café da manhã. IHOP: média de 5 omeletes, sem acompanhamentos. Com base em informações nutricionais publicadas, novembro de 2026."
 }

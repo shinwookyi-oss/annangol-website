@@ -131,5 +131,14 @@
  "ph_view": "查看照片",
  "ph_close": "关闭",
  "ph_prev": "上一张",
- "ph_next": "下一张"
+ "ph_next": "下一张",
+ "nu_pro": "蛋白质",
+ "nu_fat": "脂肪",
+ "nu_est": "估算值",
+ "cmp_title": "一餐营养对比",
+ "cmp_cal": "热量",
+ "cmp_kj": "K-JjamBab（本周平均）",
+ "cmp_mcd": "麦当劳早餐（单品平均）",
+ "cmp_ihop": "IHOP 煎蛋卷（平均）",
+ "cmp_note": "K-JjamBab 的数值为估算值。麦当劳：15 种早餐单品的平均值。IHOP：5 种煎蛋卷的平均值，不含配餐。依据 2026 年 11 月公布的营养信息。"
 }

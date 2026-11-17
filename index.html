@@ -212,6 +212,17 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .wk-m small{opacity:.8;font-size:14px}
 .wk-x{font-size:14px;line-height:1.5;opacity:.92;display:grid;gap:2px}
 .wk-x i{font-style:normal;font-weight:700;color:var(--ember);margin-inline-end:8px}
+.wk-x .wk-nu{font-size:13px;color:var(--muted);margin-top:2px}
+.wk-cmp{margin-top:18px;border-top:1px solid var(--rule);padding-top:16px}
+.wk-cmp h4{font:800 17px/1.3 var(--f-sans);margin-bottom:10px}
+.wk-cmp table{width:100%;border-collapse:collapse;font-size:14px}
+.wk-cmp th,.wk-cmp td{padding:9px 10px;text-align:center;border-bottom:1px solid var(--rule);vertical-align:middle}
+.wk-cmp th:first-child,.wk-cmp td:first-child{text-align:start;font-weight:700}
+.wk-cmp thead th{font-size:12.5px;font-weight:700;line-height:1.3}
+.wk-cmp .us{background:var(--paper);font-weight:800;color:var(--ember)}
+.wk-cmp td{white-space:nowrap}
+.wk-cmp td b{font-size:17px}
+.wk-cmp p{margin-top:10px;font-size:12px;line-height:1.5;color:var(--muted)}
 .wk-like{font:700 14px var(--f-sans);color:var(--ember);background:transparent;border:1.5px solid var(--ember);border-radius:999px;padding:7px 14px;cursor:pointer;white-space:nowrap;justify-self:end}
 .wk-like[aria-pressed=true]{background:var(--ember);color:var(--ember-ink);cursor:default}
 .am #suggest{margin-top:20px}
@@ -463,6 +474,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <span class="wk-range" id="wkRange"></span>
       </div>
       <div class="wk-list" id="wkList"></div>
+      <div class="wk-cmp" id="wkCmp" hidden></div>
       <p class="wk-note">The menu may change depending on the day's ingredients.</p>
      </div>
     </div>
@@ -567,7 +579,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="Next photo">›</button>
 </dialog>
 <script>
-const T={"copy": "Copy", "copied": "Copied", "selected": "Selected", "wk_today": "Today", "wk_soup": "Soup", "wk_sides": "Sides", "wk_special": "Special price", "wk_until": "through {d}", "wk_want": "I want this", "sg_thanks": "Thank you! We read every message.", "sg_err": "Could not send. Please try again.", "dr_s": "Small", "dr_m": "Medium", "dr_l": "Large", "ph_view": "View photo"};
+const T={"copy": "Copy", "copied": "Copied", "selected": "Selected", "wk_today": "Today", "wk_soup": "Soup", "wk_sides": "Sides", "wk_special": "Special price", "wk_until": "through {d}", "wk_want": "I want this", "sg_thanks": "Thank you! We read every message.", "sg_err": "Could not send. Please try again.", "dr_s": "Small", "dr_m": "Medium", "dr_l": "Large", "ph_view": "View photo", "nu_pro": "Protein", "nu_fat": "Fat", "nu_est": "estimate", "cmp_title": "How one meal compares", "cmp_cal": "Calories", "cmp_kj": "K-JjamBab (this week's average)", "cmp_mcd": "McDonald's breakfast (average item)", "cmp_ihop": "IHOP omelette (average)", "cmp_note": "K-JjamBab figures are estimates. McDonald's: average of 15 breakfast items. IHOP: average of 5 omelettes, sides not included. Based on published nutrition information, November 2026."};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
@@ -668,8 +680,20 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
       fetch('/display/api.php?a=like',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dish:d})})
         .then(r=>r.json()).then(r=>{if(r&&r.count>0){likes[d]=r.count;paint()}}).catch(()=>{});
     });
+    // estimated nutrition per day (set in the display admin) and how the week's average compares
+    const num=v=>parseFloat(v)>0?parseFloat(v):0;
+    const nu=e=>num(e.kcal)?'<span class="wk-nu">≈ '+num(e.kcal)+' kcal'+(num(e.pro)?' · '+esc(T.nu_pro)+' '+num(e.pro)+' g':'')+(num(e.fat)?' · '+esc(T.nu_fat)+' '+num(e.fat)+' g':'')+' ('+esc(T.nu_est)+')</span>':'';
+    const CMP={mcd:{kcal:540,pro:17,fat:28},ihop:{kcal:980,pro:57,fat:76}};
+    const cmp=w=>{
+      const box=document.getElementById('wkCmp'), ds=w.map(x=>x.e).filter(e=>num(e.kcal)); if(!ds.length){box.hidden=true;return}
+      const av=k=>ds.reduce((s,e)=>s+num(e[k]),0)/ds.length, a={kcal:Math.round(av('kcal')/10)*10,pro:Math.round(av('pro')),fat:Math.round(av('fat'))};
+      const row=(lab,k,u)=>'<tr><td>'+esc(lab)+'</td><td class="us"><b>'+a[k]+'</b> '+u+'</td><td><b>'+CMP.mcd[k]+'</b> '+u+'</td><td><b>'+CMP.ihop[k]+'</b> '+u+'</td></tr>';
+      box.innerHTML='<h4>'+esc(T.cmp_title)+'</h4><table><thead><tr><th></th><th class="us">'+esc(T.cmp_kj)+'</th><th>'+esc(T.cmp_mcd)+'</th><th>'+esc(T.cmp_ihop)+'</th></tr></thead><tbody>'+
+        row(T.cmp_cal,'kcal','kcal')+row(T.nu_pro,'pro','g')+row(T.nu_fat,'fat','g')+'</tbody></table><p>'+esc(T.cmp_note)+'</p>';
+      box.hidden=false;
+    };
     const show=o=>{
-      const w=week(o);
+      const w=week(o); cmp(w);
       range.textContent=fMD.format(w[0].d)+' – '+fMD.format(w[6].d);
       const rows=w.filter(listed);
       list.classList.toggle('has-ph',rows.some(x=>trayOf[iso(x.d)]));
@@ -678,7 +702,7 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
         return '<div class="wk-row'+(t?' today':'')+(iso(x.d)<today?' past':'')+'"><div class="wk-d"><b>'+esc(fDay.format(x.d))+'</b><span>'+esc(fMD.format(x.d))+'</span>'+(t?'<em>'+esc(T.wk_today)+'</em>':'')+'</div>'+
           (ph?'<button type="button" class="wk-ph" data-d="'+iso(x.d)+'" aria-label="'+esc(T.ph_view+': '+ph.alt)+'"><img src="'+esc(ph.th)+'" loading="lazy" alt="'+esc(ph.alt)+'"></button>':'<span class="wk-ph"></span>')+
           '<div class="wk-m"><strong>'+esc(main||'—')+'</strong>'+(alt?'<small class="kr" lang="ko">'+esc(alt)+'</small>':'')+'</div>'+
-          '<div class="wk-x">'+(soup?'<span><i>'+esc(T.wk_soup)+'</i>'+esc(soup)+'</span>':'')+(sides?'<span><i>'+esc(T.wk_sides)+'</i>'+esc(sides)+'</span>':'')+'</div>'+
+          '<div class="wk-x">'+(soup?'<span><i>'+esc(T.wk_soup)+'</i>'+esc(soup)+'</span>':'')+(sides?'<span><i>'+esc(T.wk_sides)+'</i>'+esc(sides)+'</span>':'')+nu(e)+'</div>'+
           ((e.main||'').trim()?'<button type="button" class="wk-like" data-dish="'+esc(e.main.trim())+'" aria-pressed="'+(mine.indexOf(e.main.trim())>=0)+'">'+likeLabel(e.main.trim())+'</button>':'')+'</div>';
       }).join('');
       tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.wk===o)));

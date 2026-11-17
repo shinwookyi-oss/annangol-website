@@ -128,5 +128,14 @@
  "ph_view": "Gade foto",
  "ph_close": "Fèmen",
  "ph_prev": "Foto anvan",
- "ph_next": "Foto apre"
+ "ph_next": "Foto apre",
+ "nu_pro": "Pwoteyin",
+ "nu_fat": "Grès",
+ "nu_est": "estimasyon",
+ "cmp_title": "Konparezon yon repa",
+ "cmp_cal": "Kalori",
+ "cmp_kj": "K-JjamBab (mwayèn semèn sa a)",
+ "cmp_mcd": "Dejene McDonald's (mwayèn pa atik)",
+ "cmp_ihop": "Omlèt IHOP (mwayèn)",
+ "cmp_note": "Chif K-JjamBab yo se estimasyon. McDonald's: mwayèn 15 atik dejene. IHOP: mwayèn 5 omlèt, san akonpayman. Dapre enfòmasyon nitrisyonèl ki pibliye, novanm 2026."
 }

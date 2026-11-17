@@ -1,5 +1,5 @@
 {
- "id": "week-2026-11-23-rev3",
+ "id": "nutrition-2026-11-23",
  "schedule": {
   "2026-11-23": {
    "main": "소불고기",
@@ -7,7 +7,10 @@
    "sides": "김치 · 계란말이 · 시금치나물 · 콩자반",
    "mainEn": "Beef bulgogi",
    "soupEn": "AnnanGol spicy crab hangover soup",
-   "sidesEn": "Kimchi · Rolled omelet · Spinach · Sweet black beans"
+   "sidesEn": "Kimchi · Rolled omelet · Spinach · Sweet black beans",
+   "kcal": "900",
+   "pro": "54",
+   "fat": "33"
   },
   "2026-11-24": {
    "main": "못난이 돼지",
@@ -15,7 +18,10 @@
    "sides": "깍두기 · 동그랑소세지 · 브로콜리 · 멸치조림",
    "mainEn": "Monnani pork",
    "soupEn": "Soybean paste stew",
-   "sidesEn": "Radish kimchi · Egg-battered sausage · Broccoli · Braised anchovies"
+   "sidesEn": "Radish kimchi · Egg-battered sausage · Broccoli · Braised anchovies",
+   "kcal": "950",
+   "pro": "50",
+   "fat": "40"
   },
   "2026-11-25": {
    "main": "카레",
@@ -23,7 +29,10 @@
    "sides": "김치 · 깻잎 · 콩자반 · 오뎅",
    "mainEn": "Korean curry",
    "soupEn": "Bean sprout soup",
-   "sidesEn": "Kimchi · Perilla leaves · Sweet black beans · Fish cake"
+   "sidesEn": "Kimchi · Perilla leaves · Sweet black beans · Fish cake",
+   "kcal": "820",
+   "pro": "35",
+   "fat": "27"
   },
   "2026-11-26": {
    "main": "태능 양념 돼지",
@@ -31,7 +40,10 @@
    "sides": "깍두기 · 계란말이 · 시금치나물 · 감자볶음",
    "mainEn": "Taeneung-style marinated pork",
    "soupEn": "Soft tofu soup",
-   "sidesEn": "Radish kimchi · Rolled omelet · Spinach · Stir-fried potato"
+   "sidesEn": "Radish kimchi · Rolled omelet · Spinach · Stir-fried potato",
+   "kcal": "910",
+   "pro": "46",
+   "fat": "38"
   },
   "2026-11-27": {
    "main": "오징어볶음",
@@ -39,7 +51,10 @@
    "sides": "김치 · 브로콜리 · 콩나물무침 · 멸치조림",
    "mainEn": "Spicy stir-fried squid",
    "soupEn": "Egg drop soup",
-   "sidesEn": "Kimchi · Broccoli · Bean sprouts · Braised anchovies"
+   "sidesEn": "Kimchi · Broccoli · Bean sprouts · Braised anchovies",
+   "kcal": "710",
+   "pro": "41",
+   "fat": "21"
   },
   "2026-11-28": {
    "main": "제육볶음",
@@ -47,7 +62,10 @@
    "sides": "깍두기 · 동그랑소세지 · 미역줄기 · 감자볶음",
    "mainEn": "Spicy stir-fried pork",
    "soupEn": "AnnanGol radish soup",
-   "sidesEn": "Radish kimchi · Egg-battered sausage · Seaweed stems · Stir-fried potato"
+   "sidesEn": "Radish kimchi · Egg-battered sausage · Seaweed stems · Stir-fried potato",
+   "kcal": "920",
+   "pro": "43",
+   "fat": "39"
   },
   "2026-11-29": {
    "main": "불고기",
@@ -55,7 +73,23 @@
    "sides": "김치 · 잡채 · 깻잎 · 두부조림",
    "mainEn": "Bulgogi",
    "soupEn": "Seokkeo-tang soup",
-   "sidesEn": "Kimchi · Japchae · Perilla leaves · Braised tofu"
+   "sidesEn": "Kimchi · Japchae · Perilla leaves · Braised tofu",
+   "kcal": "890",
+   "pro": "48",
+   "fat": "31"
   }
- }
+ },
+ "items_add": [
+  {
+   "id": "kj-nutri",
+   "type": "menu",
+   "view": "nutri",
+   "label": "영양 비교표 (K-짬밥 · 맥도날드 · IHOP)",
+   "seconds": 15,
+   "from": "",
+   "to": "",
+   "screens": "all",
+   "on": true
+  }
+ ]
 }

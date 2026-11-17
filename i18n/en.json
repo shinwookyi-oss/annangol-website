@@ -131,5 +131,14 @@
  "ph_view": "View photo",
  "ph_close": "Close",
  "ph_prev": "Previous photo",
- "ph_next": "Next photo"
+ "ph_next": "Next photo",
+ "nu_pro": "Protein",
+ "nu_fat": "Fat",
+ "nu_est": "estimate",
+ "cmp_title": "How one meal compares",
+ "cmp_cal": "Calories",
+ "cmp_kj": "K-JjamBab (this week's average)",
+ "cmp_mcd": "McDonald's breakfast (average item)",
+ "cmp_ihop": "IHOP omelette (average)",
+ "cmp_note": "K-JjamBab figures are estimates. McDonald's: average of 15 breakfast items. IHOP: average of 5 omelettes, sides not included. Based on published nutrition information, November 2026."
 }

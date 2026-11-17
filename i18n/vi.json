@@ -128,5 +128,14 @@
  "ph_view": "Xem ảnh",
  "ph_close": "Đóng",
  "ph_prev": "Ảnh trước",
- "ph_next": "Ảnh sau"
+ "ph_next": "Ảnh sau",
+ "nu_pro": "Đạm",
+ "nu_fat": "Chất béo",
+ "nu_est": "ước tính",
+ "cmp_title": "So sánh một bữa ăn",
+ "cmp_cal": "Calo",
+ "cmp_kj": "K-JjamBab (trung bình tuần này)",
+ "cmp_mcd": "Bữa sáng McDonald's (trung bình mỗi món)",
+ "cmp_ihop": "Trứng ốp la cuộn IHOP (trung bình)",
+ "cmp_note": "Số liệu của K-JjamBab là ước tính. McDonald's: trung bình của 15 món ăn sáng. IHOP: trung bình của 5 món omelette, chưa gồm món kèm. Theo thông tin dinh dưỡng đã công bố, tháng 11 năm 2026."
 }

@@ -131,5 +131,14 @@
  "ph_view": "Ver foto",
  "ph_close": "Cerrar",
  "ph_prev": "Foto anterior",
- "ph_next": "Foto siguiente"
+ "ph_next": "Foto siguiente",
+ "nu_pro": "Proteína",
+ "nu_fat": "Grasa",
+ "nu_est": "estimado",
+ "cmp_title": "Cómo se compara una comida",
+ "cmp_cal": "Calorías",
+ "cmp_kj": "K-JjamBab (promedio de la semana)",
+ "cmp_mcd": "Desayuno de McDonald's (promedio por artículo)",
+ "cmp_ihop": "Omelette de IHOP (promedio)",
+ "cmp_note": "Las cifras de K-JjamBab son estimadas. McDonald's: promedio de 15 artículos de desayuno. IHOP: promedio de 5 omelettes, sin acompañamientos. Según información nutricional publicada, noviembre de 2026."
 }

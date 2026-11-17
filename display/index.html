@@ -37,6 +37,22 @@
   .m-dish { margin-top:calc(1.5 * var(--u)); font-size:calc(11 * var(--u)); font-weight:900; line-height:1.1; word-break:keep-all; }
   .m-extra { margin-top:calc(2 * var(--u)); font-size:calc(3.6 * var(--u)); line-height:1.5; word-break:keep-all; }
   .m-extra b { color:var(--gold); font-weight:700; margin-right:.5em; }
+  .m-nu { margin-top:calc(1.6 * var(--u)); font-size:calc(3 * var(--u)); font-weight:700; color:var(--cream); word-break:keep-all; }
+  .m-nu small { font-size:.72em; font-weight:400; color:var(--muted); margin-left:.6em; }
+  .slide.nutri { flex-direction:column; align-items:stretch; justify-content:center; gap:calc(3 * var(--u)); }
+  .n-grid { display:grid; grid-template-columns:auto 1fr 1fr 1fr; gap:calc(1 * var(--u)); }
+  .n-grid > div { background:rgba(255,255,255,.06); border-radius:calc(1.2 * var(--u)); padding:calc(1.8 * var(--u)) calc(2 * var(--u)); display:flex; flex-direction:column; justify-content:center; }
+  .n-grid .h { font-size:calc(2.6 * var(--u)); font-weight:900; line-height:1.25; word-break:keep-all; }
+  .n-grid .h small, .n-grid .r small { display:block; font-size:.72em; font-weight:400; color:var(--muted); }
+  .n-grid .r { font-size:calc(3 * var(--u)); font-weight:700; color:var(--gold); background:transparent; padding-left:0; }
+  .n-grid .v { font-size:calc(5.2 * var(--u)); font-weight:900; line-height:1.1; }
+  .n-grid .v small { font-size:.45em; font-weight:700; color:var(--muted); margin-left:.2em; }
+  .n-grid .us { background:var(--red); color:#fff; }
+  .n-grid .us small { color:#ffe1e1; }
+  .n-foot { font-size:calc(1.9 * var(--u)); color:var(--muted); line-height:1.45; word-break:keep-all; }
+  .portrait .n-grid { grid-template-columns:auto 1fr 1fr 1fr; }
+  .portrait .n-grid .v { font-size:calc(4.6 * var(--u)); }
+  .portrait .n-grid .h { font-size:calc(2.2 * var(--u)); }
   .m-en { font-size:calc(4 * var(--u)); color:var(--muted); font-weight:700; margin-top:calc(.6 * var(--u)); }
   small.en { display:block; font-size:.62em; font-weight:400; color:var(--muted); line-height:1.3; }
   .w-row.today small.en { color:#ffe1e1; }
@@ -165,6 +181,8 @@
   .sched .drow { display:grid; grid-template-columns:90px 1.2fr 1fr 1.6fr; gap:8px; align-items:center; margin-bottom:8px; }
   .sched .drow.en { margin:-4px 0 14px; }
   .sched .drow.en input { font-size:13px; padding:6px 10px; color:#6b6359; }
+  .sched .drow.nu { margin:-10px 0 16px; }
+  .sched .drow.nu input { font-size:13px; padding:6px 10px; color:#6b6359; }
   .sched .drow.today .dl { color:var(--red); }
   .sched .dl { font-weight:700; font-size:14px; line-height:1.3; }
   .sched .dl small { display:block; font-weight:400; color:#6b6359; }
@@ -672,7 +690,35 @@
   /* ---------- 짬밥 메뉴 슬라이드 ---------- */
   function dayEntry(d) {
     var e = state.schedule[ymd(d)] || {}, t = function (k) { return String(e[k] || '').trim(); };
-    return { main: t('main'), soup: t('soup'), sides: t('sides'), mainEn: t('mainEn'), soupEn: t('soupEn'), sidesEn: t('sidesEn') };
+    return { main: t('main'), soup: t('soup'), sides: t('sides'), mainEn: t('mainEn'), soupEn: t('soupEn'), sidesEn: t('sidesEn'), kcal: t('kcal'), pro: t('pro'), fat: t('fat') };
+  }
+  // 영양 추정치: 스케줄에 열량을 적은 날만 보여준다
+  function nutriLine(e) {
+    if (!(parseFloat(e.kcal) > 0)) return '';
+    return '<div class="m-nu">약 ' + esc(e.kcal) + ' kcal' + (e.pro ? ' · 단백질 ' + esc(e.pro) + 'g' : '') + (e.fat ? ' · 지방 ' + esc(e.fat) + 'g' : '') + '<small>추정치 · estimate</small></div>';
+  }
+  // 주간 평균 (열량을 적은 날만). 이번 주에 없으면 다음 주
+  function weekAvg() {
+    for (var w = 0; w < 2; w++) {
+      var mon = addDays(mondayOf(new Date()), w * 7), n = 0, a = { kcal: 0, pro: 0, fat: 0 };
+      for (var i = 0; i < 7; i++) { var e = dayEntry(addDays(mon, i)); if (parseFloat(e.kcal) > 0) { n++; a.kcal += parseFloat(e.kcal); a.pro += parseFloat(e.pro) || 0; a.fat += parseFloat(e.fat) || 0; } }
+      if (n) return { kcal: Math.round(a.kcal / n / 10) * 10, pro: Math.round(a.pro / n), fat: Math.round(a.fat / n) };
+    }
+    return null;
+  }
+  var CMP = { mcd: { kcal: 540, pro: 17, fat: 28 }, ihop: { kcal: 980, pro: 57, fat: 76 } };   // 공개 영양정보 평균 (2026-11)
+  function nutriHtml(a) {
+    function row(ko, enn, k, unit) {
+      return '<div class="r">' + ko + '<small>' + enn + '</small></div><div class="v us">' + a[k] + '<small>' + unit + '</small></div>' +
+        '<div class="v">' + CMP.mcd[k] + '<small>' + unit + '</small></div><div class="v">' + CMP.ihop[k] + '<small>' + unit + '</small></div>';
+    }
+    return '<div class="slide nutri"><div class="w-head"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
+      '<div class="w-title">한 끼 영양 비교<small>Nutrition per meal</small></div></div><div class="n-grid">' +
+      '<div class="r"></div><div class="h us">K-짬밥<small>주간 평균 · weekly average</small></div>' +
+      '<div class="h">McDonald\'s<small>아침 메뉴 평균 · breakfast item avg.</small></div><div class="h">IHOP<small>오믈렛 평균 · omelette avg.</small></div>' +
+      row('열량', 'Calories', 'kcal', 'kcal') + row('단백질', 'Protein', 'pro', 'g') + row('지방', 'Fat', 'fat', 'g') + '</div>' +
+      '<div class="n-foot">K-짬밥 수치는 추정치입니다. 맥도날드는 아침 메뉴 15종, IHOP은 오믈렛 5종(곁들임 제외)의 공개 영양정보 평균입니다 · 2026년 11월 기준.<br>' +
+      'K-JjamBab figures are estimates. McDonald\'s: average of 15 breakfast items. IHOP: average of 5 omelettes, sides not included. Published nutrition information, Nov 2026.</div></div>';
   }
   function en(txt) { return txt ? '<small class="en">' + esc(txt) + '</small>' : ''; }
   function weekHasAny(mon) { for (var i = 0; i < 7; i++) { var e = dayEntry(addDays(mon, i)); if (e.main || e.soup || e.sides) return true; } return false; }
@@ -691,6 +737,7 @@
   }
   function menuHtml(view) {
     var m = state.menu, today = new Date(), tkey = ymd(today), mon, i, d, e, h, dl = deal();
+    if (view === 'nutri') { var av = weekAvg(); if (av) return nutriHtml(av); view = 'today'; }
     if (view === 'week' || view === 'next') {
       mon = addDays(mondayOf(today), view === 'next' ? 7 : 0);
       h = '<div class="slide week"><div class="w-head"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
@@ -708,7 +755,7 @@
     h = '<div class="slide menu"><div class="m-left"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
       '<div class="m-day">' + DAY_KO[today.getDay()] + '요일 · ' + DAY_EN[today.getDay()] + ' ' + md(today) + '</div>' +
       '<div class="m-dish">' + esc(e.main || '오늘의 백반') + '</div>' + (e.mainEn ? '<div class="m-en">' + esc(e.mainEn) + '</div>' : '') +
-      ((e.soup || e.sides) ? '<div class="m-extra">' + (e.soup ? '<div><b>국</b>' + esc(e.soup) + en(e.soupEn) + '</div>' : '') + (e.sides ? '<div><b>반찬</b>' + esc(e.sides) + en(e.sidesEn) + '</div>' : '') + '</div>' : '') +
+      ((e.soup || e.sides) ? '<div class="m-extra">' + (e.soup ? '<div><b>국</b>' + esc(e.soup) + en(e.soupEn) + '</div>' : '') + (e.sides ? '<div><b>반찬</b>' + esc(e.sides) + en(e.sidesEn) + '</div>' : '') + '</div>' : '') + nutriLine(e) +
       (m.note ? '<div class="m-sub">' + esc(m.note) + '</div>' : '') +
       (dl ? (dl.label ? '<div class="m-deal">' + esc(dl.label) + '</div>' : '') + '<div><span class="m-price">' + esc(dl.price) + '</span>' + (dl.was ? '<span class="m-was">' + esc(dl.was) + '</span>' : '') + '</div>'
           : (m.price ? '<div class="m-price">' + esc(m.price) + '</div>' : '')) +
@@ -924,7 +971,7 @@
       h += '<label class="c6">큰 제목<input type="text" data-f="title" value="' + esc(it.title) + '"></label>';
       h += '<label class="c12">내용 (줄바꿈 가능)<textarea data-f="body">' + esc(it.body) + '</textarea></label>';
     } else if (it.type === 'menu') {
-      h += '<label class="c6">보여줄 내용<select data-f="view">' + opt('today', '오늘의 메뉴', it.view || 'today') + opt('week', '이번 주 메뉴표', it.view || 'today') + opt('next', '다음 주 메뉴표', it.view || 'today') + '</select></label>';
+      h += '<label class="c6">보여줄 내용<select data-f="view">' + opt('today', '오늘의 메뉴', it.view || 'today') + opt('week', '이번 주 메뉴표', it.view || 'today') + opt('next', '다음 주 메뉴표', it.view || 'today') + opt('nutri', '영양 비교표 (맥도날드·IHOP 평균)', it.view || 'today') + '</select></label>';
     }
     if (it.type === 'youtube' || it.type === 'video') h += '<label class="c4">사이사이 끼워 넣기 (다른 항목 몇 개마다 · 비우면 목록 순서대로)<input type="number" min="0" data-f="every" placeholder="예: 3" value="' + esc(it.every || '') + '"></label>';
     else h += '<label class="c4">표시 시간 (초)<input type="number" min="3" data-f="seconds" value="' + esc(it.seconds) + '"></label>';
@@ -959,7 +1006,11 @@
         '<div class="drow en"><span></span>' +
         '<input type="text" data-day="' + k + '" data-k="mainEn" placeholder="Main in English (선택)" value="' + esc(e.mainEn) + '">' +
         '<input type="text" data-day="' + k + '" data-k="soupEn" placeholder="Soup" value="' + esc(e.soupEn) + '">' +
-        '<input type="text" data-day="' + k + '" data-k="sidesEn" placeholder="Sides" value="' + esc(e.sidesEn) + '"></div>';
+        '<input type="text" data-day="' + k + '" data-k="sidesEn" placeholder="Sides" value="' + esc(e.sidesEn) + '"></div>' +
+        '<div class="drow nu"><span></span>' +
+        '<input type="text" inputmode="numeric" data-day="' + k + '" data-k="kcal" placeholder="열량 kcal (추정, 선택)" value="' + esc(e.kcal) + '">' +
+        '<input type="text" inputmode="numeric" data-day="' + k + '" data-k="pro" placeholder="단백질 g" value="' + esc(e.pro) + '">' +
+        '<input type="text" inputmode="numeric" data-day="' + k + '" data-k="fat" placeholder="지방 g" value="' + esc(e.fat) + '"></div>';
     }
     h += '</div><div class="addrow"><button id="btnCopyWeek">바로 앞 주 내용을 이 주로 복사</button><button class="danger" id="btnClearWeek">이 주 비우기</button></div>';
     return h;
