@@ -120,5 +120,13 @@
  "dr_call": "Ligar (703) 914-4600",
  "am_health": "Comece o dia saudável com o K-JjamBab. Carne e legumes, um café da manhã coreano equilibrado.",
  "rv_ask": "Já comeu conosco? Conte como foi.",
- "rv_cta": "Escrever uma avaliação no Google"
+ "rv_cta": "Escrever uma avaliação no Google",
+ "ph_tray_title": "A bandeja K-JjamBab, dia a dia",
+ "ph_tray_sub": "Fotos reais da bandeja que servimos a cada manhã.",
+ "ph_box_title": "K-DosiRock, dia a dia",
+ "ph_box_sub": "Fotos reais das marmitas que preparamos a cada dia.",
+ "ph_view": "Ver foto",
+ "ph_close": "Fechar",
+ "ph_prev": "Foto anterior",
+ "ph_next": "Próxima foto"
 }

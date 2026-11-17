@@ -145,6 +145,9 @@
   .addrow { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 14px; align-items:center; }
   .card { background:#fff; border:1px solid #d9d2c6; border-radius:12px; padding:14px; margin-bottom:10px; }
   .card.off { opacity:.55; }
+  .ph-card { display:grid; grid-template-columns:112px minmax(0,1fr); gap:14px; align-items:start; }
+  .ph-card img { width:112px; aspect-ratio:4/3; object-fit:cover; border-radius:8px; background:#e9e4da; display:block; }
+  @media (max-width:700px) { .ph-card { grid-template-columns:84px minmax(0,1fr); } .ph-card img { width:84px; } }
   .card .head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
   .badge { font-size:12px; font-weight:700; padding:3px 9px; border-radius:99px; background:#1b1815; color:#fff; }
   .badge.youtube { background:#c4302b; } .badge.image { background:#2f6f4f; }
@@ -847,7 +850,7 @@
     adminEl.innerHTML = '<div class="login"><p class="help">연결 중…</p></div>';
     call('me', { credentials: 'same-origin' }).then(function (r) {
       if (!r.ok) throw 0;
-      if (r.data.authed) pull().then(function () { renderAdmin(); loadFb(); }); else renderLogin('');
+      if (r.data.authed) pull().then(function () { renderAdmin(); loadFb(); loadPhotos(); }); else renderLogin('');
     }).catch(function () {
       adminEl.innerHTML = '<div class="login"><h1>관리자</h1><p class="warn">서버에 연결하지 못했습니다. 이 페이지는 annangol.com/display/ 주소로 열어야 관리자 기능이 작동합니다.</p><button id="btnBack">돌아가기</button></div>';
     });
@@ -863,7 +866,7 @@
     e.preventDefault();
     if (e.target.id !== 'loginForm') return;
     postJson('login', { password: document.getElementById('pw').value }).then(function (r) {
-      if (r.ok && r.data.authed) pull().then(function () { renderAdmin(); loadFb(); }); else renderLogin('비밀번호가 맞지 않습니다.');
+      if (r.ok && r.data.authed) pull().then(function () { renderAdmin(); loadFb(); loadPhotos(); }); else renderLogin('비밀번호가 맞지 않습니다.');
     }).catch(function () { renderLogin('서버에 연결하지 못했습니다.'); });
   });
 
@@ -983,6 +986,123 @@
       fb = r.data; var el = document.getElementById('fb'); if (el) el.innerHTML = fbHtml();
     }).catch(function () {});
   }
+  /* ---------- 날짜별 사진 ---------- */
+  var photos = null, phMsg = '', phBusy = false;
+  var PH_KIND = [['tray', '식판 (K-JjamBab)'], ['box:S', '도시락 소'], ['box:M', '도시락 중'], ['box:L', '도시락 대']];
+  function phUrl(v) { v = String(v || ''); return v.indexOf('up:') === 0 ? API + '?a=file&f=' + encodeURIComponent(v.slice(3)) : '../' + v; }
+  function photosHtml() {
+    var h = '<div class="addrow"><label class="note">종류 <select id="phKind"><option value="">파일 이름으로 자동</option>' +
+      PH_KIND.map(function (k) { return '<option value="' + k[0] + '">' + k[1] + '</option>'; }).join('') + '</select></label>' +
+      '<label class="note">날짜 (비우면 자동) <input type="date" id="phDate"></label>' +
+      '<input type="file" id="phFiles" accept="image/*,.heic,.heif" multiple' + (phBusy ? ' disabled' : '') + '></div>' +
+      '<p class="' + (/못했|없습니다/.test(phMsg) ? 'warn' : 'note') + '" id="phMsg">' + esc(phMsg) + '</p>';
+    if (!photos) return h + '<p class="note">불러오는 중…</p>';
+    if (!photos.length) return h + '<p class="note">올린 사진이 아직 없습니다.</p>';
+    photos.slice(0, 60).forEach(function (p) {
+      var kv = p.kind === 'box' ? 'box:' + (p.size || 'L') : 'tray';
+      h += '<div class="card ph-card" data-ph="' + esc(p.id) + '"><img src="' + esc(phUrl(p.th || p.src)) + '" loading="lazy" alt="">' +
+        '<div class="grid"><label class="c3">날짜<input type="date" data-pk="date" value="' + esc(p.date) + '"></label>' +
+        '<label class="c3">종류<select data-pk="kind">' + PH_KIND.map(function (k) { return '<option value="' + k[0] + '"' + (k[0] === kv ? ' selected' : '') + '>' + k[1] + '</option>'; }).join('') + '</select></label>' +
+        '<label class="c3">설명 (비우면 그날 스케줄의 메인)<input type="text" data-pk="cap" maxlength="80" value="' + esc(p.cap) + '"></label>' +
+        '<label class="c3">설명 (영문)<input type="text" data-pk="capEn" maxlength="80" value="' + esc(p.capEn) + '"></label>' +
+        '<div class="c12"><button class="danger" data-phdel="' + esc(p.id) + '">삭제</button></div></div></div>';
+    });
+    if (photos.length > 60) h += '<p class="note">최근 60장만 보입니다. (전체 ' + photos.length + '장)</p>';
+    return h;
+  }
+  function paintPhotos() { var el = document.getElementById('photos'); if (el) el.innerHTML = photosHtml(); }
+  function loadPhotos() {
+    return call('photos', { cache: 'no-store' }).then(function (r) { if (r.ok) { photos = r.data.photos || []; paintPhotos(); } }).catch(function () {});
+  }
+  // 파일 이름에서 종류와 날짜를 읽는다: J-20261117 (식판), D-L-20261117 / D-L111726 (도시락 대 · 월일년)
+  function phGuess(name, lastMod) {
+    var base = String(name).replace(/\.[^.]+$/, ''), kind = 'tray', size = '', date = '', m;
+    var ok = function (y, mo, d) { var t = new Date(y, mo - 1, d); return y >= 2024 && y <= 2099 && t.getMonth() === mo - 1 && t.getDate() === d ? ymd(t) : ''; };
+    if ((m = /(?:^|[^A-Za-z])D[-_ ]?([SML])(?![A-Za-z])/i.exec(base))) { kind = 'box'; size = m[1].toUpperCase(); }
+    if ((m = /(20\d\d)[-_.]?(\d\d)[-_.]?(\d\d)(?!\d)/.exec(base.replace(/^\d{10,}[-_]/, '')))) date = ok(+m[1], +m[2], +m[3]);
+    if (!date && (m = /[SML][-_]?(\d\d)(\d\d)(\d\d)(?!\d)/i.exec(base))) date = ok(2000 + +m[3], +m[1], +m[2]);
+    if (!date && lastMod) date = ymd(new Date(lastMod));
+    return { kind: kind, size: size, date: date || ymd(new Date()) };
+  }
+  function phScript(src) {
+    return new Promise(function (res, rej) { var el = document.createElement('script'); el.src = src; el.onload = res; el.onerror = rej; document.head.appendChild(el); });
+  }
+  // 브라우저가 열 수 있는 그림으로 바꾼다 (HEIC는 필요할 때만 변환기를 불러온다)
+  function phDecode(file) {
+    var plain = function (blob) {
+      if (window.createImageBitmap) return createImageBitmap(blob, { imageOrientation: 'from-image' }).catch(function () { return createImageBitmap(blob); });
+      return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im); }; im.onerror = rej; im.src = URL.createObjectURL(blob); });
+    };
+    return plain(file).catch(function () {
+      if (!/\.(heic|heif)$/i.test(file.name) && !/hei[cf]/i.test(file.type)) throw new Error('decode');
+      return (window.heic2any ? Promise.resolve() : phScript('vendor/heic2any.min.js'))
+        .then(function () { return window.heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 }); })
+        .then(function (b) { return plain(Array.isArray(b) ? b[0] : b); });
+    });
+  }
+  function phShrink(img, max, q) {
+    var w = img.width, h = img.height, k = Math.min(1, max / Math.max(w, h)), c = document.createElement('canvas');
+    c.width = Math.round(w * k); c.height = Math.round(h * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    return new Promise(function (res, rej) { c.toBlob(function (b) { if (b) res(b); else rej(new Error('encode')); }, 'image/jpeg', q); });
+  }
+  function phUpload(files, kindSel, dateSel) {
+    var list = Array.prototype.slice.call(files), done = 0, failed = [];
+    phBusy = true;
+    var say = function (t) { phMsg = t; var el = document.getElementById('phMsg'); if (el) { el.textContent = t; el.className = /못했|없습니다/.test(t) ? 'warn' : 'note'; } };
+    var next = function () {
+      if (!list.length) {
+        phBusy = false;
+        say((done ? done + '장 올렸습니다.' : '') + (failed.length ? ' 올리지 못했습니다: ' + failed.join(', ') : ''));
+        return loadPhotos();
+      }
+      var f = list.shift(), g = phGuess(f.name, f.lastModified);
+      if (kindSel) { g.kind = kindSel.split(':')[0]; g.size = kindSel.split(':')[1] || ''; }
+      if (dateSel) g.date = dateSel;
+      say('올리는 중… ' + f.name + ' (남은 사진 ' + list.length + '장)');
+      return phDecode(f).then(function (img) {
+        return Promise.all([phShrink(img, 1600, 0.84), phShrink(img, 640, 0.8)]);
+      }).then(function (b) {
+        var fd = new FormData();
+        fd.append('file', b[0], 'photo.jpg'); fd.append('thumb', b[1], 'thumb.jpg');
+        fd.append('date', g.date); fd.append('kind', g.kind); fd.append('size', g.size);
+        return fetch(API + '?a=photo_add', { method: 'POST', body: fd, credentials: 'same-origin' });
+      }).then(function (r) {
+        if (r.status === 401) { list = []; phBusy = false; renderLogin('로그인이 만료되었습니다. 다시 로그인해 주세요.'); throw new Error('auth'); }
+        if (!r.ok) throw new Error('upload');
+        done++;
+      }).catch(function (e) { if (e.message !== 'auth') failed.push(f.name); }).then(next);
+    };
+    return next();
+  }
+  adminEl.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.id === 'phFiles' && t.files && t.files.length) {
+      phUpload(t.files, document.getElementById('phKind').value, document.getElementById('phDate').value);
+      return;
+    }
+    var card = t.dataset.pk ? t.closest('[data-ph]') : null;
+    if (!card || !photos) return;
+    var p = null; photos.forEach(function (x) { if (x.id === card.dataset.ph) p = x; });
+    if (!p) return;
+    if (t.dataset.pk === 'kind') { p.kind = t.value.split(':')[0]; p.size = t.value.split(':')[1] || ''; }
+    else if (t.dataset.pk === 'date') { if (!t.value) { t.value = p.date; return; } p.date = t.value; }
+    else p[t.dataset.pk] = t.value;
+    postJson('photo_set', { id: p.id, date: p.date, kind: p.kind, size: p.size, cap: p.cap || '', capEn: p.capEn || '' }).then(function (r) {
+      if (r.status === 401) { renderLogin('로그인이 만료되었습니다. 다시 로그인해 주세요.'); return; }
+      phMsg = r.ok ? '저장했습니다.' : '저장하지 못했습니다.';
+      // 설명만 고쳤을 때는 목록을 다시 그리지 않는다 (입력 중인 칸이 풀리지 않게)
+      if (r.ok && /^cap/.test(t.dataset.pk)) { var el = document.getElementById('phMsg'); if (el) { el.textContent = phMsg; el.className = 'note'; } }
+      else loadPhotos();
+    }).catch(function () { phMsg = '저장하지 못했습니다.'; paintPhotos(); });
+  });
+  adminEl.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t.dataset || !t.dataset.phdel) return;
+    if (!t.dataset.sure) { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 삭제'; return; }
+    postJson('photo_del', { id: t.dataset.phdel }).then(function () { phMsg = '삭제했습니다.'; loadPhotos(); }).catch(function () {});
+  });
+
   function offersHtml() {
     var h = '';
     (state.menu.offers || []).forEach(function (o, i) {
@@ -1011,6 +1131,9 @@
       '<label class="c3">특가 종료일 (지나면 자동으로 정가)<input type="date" data-menu="specialUntil" value="' + esc(m.specialUntil) + '"></label>' +
       '<label class="c4">안내 한 줄<input type="text" data-menu="note" value="' + esc(m.note) + '"></label>' +
       '<label class="c4" style="grid-column:span 8">문구<input type="text" data-menu="tagline" value="' + esc(m.tagline) + '"></label></div>';
+
+    h += '<h2>날짜별 사진 (식판 · 도시락)</h2><p class="help">그날 나간 식판과 도시락 사진을 올리면 웹사이트의 주간 메뉴 옆과 K-JjamBab · K-DosiRock 안내 아래에 날짜별로 나옵니다. ' +
+      '여러 장을 한 번에 올릴 수 있고, 아이폰 사진(HEIC)도 자동으로 바뀌어 올라갑니다. 파일 이름이 <b>J-20261117</b>(식판)이나 <b>D-L-20261117</b>(도시락 대 · M은 중 · S는 소)처럼 되어 있으면 날짜와 종류를 알아서 넣고, 아니면 사진을 찍은 날짜로 넣습니다. 올린 뒤 아래에서 고칠 수 있습니다.</p><div id="photos">' + photosHtml() + '</div>';
 
     h += '<h2>대상 한정 가격</h2><p class="help">Hero Price나 어르신 가격처럼 특정 손님에게만 적용하는 가격입니다. 켜 두면 웹사이트의 짬밥 안내와 매장의 "오늘의 메뉴" 화면에 함께 표시되고, 종료일이 지나면 자동으로 내려갑니다.</p><div id="offers">' + offersHtml() + '</div>';
 

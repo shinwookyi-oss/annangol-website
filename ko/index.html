@@ -229,6 +229,45 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 @media (max-width:700px){.sg-row{grid-template-columns:1fr}.wk-like{justify-self:start;margin-top:4px}}
 .am .wk-note{margin-top:12px;font-size:13px;color:var(--muted);opacity:1;max-width:none}
 @media (max-width:700px){.wk-row{grid-template-columns:1fr;gap:4px}.wk-range{margin-inline-start:0;flex-basis:100%}}
+/* daily photos: a thumbnail beside each day of the weekly menu, and a strip of recent days under each section */
+.wk-ph{display:none}
+.wk-list.has-ph .wk-row{grid-template-columns:120px 84px minmax(0,1fr) minmax(0,1.5fr) auto}
+.wk-list.has-ph .wk-ph{display:block;width:84px;aspect-ratio:4/3;border-radius:8px;overflow:hidden;padding:0;border:0;background:var(--steel);cursor:zoom-in}
+.wk-list.has-ph span.wk-ph{cursor:default;background:transparent}
+.wk-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.wk-row.past{opacity:.82}
+.am .ph-sub,.ph-sub{margin:-6px 0 16px;font-size:14px;color:var(--muted);opacity:1;max-width:none}
+.ph-strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,25%);gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:10px;scrollbar-width:thin}
+.ph-tile{margin:0;scroll-snap-align:start}
+.ph-tile button{display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--steel);cursor:zoom-in}
+.ph-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+.ph-tile button:hover img{transform:scale(1.03)}
+.ph-tile button:focus-visible,.wk-ph:focus-visible{outline:3px solid var(--ember);outline-offset:2px}
+.ph-tile figcaption{margin-top:8px;font-size:14px;line-height:1.35}
+.ph-tile figcaption b{display:block;font-weight:800}
+.ph-tile figcaption b em{font-style:normal;color:var(--ember);font-size:12px;margin-inline-start:6px}
+.ph-tile figcaption span{color:var(--muted)}
+.dr-photos{margin-top:40px}
+.dr-photos h3{font:800 24px/1.2 var(--f-sans);letter-spacing:-.01em;margin-bottom:14px}
+.dr-photos .ph-sub{margin-top:-8px}
+.ph-view{border:0;padding:0;background:transparent;color:#fff;max-width:min(96vw,1100px);max-height:96vh;overflow:visible}
+.ph-view::backdrop{background:rgba(12,9,8,.9)}
+.ph-view img{display:block;max-width:100%;max-height:calc(96vh - 76px);width:auto;height:auto;margin:0 auto;border-radius:10px}
+.ph-view p{margin:10px 0 0;text-align:center;font-size:15px;line-height:1.4}
+.ph-view button{position:fixed;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:24px;line-height:1;cursor:pointer}
+.ph-view button:hover{background:rgba(255,255,255,.3)}
+.ph-view .x{top:14px;right:14px}
+.ph-view .pv{left:14px;top:50%;transform:translateY(-50%)}
+.ph-view .nx{right:14px;top:50%;transform:translateY(-50%)}
+@media (max-width:700px){
+  .wk-list.has-ph .wk-row{grid-template-columns:minmax(0,1fr) 92px;column-gap:14px}
+  .wk-list.has-ph .wk-row>*{grid-column:1}
+  .wk-list.has-ph .wk-row>.wk-ph{grid-column:2;grid-row:1/span 4;align-self:start;width:92px}
+  .wk-list.has-ph .wk-row>span.wk-ph{display:none}
+  .ph-strip{grid-auto-columns:68%}
+  .ph-view .pv,.ph-view .nx{top:auto;bottom:14px;transform:none}
+}
+@media (prefers-reduced-motion:reduce){.ph-tile img{transition:none}}
 
 /* room */
 .room{margin-top:36px;display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:auto auto;gap:16px}
@@ -427,6 +466,14 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <p class="wk-note">메뉴는 재료 사정에 따라 바뀔 수 있습니다.</p>
      </div>
     </div>
+    <!-- Daily tray photos, newest first: uploaded in the display admin. Hidden until there is a photo. -->
+    <div class="wrap wk" id="trayPhotos" hidden>
+     <div class="wk-card">
+      <div class="wk-head"><h3>날짜별 K-짬밥 식판</h3></div>
+      <p class="ph-sub">매일 아침 실제로 나간 식판 사진입니다.</p>
+      <div class="ph-strip" id="phTray" tabindex="0" role="group" aria-label="날짜별 K-짬밥 식판"></div>
+     </div>
+    </div>
     <!-- Private suggestion box: messages go to the display admin, never shown on the site. -->
     <div class="wrap wk" id="suggest">
      <form class="wk-card sg" id="sgForm">
@@ -460,6 +507,11 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
           <img src="../img/dosirock_l.jpg" loading="lazy" width="1200" height="805" alt="밥, 불고기, 반찬 네 가지가 담긴 K-DosiRock 대와 국, 김">
           <div class="b"><div class="t"><h3><span class="kr" hidden>대</span>대</h3><span class="p">$12.99</span></div><p class="d">메인 듬뿍, 반찬 4가지</p><span class="plus">+ 국 · 김</span></div>
         </article>
+      </div>
+      <div class="dr-photos" id="boxPhotos" hidden>
+        <h3>날짜별 K-DosiRock 도시락</h3>
+        <p class="ph-sub">그날 실제로 담은 도시락 사진입니다.</p>
+        <div class="ph-strip" id="phBox" tabindex="0" role="group" aria-label="날짜별 K-DosiRock 도시락"></div>
       </div>
       <div class="dr-note"><span>메뉴는 매일 바뀝니다. 아난골 매장에서 받아 가세요.</span><a class="btn" href="tel:+17039144600">전화 (703) 914-4600</a></div>
     </div>
@@ -507,8 +559,15 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   </div>
 </footer>
 
+<dialog class="ph-view" id="phView" aria-label="사진 크게 보기">
+  <img id="phViewImg" alt="">
+  <p id="phViewCap"></p>
+  <button type="button" class="x" data-pv="x" aria-label="닫기">×</button>
+  <button type="button" class="pv" data-pv="-1" aria-label="이전 사진">‹</button>
+  <button type="button" class="nx" data-pv="1" aria-label="다음 사진">›</button>
+</dialog>
 <script>
-const T={"copy": "복사", "copied": "복사됨", "selected": "선택됨", "wk_today": "오늘", "wk_soup": "국", "wk_sides": "반찬", "wk_special": "특가", "wk_until": "{d}까지", "wk_want": "원해요", "sg_thanks": "감사합니다! 보내주신 내용은 모두 읽고 있습니다.", "sg_err": "보내지 못했습니다. 다시 시도해 주세요."};
+const T={"copy": "복사", "copied": "복사됨", "selected": "선택됨", "wk_today": "오늘", "wk_soup": "국", "wk_sides": "반찬", "wk_special": "특가", "wk_until": "{d}까지", "wk_want": "원해요", "sg_thanks": "감사합니다! 보내주신 내용은 모두 읽고 있습니다.", "sg_err": "보내지 못했습니다. 다시 시도해 주세요.", "dr_s": "소", "dr_m": "중", "dr_l": "대", "ph_view": "사진 크게 보기"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
@@ -528,6 +587,37 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const fDay=new Intl.DateTimeFormat(lang,{weekday:'short',timeZone:'UTC'}), fMD=ko?{format:d=>(d.getUTCMonth()+1)+'/'+d.getUTCDate()}:new Intl.DateTimeFormat(lang,{month:'numeric',day:'numeric',timeZone:'UTC'});
   fetch('/display/api.php?a=state').then(r=>r.json()).then(j=>{
     const st=j.state||{}, sc=st.schedule||{}, m=st.menu||{}, likes=j.likes||{};
+    // daily photos (trays and lunch boxes), newest first
+    const fFull=new Intl.DateTimeFormat(lang,{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'});
+    const purl=v=>{v=String(v||'');return v.indexOf('up:')===0?'/display/api.php?a=file&f='+encodeURIComponent(v.slice(3)):'/'+v.replace(/^\/+/,'')};
+    const SZ={S:T.dr_s,M:T.dr_m,L:T.dr_l};
+    const photos=(Array.isArray(j.photos)?j.photos:[]).filter(p=>p&&p.src&&/^\d{4}-\d\d-\d\d$/.test(p.date||'')&&p.date<=today).map(p=>{
+      const e=sc[p.date]||{}, a=(p.cap||e.main||'').trim(), b=(p.capEn||e.mainEn||'').trim(), dish=ko?(a||b):(b||a);
+      const size=p.kind==='box'&&SZ[p.size]?'K-DosiRock '+SZ[p.size]:'';
+      return {date:p.date,kind:p.kind,full:purl(p.src),th:purl(p.th||p.src),day:fFull.format(D(p.date)),sub:[size,dish].filter(Boolean).join(' · '),alt:[p.kind==='box'?'K-DosiRock':'K-JjamBab',size?SZ[p.size]:'',dish,fFull.format(D(p.date))].filter(Boolean).join(', ')};
+    });
+    const trayOf={}; photos.forEach(p=>{if(p.kind==='tray'&&!trayOf[p.date])trayOf[p.date]=p});
+    // full-size viewer, shared by the weekly menu thumbnails and both strips
+    const dlg=document.getElementById('phView'); let set=[], at=0;
+    const paintView=()=>{const p=set[at]; if(!p) return;
+      const im=document.getElementById('phViewImg'); im.src=p.full; im.alt=p.alt;
+      document.getElementById('phViewCap').textContent=p.day+(p.sub?' · '+p.sub:'');
+      dlg.querySelectorAll('.pv,.nx').forEach(b=>b.hidden=set.length<2)};
+    const view=(list,i)=>{if(!dlg||!dlg.showModal){window.open(list[i].full,'_blank');return} set=list; at=i; paintView(); if(!dlg.open) dlg.showModal()};
+    const step=n=>{at=(at+n+set.length)%set.length; paintView()};
+    if(dlg){
+      dlg.addEventListener('click',ev=>{const b=ev.target.closest('button'); if(b){b.dataset.pv==='x'?dlg.close():step(+b.dataset.pv)} else if(ev.target===dlg) dlg.close()});
+      dlg.addEventListener('keydown',ev=>{if(ev.key==='ArrowLeft')step(-1); else if(ev.key==='ArrowRight')step(1)});
+    }
+    const strip=(boxId,listId,list)=>{
+      const el=document.getElementById(listId); if(!el||!list.length) return;
+      el.innerHTML=list.map((p,i)=>'<figure class="ph-tile"><button type="button" data-i="'+i+'" aria-label="'+esc(T.ph_view+': '+p.alt)+'"><img src="'+esc(p.th)+'" loading="lazy" alt="'+esc(p.alt)+'"></button>'+
+        '<figcaption><b>'+esc(p.day)+(p.date===today?'<em>'+esc(T.wk_today)+'</em>':'')+'</b>'+(p.sub?'<span>'+esc(p.sub)+'</span>':'')+'</figcaption></figure>').join('');
+      el.addEventListener('click',ev=>{const b=ev.target.closest('button'); if(b) view(list,+b.dataset.i)});
+      document.getElementById(boxId).hidden=false;
+    };
+    strip('trayPhotos','phTray',photos.filter(p=>p.kind==='tray').slice(0,10));
+    strip('boxPhotos','phBox',photos.filter(p=>p.kind==='box').slice(0,12));
     let mine=[]; try{mine=JSON.parse(localStorage.getItem('ag_likes'))||[]}catch(e){}
     // event banner: text and dates come from the display admin; until it has been saved there, the built-in event below is used
     const EVD={evText:'11월 16일 – 30일 · 매일 선착순 10명 K-짬밥 아침 무료',evTextEn:'Nov 16 – 30 · Free K-JjamBab breakfast for the first 10 guests daily',evTitle:'K-짬밥 아침 무료 체험',evTitleEn:'Free K-JjamBab breakfast trial',evBody:'11월 16일 – 30일, 매일 아침 7:00에 5명, 8:30에 5명. K-짬밥을 처음 드시는 분, 매장 식사, 1인 1회. 식사 후 설문을 작성하시면 다음 방문 $2 할인권을 드립니다.',evBodyEn:'Nov 16 – 30. Every morning, 5 guests at 7:00 AM and 5 guests at 8:30 AM. First-time guests, dine-in, once per person. Fill out a short survey after your meal and get $2 off your next visit.',evStart:'2026-11-15',evEnd:'2026-11-30'};
@@ -560,6 +650,8 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     // weekly menu
     const pick=(e,k)=>{const a=(e[k]||'').trim(), b=(e[k+'En']||'').trim();return ko?(a||b):(b||a)};
     const week=o=>{const out=[];for(let i=0;i<7;i++){const d=add(mon,o*7+i);out.push({d:d,e:sc[iso(d)]||{}})}return out};
+    // a day is listed from today onward, and earlier days of this week stay listed once they have a photo of that day's tray
+    const listed=x=>pick(x.e,'main')&&(iso(x.d)>=today||trayOf[iso(x.d)]);
     const has=o=>week(o).some(x=>pick(x.e,'main')&&iso(x.d)>=today);
     const avail=[0,1].filter(has); if(!avail.length) return;
     const tabs=document.getElementById('wkTabs'), list=document.getElementById('wkList'), range=document.getElementById('wkRange');
@@ -567,6 +659,7 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     // "I want this": one tap per dish; the count is kept on the server and shown to the owner in the display admin
     const likeLabel=d=>'♥ '+esc(T.wk_want)+(likes[d]>0?' · '+likes[d]:'');
     list.addEventListener('click',ev=>{
+      const ph=ev.target.closest('button.wk-ph'); if(ph){const tl=Object.keys(trayOf).sort().map(k=>trayOf[k]); view(tl,tl.indexOf(trayOf[ph.dataset.d])); return}
       const b=ev.target.closest('.wk-like'); if(!b||b.getAttribute('aria-pressed')==='true') return;
       const d=b.dataset.dish; mine.push(d); try{localStorage.setItem('ag_likes',JSON.stringify(mine))}catch(e){}
       likes[d]=(+likes[d]||0)+1;
@@ -578,10 +671,12 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     const show=o=>{
       const w=week(o);
       range.textContent=fMD.format(w[0].d)+' – '+fMD.format(w[6].d);
-      // only days that have a menu, and for the current week only today onward
-      list.innerHTML=w.filter(x=>pick(x.e,'main')&&iso(x.d)>=today).map(x=>{
-        const e=x.e, main=pick(e,'main'), alt=(!ko&&(e.mainEn||'').trim()&&(e.main||'').trim())?e.main.trim():'', soup=pick(e,'soup'), sides=pick(e,'sides'), t=iso(x.d)===today;
-        return '<div class="wk-row'+(t?' today':'')+'"><div class="wk-d"><b>'+esc(fDay.format(x.d))+'</b><span>'+esc(fMD.format(x.d))+'</span>'+(t?'<em>'+esc(T.wk_today)+'</em>':'')+'</div>'+
+      const rows=w.filter(listed);
+      list.classList.toggle('has-ph',rows.some(x=>trayOf[iso(x.d)]));
+      list.innerHTML=rows.map(x=>{
+        const e=x.e, main=pick(e,'main'), alt=(!ko&&(e.mainEn||'').trim()&&(e.main||'').trim())?e.main.trim():'', soup=pick(e,'soup'), sides=pick(e,'sides'), t=iso(x.d)===today, ph=trayOf[iso(x.d)];
+        return '<div class="wk-row'+(t?' today':'')+(iso(x.d)<today?' past':'')+'"><div class="wk-d"><b>'+esc(fDay.format(x.d))+'</b><span>'+esc(fMD.format(x.d))+'</span>'+(t?'<em>'+esc(T.wk_today)+'</em>':'')+'</div>'+
+          (ph?'<button type="button" class="wk-ph" data-d="'+iso(x.d)+'" aria-label="'+esc(T.ph_view+': '+ph.alt)+'"><img src="'+esc(ph.th)+'" loading="lazy" alt="'+esc(ph.alt)+'"></button>':'<span class="wk-ph"></span>')+
           '<div class="wk-m"><strong>'+esc(main||'—')+'</strong>'+(alt?'<small class="kr" lang="ko">'+esc(alt)+'</small>':'')+'</div>'+
           '<div class="wk-x">'+(soup?'<span><i>'+esc(T.wk_soup)+'</i>'+esc(soup)+'</span>':'')+(sides?'<span><i>'+esc(T.wk_sides)+'</i>'+esc(sides)+'</span>':'')+'</div>'+
           ((e.main||'').trim()?'<button type="button" class="wk-like" data-dish="'+esc(e.main.trim())+'" aria-pressed="'+(mine.indexOf(e.main.trim())>=0)+'">'+likeLabel(e.main.trim())+'</button>':'')+'</div>';

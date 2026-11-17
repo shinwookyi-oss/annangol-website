@@ -121,6 +121,57 @@ function media_name(string $f): ?string {
     return preg_match('/^[a-f0-9]{16}\.(' . implode('|', array_keys(DISPLAY_EXT)) . ')$/', $f) ? $f : null;
 }
 
+// ---- Daily photos (K-JjamBab trays and K-DosiRock boxes), shown by date on the website ----
+// photos.json holds {items:[{id,date,kind:'tray'|'box',size:''|'S'|'M'|'L',src,th,cap,capEn}]}.
+// src/th are either a site path (img/daily/…, shipped with the site) or 'up:<file>' for an upload.
+const PHOTO_EXT = ['jpg', 'jpeg', 'png', 'webp'];
+function photos_seed(): void {                             // photos shipped with the site are added once per seed id
+    $src = __DIR__ . '/photos-seed.json';
+    if (!is_file($src)) return;
+    $mark = display_dir() . '/photos-seed-applied.txt';
+    $seed = json_decode((string)file_get_contents($src), true);
+    if (!is_array($seed) || empty($seed['id']) || !is_array($seed['items'] ?? null)) return;
+    if (is_file($mark) && trim((string)file_get_contents($mark)) === (string)$seed['id']) return;
+    json_update(display_dir() . '/photos.json', function (&$d) use ($seed) {
+        if (!is_array($d['items'] ?? null)) $d['items'] = [];
+        $have = array_column($d['items'], 'id');
+        foreach ($seed['items'] as $it) { if (is_array($it) && !empty($it['id']) && !in_array($it['id'], $have, true)) $d['items'][] = $it; }
+    });
+    file_put_contents($mark, (string)$seed['id'], LOCK_EX);
+}
+function photos_list(): array {                            // newest day first; within a day trays, then boxes S, M, L
+    try { photos_seed(); } catch (Throwable $e) {}
+    $items = array_values(array_filter((array)(json_read(display_dir() . '/photos.json')['items'] ?? []), 'is_array'));
+    $rank = function (array $p) { return ($p['kind'] ?? '') === 'tray' ? 0 : 1 + (int)array_search($p['size'] ?? '', ['', 'S', 'M', 'L'], true); };
+    usort($items, function ($a, $b) use ($rank) {
+        return [(string)($b['date'] ?? ''), $rank($a), (string)($a['id'] ?? '')] <=> [(string)($a['date'] ?? ''), $rank($b), (string)($b['id'] ?? '')];
+    });
+    return $items;
+}
+function photo_fields(array $in): ?array {                 // the editable fields of a photo, or null when they are not valid
+    $date = (string)($in['date'] ?? ''); $kind = (string)($in['kind'] ?? ''); $size = strtoupper((string)($in['size'] ?? ''));
+    $t = DateTime::createFromFormat('!Y-m-d', $date);
+    if (!$t || $t->format('Y-m-d') !== $date) return null;
+    if (!in_array($kind, ['tray', 'box'], true)) return null;
+    if ($kind === 'tray' || !in_array($size, ['S', 'M', 'L'], true)) $size = '';
+    return ['date' => $date, 'kind' => $kind, 'size' => $size, 'cap' => clip($in['cap'] ?? '', 80), 'capEn' => clip($in['capEn'] ?? '', 80)];
+}
+function photo_store(?array $up): ?string {                // keep an uploaded picture; returns its stored name
+    if (!$up || ($up['error'] ?? 1) !== UPLOAD_ERR_OK) return null;
+    $ext = strtolower(pathinfo((string)$up['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, PHOTO_EXT, true)) return null;
+    $mime = (string)(new finfo(FILEINFO_MIME_TYPE))->file($up['tmp_name']);
+    if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) return null;
+    $name = bin2hex(random_bytes(8)) . '.' . $ext;
+    return move_uploaded_file($up['tmp_name'], display_dir() . '/media/' . $name) ? $name : null;
+}
+function photo_unlink(array $p): void {                    // remove a photo's uploaded files (site files are left alone)
+    foreach (['src', 'th'] as $k) {
+        $v = (string)($p[$k] ?? '');
+        if (strpos($v, 'up:') === 0 && ($n = media_name(substr($v, 3)))) @unlink(display_dir() . '/media/' . $n);
+    }
+}
+
 // ---- Survey mail and scheduled reports (daily, weekly, monthly) ----
 function survey_mail(array $to, string $subject, string $body): bool {      // plain-text mail from the site's own domain
     $h = "From: AnnanGol Survey <noreply@annangol.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit";
@@ -260,6 +311,7 @@ try {
         $raw = is_file($f) ? (string)file_get_contents($f) : '';
         $state = $raw !== '' ? json_decode($raw, true) : null;
         out(['state' => $state, 'likes' => (object)(json_read(display_dir() . '/likes.json')['counts'] ?? []),
+             'photos' => array_slice(photos_list(), 0, 80),   // daily tray and lunch-box photos for the website
              'version' => $raw !== '' ? (string)filemtime($f) . '-' . strlen($raw) : '0',
              'app' => (string)@filemtime(__DIR__ . '/index.html')]);   // lets open screens notice a new page version
     }
@@ -373,6 +425,51 @@ try {
         $in = json_decode((string)file_get_contents('php://input'), true) ?: [];
         $name = media_name((string)($in['file'] ?? ''));
         if ($name) @unlink(display_dir() . '/media/' . $name);
+        out(['ok' => true]);
+    }
+
+    // ---------------- Daily photos ----------------
+    if ($a === 'photos') { out(['photos' => photos_list()]); }   // public: every photo (the admin list uses this)
+
+    if ($a === 'photo_add') {                              // admin: one picture (already resized in the browser) + its small version
+        need_post(); need_auth();
+        $f = photo_fields($_POST);
+        if (!$f) out(['error' => 'fields'], 400);
+        $up = $_FILES['file'] ?? null;
+        if (!$up || in_array($up['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) out(['error' => 'too_large', 'limit' => ini_get('upload_max_filesize')], 400);
+        $src = photo_store($up);
+        if (!$src) out(['error' => 'type'], 400);
+        $th = photo_store($_FILES['thumb'] ?? null) ?: $src;
+        $row = ['id' => bin2hex(random_bytes(6))] + $f + ['src' => "up:$src", 'th' => "up:$th", 't' => time()];
+        json_update(display_dir() . '/photos.json', function (&$d) use ($row) {
+            if (!is_array($d['items'] ?? null)) $d['items'] = [];
+            $d['items'][] = $row;
+        });
+        out(['ok' => true, 'photo' => $row]);
+    }
+
+    if ($a === 'photo_set') {                              // admin: change a photo's date, kind, size or caption
+        need_post(); need_auth();
+        $in = json_decode((string)file_get_contents('php://input'), true) ?: [];
+        $id = (string)($in['id'] ?? ''); $f = photo_fields($in);
+        if ($id === '' || !$f) out(['error' => 'fields'], 400);
+        $found = json_update(display_dir() . '/photos.json', function (&$d) use ($id, $f) {
+            foreach (($d['items'] ?? []) as $i => $p) { if (($p['id'] ?? '') === $id) { $d['items'][$i] = $f + $p; return true; } }
+            return false;
+        });
+        out($found ? ['ok' => true] : ['error' => 'missing'], $found ? 200 : 404);
+    }
+
+    if ($a === 'photo_del') {
+        need_post(); need_auth();
+        $in = json_decode((string)file_get_contents('php://input'), true) ?: [];
+        $id = (string)($in['id'] ?? '');
+        $gone = json_update(display_dir() . '/photos.json', function (&$d) use ($id) {
+            $gone = null;
+            foreach (($d['items'] ?? []) as $i => $p) { if (($p['id'] ?? '') === $id) { $gone = $p; array_splice($d['items'], $i, 1); break; } }
+            return $gone;
+        });
+        if ($gone) photo_unlink($gone);
         out(['ok' => true]);
     }
 

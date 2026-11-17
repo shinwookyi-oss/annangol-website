@@ -123,5 +123,13 @@
  "dr_l_alt": "Large K-DosiRock lunch box with rice, bulgogi, four side dishes, soup and roasted gim",
  "am_health": "Start healthy with K-JjamBab. Meat and vegetables, a balanced Korean breakfast.",
  "rv_ask": "Dined with us? Tell us how it was.",
- "rv_cta": "Write a Google review"
+ "rv_cta": "Write a Google review",
+ "ph_tray_title": "The K-JjamBab tray, day by day",
+ "ph_tray_sub": "Real photos of the tray we served each morning.",
+ "ph_box_title": "K-DosiRock, day by day",
+ "ph_box_sub": "Real photos of the lunch boxes we packed each day.",
+ "ph_view": "View photo",
+ "ph_close": "Close",
+ "ph_prev": "Previous photo",
+ "ph_next": "Next photo"
 }

@@ -120,5 +120,13 @@
  "dr_call": "Rele (703) 914-4600",
  "am_health": "Kòmanse jounen an an sante ak K-JjamBab. Vyann ak legim, yon manje maten Koreyen ekilibre.",
  "rv_ask": "Ou te manje lakay nou? Di nou kijan sa te ye.",
- "rv_cta": "Ekri yon avi sou Google"
+ "rv_cta": "Ekri yon avi sou Google",
+ "ph_tray_title": "Plato K-JjamBab la, jou apre jou",
+ "ph_tray_sub": "Vrè foto plato nou sèvi chak maten.",
+ "ph_box_title": "K-DosiRock, jou apre jou",
+ "ph_box_sub": "Vrè foto bwat manje nou prepare chak jou.",
+ "ph_view": "Gade foto",
+ "ph_close": "Fèmen",
+ "ph_prev": "Foto anvan",
+ "ph_next": "Foto apre"
 }

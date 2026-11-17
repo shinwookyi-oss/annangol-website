@@ -120,5 +120,13 @@
  "dr_call": "Gọi (703) 914-4600",
  "am_health": "Khởi đầu khỏe mạnh cùng K-JjamBab. Thịt và rau, một bữa sáng Hàn Quốc cân bằng.",
  "rv_ask": "Bạn đã dùng bữa tại quán? Hãy cho chúng tôi biết cảm nhận của bạn.",
- "rv_cta": "Viết đánh giá trên Google"
+ "rv_cta": "Viết đánh giá trên Google",
+ "ph_tray_title": "Khay K-JjamBab theo từng ngày",
+ "ph_tray_sub": "Ảnh thật của khay cơm chúng tôi phục vụ mỗi sáng.",
+ "ph_box_title": "K-DosiRock theo từng ngày",
+ "ph_box_sub": "Ảnh thật của hộp cơm chúng tôi chuẩn bị mỗi ngày.",
+ "ph_view": "Xem ảnh",
+ "ph_close": "Đóng",
+ "ph_prev": "Ảnh trước",
+ "ph_next": "Ảnh sau"
 }

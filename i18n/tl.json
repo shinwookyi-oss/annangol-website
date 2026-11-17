@@ -120,5 +120,13 @@
  "dr_call": "Tumawag (703) 914-4600",
  "am_health": "Simulan ang araw nang malusog sa K-JjamBab. Karne at gulay, isang balanseng Korean breakfast.",
  "rv_ask": "Kumain ka na ba sa amin? Ikuwento mo ang iyong karanasan.",
- "rv_cta": "Sumulat ng Google review"
+ "rv_cta": "Sumulat ng Google review",
+ "ph_tray_title": "Ang K-JjamBab tray, araw-araw",
+ "ph_tray_sub": "Mga totoong larawan ng tray na inihain namin tuwing umaga.",
+ "ph_box_title": "K-DosiRock, araw-araw",
+ "ph_box_sub": "Mga totoong larawan ng baon na inihanda namin bawat araw.",
+ "ph_view": "Tingnan ang larawan",
+ "ph_close": "Isara",
+ "ph_prev": "Nakaraang larawan",
+ "ph_next": "Susunod na larawan"
 }

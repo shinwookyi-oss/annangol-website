@@ -123,5 +123,13 @@
  "dr_l_alt": "K-DosiRock大份便当：米饭、烤牛肉、四样小菜，配汤和烤海苔",
  "am_health": "健康的一天，从K-JjamBab开始。有肉有菜，营养均衡的韩式早餐。",
  "rv_ask": "来用过餐吗？欢迎留下您的真实感受。",
- "rv_cta": "撰写Google评价"
+ "rv_cta": "撰写Google评价",
+ "ph_tray_title": "每日 K-JjamBab 餐盘",
+ "ph_tray_sub": "每天早上实际供应的餐盘照片。",
+ "ph_box_title": "每日 K-DosiRock 便当",
+ "ph_box_sub": "每天实际装好的便当照片。",
+ "ph_view": "查看照片",
+ "ph_close": "关闭",
+ "ph_prev": "上一张",
+ "ph_next": "下一张"
 }

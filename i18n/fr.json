@@ -120,5 +120,13 @@
  "dr_call": "Appeler le (703) 914-4600",
  "am_health": "Commencez la journée sainement avec K-JjamBab. Viande et légumes, un petit-déjeuner coréen équilibré.",
  "rv_ask": "Vous avez mangé chez nous ? Dites-nous ce que vous en avez pensé.",
- "rv_cta": "Écrire un avis Google"
+ "rv_cta": "Écrire un avis Google",
+ "ph_tray_title": "Le plateau K-JjamBab, jour après jour",
+ "ph_tray_sub": "De vraies photos du plateau servi chaque matin.",
+ "ph_box_title": "K-DosiRock, jour après jour",
+ "ph_box_sub": "De vraies photos des boîtes-repas préparées chaque jour.",
+ "ph_view": "Voir la photo",
+ "ph_close": "Fermer",
+ "ph_prev": "Photo précédente",
+ "ph_next": "Photo suivante"
 }

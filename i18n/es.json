@@ -123,5 +123,13 @@
  "dr_l_alt": "Lunch box K-DosiRock grande con arroz, bulgogi, cuatro acompañamientos, sopa y gim tostado",
  "am_health": "Empiece sano con K-JjamBab. Carne y verduras, un desayuno coreano equilibrado.",
  "rv_ask": "¿Comió con nosotros? Cuéntenos qué le pareció.",
- "rv_cta": "Escribir una reseña en Google"
+ "rv_cta": "Escribir una reseña en Google",
+ "ph_tray_title": "La bandeja K-JjamBab, día a día",
+ "ph_tray_sub": "Fotos reales de la bandeja que servimos cada mañana.",
+ "ph_box_title": "K-DosiRock, día a día",
+ "ph_box_sub": "Fotos reales de las loncheras que preparamos cada día.",
+ "ph_view": "Ver foto",
+ "ph_close": "Cerrar",
+ "ph_prev": "Foto anterior",
+ "ph_next": "Foto siguiente"
 }
