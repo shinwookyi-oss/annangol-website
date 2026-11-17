@@ -1,123 +1,61 @@
 {
- "id": "google-review-2026-11-16",
- "items_add": [
-  {
-   "id": "ft-poster-ko",
-   "type": "image",
-   "label": "무료 체험 포스터 (한국어)",
-   "src": "media/freetrial-ko.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "board",
-   "on": true,
-   "until": "2026-11-30"
+ "id": "week-2026-11-23-rev3",
+ "schedule": {
+  "2026-11-23": {
+   "main": "소불고기",
+   "soup": "아난골 얼큰 게 해장국",
+   "sides": "김치 · 계란말이 · 시금치나물 · 콩자반",
+   "mainEn": "Beef bulgogi",
+   "soupEn": "AnnanGol spicy crab hangover soup",
+   "sidesEn": "Kimchi · Rolled omelet · Spinach · Sweet black beans"
   },
-  {
-   "id": "ft-poster-en",
-   "type": "image",
-   "label": "무료 체험 포스터 (영어)",
-   "src": "media/freetrial-en.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "board",
-   "on": true,
-   "until": "2026-11-30"
+  "2026-11-24": {
+   "main": "못난이 돼지",
+   "soup": "된장찌개",
+   "sides": "깍두기 · 동그랑소세지 · 브로콜리 · 멸치조림",
+   "mainEn": "Monnani pork",
+   "soupEn": "Soybean paste stew",
+   "sidesEn": "Radish kimchi · Egg-battered sausage · Broccoli · Braised anchovies"
   },
-  {
-   "id": "ft-poster-es",
-   "type": "image",
-   "label": "무료 체험 포스터 (스페인어)",
-   "src": "media/freetrial-es.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "board",
-   "on": true,
-   "until": "2026-11-30"
+  "2026-11-25": {
+   "main": "카레",
+   "soup": "콩나물국",
+   "sides": "김치 · 깻잎 · 콩자반 · 오뎅",
+   "mainEn": "Korean curry",
+   "soupEn": "Bean sprout soup",
+   "sidesEn": "Kimchi · Perilla leaves · Sweet black beans · Fish cake"
   },
-  {
-   "id": "ft-poster-zh",
-   "type": "image",
-   "label": "무료 체험 포스터 (중국어)",
-   "src": "media/freetrial-zh.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "board",
-   "on": true,
-   "until": "2026-11-30"
+  "2026-11-26": {
+   "main": "태능 양념 돼지",
+   "soup": "순두부국",
+   "sides": "깍두기 · 계란말이 · 시금치나물 · 감자볶음",
+   "mainEn": "Taeneung-style marinated pork",
+   "soupEn": "Soft tofu soup",
+   "sidesEn": "Radish kimchi · Rolled omelet · Spinach · Stir-fried potato"
   },
-  {
-   "id": "ft-wide-ko",
-   "type": "image",
-   "label": "무료 체험 가로 포스터 (한국어)",
-   "src": "media/freetrial-wide-ko.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "tv",
-   "on": true,
-   "until": "2026-11-30"
+  "2026-11-27": {
+   "main": "오징어볶음",
+   "soup": "계란국",
+   "sides": "김치 · 브로콜리 · 콩나물무침 · 멸치조림",
+   "mainEn": "Spicy stir-fried squid",
+   "soupEn": "Egg drop soup",
+   "sidesEn": "Kimchi · Broccoli · Bean sprouts · Braised anchovies"
   },
-  {
-   "id": "ft-wide-en",
-   "type": "image",
-   "label": "무료 체험 가로 포스터 (영어)",
-   "src": "media/freetrial-wide-en.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "tv",
-   "on": true,
-   "until": "2026-11-30"
+  "2026-11-28": {
+   "main": "제육볶음",
+   "soup": "아난골 무국",
+   "sides": "깍두기 · 동그랑소세지 · 미역줄기 · 감자볶음",
+   "mainEn": "Spicy stir-fried pork",
+   "soupEn": "AnnanGol radish soup",
+   "sidesEn": "Radish kimchi · Egg-battered sausage · Seaweed stems · Stir-fried potato"
   },
-  {
-   "id": "ft-wide-es",
-   "type": "image",
-   "label": "무료 체험 가로 포스터 (스페인어)",
-   "src": "media/freetrial-wide-es.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "tv",
-   "on": true,
-   "until": "2026-11-30"
-  },
-  {
-   "id": "ft-wide-zh",
-   "type": "image",
-   "label": "무료 체험 가로 포스터 (중국어)",
-   "src": "media/freetrial-wide-zh.jpg",
-   "seconds": 12,
-   "from": "",
-   "to": "",
-   "screens": "tv",
-   "on": true,
-   "until": "2026-11-30"
-  },
-  {
-   "id": "google-review-portrait",
-   "type": "image",
-   "label": "구글 리뷰 QR (세로)",
-   "src": "media/review-portrait.jpg",
-   "seconds": 15,
-   "from": "",
-   "to": "",
-   "screens": "board",
-   "on": true
-  },
-  {
-   "id": "google-review-landscape",
-   "type": "image",
-   "label": "구글 리뷰 QR (가로)",
-   "src": "media/review-landscape.jpg",
-   "seconds": 15,
-   "from": "",
-   "to": "",
-   "screens": "tv",
-   "on": true
+  "2026-11-29": {
+   "main": "불고기",
+   "soup": "섞어탕국",
+   "sides": "김치 · 잡채 · 깻잎 · 두부조림",
+   "mainEn": "Bulgogi",
+   "soupEn": "Seokkeo-tang soup",
+   "sidesEn": "Kimchi · Japchae · Perilla leaves · Braised tofu"
   }
- ]
+ }
 }
