@@ -336,6 +336,11 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .ord{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px}
 .ord a{border:1.5px solid var(--ember);color:var(--ember);border-radius:999px;padding:5px 14px;font-size:14px;font-weight:700;text-decoration:none}
 .ord a:hover{background:var(--ember);color:var(--ember-ink)}
+.hero-ord{margin-top:22px}
+.hero-ord a{border-color:currentColor;color:inherit;opacity:.9}
+.hero-ord a:hover{background:var(--char-ink);color:var(--char);opacity:1}
+.hero-ord .ord-k{color:inherit;opacity:.7;margin-inline:0 2px}
+.menu-ord{margin-top:14px}
 .ord-k{font-size:13px;color:var(--muted);margin-inline-start:6px}
 .grp{margin-top:20px;background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:22px 26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 28px}
 .grp h3{margin:0;font-size:20px}
@@ -416,6 +421,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
           <a class="btn" href="#menu">Ver o cardápio</a>
           <a class="btn ghost" href="#visit">Como chegar</a>
         </div>
+        <div class="ord hero-ord"><span class="ord-k">Pedir</span><a href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Retirada</a><span class="ord-k">Entrega</span><a href="https://www.doordash.com/store/annangol-restaurant-annandale-279656/1849749/" target="_blank" rel="noopener">DoorDash</a><a href="https://www.ubereats.com/store/annangol-4215-tom-davis-dr/wnXVhw9TU3WQazs67JfvBQ" target="_blank" rel="noopener">Uber Eats</a></div>
       </div>
       <div class="hero-photo">
         <img src="../img/m_la_galbi.jpg" width="895" height="718" alt="LA galbi, marinated beef short ribs on a sizzling cast-iron plate">
@@ -478,6 +484,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <p class="eyebrow">Cardápio</p>
       <h2 class="h2">O cardápio completo.</h2>
       <p class="h2-kr">Os preços estão na nossa página de pedidos online.</p>
+      <div class="ord menu-ord"><a href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Retirada</a><span class="ord-k">Entrega</span><a href="https://www.doordash.com/store/annangol-restaurant-annandale-279656/1849749/" target="_blank" rel="noopener">DoorDash</a><a href="https://www.ubereats.com/store/annangol-4215-tom-davis-dr/wnXVhw9TU3WQazs67JfvBQ" target="_blank" rel="noopener">Uber Eats</a></div>
       <div class="mtabs" id="mTabs" role="group" aria-label="Cardápio" hidden><button type="button" data-m="" aria-pressed="true">Tudo</button><button type="button" data-m="bbq" aria-pressed="false">Churrasco</button><button type="button" data-m="meals" aria-pressed="false">Pratos &amp; panelas quentes</button><button type="button" data-m="lunch" aria-pressed="false">Especiais do almoço</button><button type="button" data-m="chef" aria-pressed="false">Especialidades do chef</button><button type="button" data-m="cas" aria-pressed="false">Caçarolas</button><button type="button" data-m="app" aria-pressed="false">Entradas</button></div>
       <p class="hot-key"><span class="hot">🌶</span> Picante</p>
       <h3 class="sub" data-m="meals">Sopas &amp; panelas quentes <span class="kr">국물 요리</span></h3>
