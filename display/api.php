@@ -125,19 +125,28 @@ function media_name(string $f): ?string {
 // photos.json holds {items:[{id,date,kind:'tray'|'box',size:''|'S'|'M'|'L',src,th,cap,capEn}]}.
 // src/th are either a site path (img/daily/…, shipped with the site) or 'up:<file>' for an upload.
 const PHOTO_EXT = ['jpg', 'jpeg', 'png', 'webp'];
-function photos_seed(): void {                             // photos shipped with the site are added once per seed id
+function photos_seed(): void {                             // photos shipped with the site are each added once, so one deleted in the admin stays deleted
     $src = __DIR__ . '/photos-seed.json';
     if (!is_file($src)) return;
-    $mark = display_dir() . '/photos-seed-applied.txt';
     $seed = json_decode((string)file_get_contents($src), true);
-    if (!is_array($seed) || empty($seed['id']) || !is_array($seed['items'] ?? null)) return;
-    if (is_file($mark) && trim((string)file_get_contents($mark)) === (string)$seed['id']) return;
-    json_update(display_dir() . '/photos.json', function (&$d) use ($seed) {
+    if (!is_array($seed) || !is_array($seed['items'] ?? null)) return;
+    $items = array_values(array_filter($seed['items'], function ($it) { return is_array($it) && !empty($it['id']); }));
+    $file = display_dir() . '/photos.json';
+    // The first set (through Nov 17, 2026) was recorded as a whole in photos-seed-applied.txt, before ids were kept per photo.
+    $first = is_file(display_dir() . '/photos-seed-applied.txt')
+        ? array_column(array_filter($items, function ($it) { return (string)($it['date'] ?? '') <= '2026-11-17'; }), 'id') : [];
+    $done = function (array $d) use ($first): array { return is_array($d['seeded'] ?? null) ? $d['seeded'] : $first; };
+    if (!array_diff(array_column($items, 'id'), $done(json_read($file)))) return;   // nothing new: no write
+    json_update($file, function (&$d) use ($items, $done) {
         if (!is_array($d['items'] ?? null)) $d['items'] = [];
-        $have = array_column($d['items'], 'id');
-        foreach ($seed['items'] as $it) { if (is_array($it) && !empty($it['id']) && !in_array($it['id'], $have, true)) $d['items'][] = $it; }
+        $seeded = $done($d); $have = array_column($d['items'], 'id');
+        foreach ($items as $it) {
+            if (in_array($it['id'], $seeded, true)) continue;
+            if (!in_array($it['id'], $have, true)) $d['items'][] = $it;
+            $seeded[] = $it['id'];
+        }
+        $d['seeded'] = array_values(array_unique($seeded));
     });
-    file_put_contents($mark, (string)$seed['id'], LOCK_EX);
 }
 function photos_list(): array {                            // newest day first; within a day trays, then boxes S, M, L
     try { photos_seed(); } catch (Throwable $e) {}

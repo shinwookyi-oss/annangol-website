@@ -1,5 +1,5 @@
 {
- "id": "photos-2026-11-17",
+ "id": "photos-2026-11-18",
  "items": [
   {
    "id": "seed-2026-11-02-tray",
@@ -98,6 +98,46 @@
    "size": "",
    "src": "img/daily/2026-11-17-tray.jpg",
    "th": "img/daily/2026-11-17-tray-th.jpg",
+   "cap": "",
+   "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-18-tray",
+   "date": "2026-11-18",
+   "kind": "tray",
+   "size": "",
+   "src": "img/daily/2026-11-18-tray.jpg",
+   "th": "img/daily/2026-11-18-tray-th.jpg",
+   "cap": "",
+   "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-18-box-s",
+   "date": "2026-11-18",
+   "kind": "box",
+   "size": "S",
+   "src": "img/daily/2026-11-18-box-s.jpg",
+   "th": "img/daily/2026-11-18-box-s-th.jpg",
+   "cap": "",
+   "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-18-box-m",
+   "date": "2026-11-18",
+   "kind": "box",
+   "size": "M",
+   "src": "img/daily/2026-11-18-box-m.jpg",
+   "th": "img/daily/2026-11-18-box-m-th.jpg",
+   "cap": "",
+   "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-18-box-l",
+   "date": "2026-11-18",
+   "kind": "box",
+   "size": "L",
+   "src": "img/daily/2026-11-18-box-l.jpg",
+   "th": "img/daily/2026-11-18-box-l-th.jpg",
    "cap": "",
    "capEn": ""
   }
