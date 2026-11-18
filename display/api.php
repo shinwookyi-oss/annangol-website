@@ -155,6 +155,13 @@ function photos_list(): array {                            // newest day first; 
     usort($items, function ($a, $b) use ($rank) {
         return [(string)($b['date'] ?? ''), $rank($a), (string)($a['id'] ?? '')] <=> [(string)($a['date'] ?? ''), $rank($b), (string)($b['id'] ?? '')];
     });
+    foreach ($items as &$p) {                              // site photos carry their file time, so a replaced picture is not served from an old cached copy
+        foreach (['src', 'th'] as $k) {
+            $v = (string)($p[$k] ?? '');
+            if ($v !== '' && strpos($v, 'up:') !== 0 && preg_match('~^img/[\w./-]+$~', $v) && strpos($v, '..') === false && is_file($f = dirname(__DIR__) . '/' . $v)) $p[$k] = $v . '?v=' . filemtime($f);
+        }
+    }
+    unset($p);
     return $items;
 }
 function photo_fields(array $in): ?array {                 // the editable fields of a photo, or null when they are not valid
