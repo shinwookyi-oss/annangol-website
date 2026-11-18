@@ -2,7 +2,7 @@
  "lang_label": "Lang",
  "title": "AnnanGol Korean BBQ",
  "meta_desc": "AnnanGol (아난골), babekyou Koreyen sou chabon ak manje Koreyen lakay nan Annandale, VA. LA galbi, galbi kochon, jokbal, bouyon ak chodyè cho. Manje maten K-JjamBab sou plato chak maten 7–10 AM.",
- "og_desc": "Babekyou Koreyen, bouyon ak espesyalite chèf la. Epi manje maten K-JjamBab, 7–10 AM, $13.99, pa gen tip.",
+ "og_desc": "Babekyou Koreyen, bouyon ak espesyalite chèf la. Epi manje maten K-JjamBab, 7–10 AM, $12.99, pa gen tip.",
  "nav_signature": "Espesyalite",
  "nav_menu": "Meni",
  "nav_breakfast": "Manje maten",
@@ -14,7 +14,7 @@
  "cta_menu": "Gade meni an",
  "cta_dir": "Jwenn direksyon",
  "chefs_choice": "Chwa chèf la",
- "q_breakfast": "Maten 7–10 AM: manje maten K-JjamBab sou plato, $13.99, pa gen tip",
+ "q_breakfast": "Maten 7–10 AM: manje maten K-JjamBab sou plato, $12.99, pa gen tip",
  "q_hours": "Louvri 7 AM–10 PM, 365 jou",
  "sig_eyebrow": "Espesyalite chèf la",
  "sig_title": "Sa ki fè moun tounen.",
@@ -140,5 +140,7 @@
  "cmp_note": "Chif K-JjamBab yo se estimasyon. McDonald's: mwayèn 15 atik dejene. IHOP: mwayèn 5 omlèt, san akonpayman. Dapre enfòmasyon nitrisyonèl ki pibliye, novanm 2026.",
  "cmp_fatpct": "Kalori ki soti nan grès",
  "cmp_pf": "Pwoteyin konpare ak grès",
- "cmp_tag": "Anpil pwoteyin, natirèlman mwens pati grès: yon repa koreyen ekilibre"
+ "cmp_tag": "Anpil pwoteyin, natirèlman mwens pati grès: yon repa koreyen ekilibre",
+ "rv_count": "{n} revi sou Google",
+ "rv_all": "Gade tout revi yo sou Google"
 }

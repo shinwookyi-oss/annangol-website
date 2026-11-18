@@ -2,7 +2,7 @@
  "lang_label": "Idioma",
  "title": "AnnanGol Korean BBQ",
  "meta_desc": "AnnanGol (아난골), churrasco coreano no carvão e comida coreana caseira em Annandale, VA. LA galbi, galbi de porco, jokbal, ensopados e panelas quentes. Café da manhã na bandeja K-JjamBab todas as manhãs, das 7h às 10h.",
- "og_desc": "Churrasco coreano, ensopados e especialidades do chef. E ainda o café da manhã K-JjamBab, 7h–10h, $13.99, sem gorjeta.",
+ "og_desc": "Churrasco coreano, ensopados e especialidades do chef. E ainda o café da manhã K-JjamBab, 7h–10h, $12.99, sem gorjeta.",
  "nav_signature": "Destaques",
  "nav_menu": "Cardápio",
  "nav_breakfast": "Café da manhã",
@@ -14,7 +14,7 @@
  "cta_menu": "Ver o cardápio",
  "cta_dir": "Como chegar",
  "chefs_choice": "Escolha do chef",
- "q_breakfast": "Manhãs das 7h às 10h: café da manhã na bandeja K-JjamBab, $13.99, sem gorjeta",
+ "q_breakfast": "Manhãs das 7h às 10h: café da manhã na bandeja K-JjamBab, $12.99, sem gorjeta",
  "q_hours": "Aberto das 7h às 22h, 365 dias",
  "sig_eyebrow": "Especialidades do chef",
  "sig_title": "O que faz o pessoal voltar.",
@@ -140,5 +140,7 @@
  "cmp_note": "Os números do K-JjamBab são estimativas. McDonald's: média de 15 itens do café da manhã. IHOP: média de 5 omeletes, sem acompanhamentos. Com base em informações nutricionais publicadas, novembro de 2026.",
  "cmp_fatpct": "Calorias da gordura",
  "cmp_pf": "Proteína em relação à gordura",
- "cmp_tag": "Rica em proteína, com proporção de gordura naturalmente menor: uma refeição coreana equilibrada"
+ "cmp_tag": "Rica em proteína, com proporção de gordura naturalmente menor: uma refeição coreana equilibrada",
+ "rv_count": "{n} avaliações no Google",
+ "rv_all": "Ver todas as avaliações no Google"
 }

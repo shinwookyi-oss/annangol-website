@@ -2,7 +2,7 @@
  "lang_label": "Idioma",
  "title": "AnnanGol Korean BBQ",
  "meta_desc": "AnnanGol (아난골), barbacoa coreana al carbón y comida coreana casera en Annandale, VA. LA galbi, galbi de cerdo, jokbal, guisos y ollas calientes. Desayuno en bandeja K-JjamBab todas las mañanas de 7–10 AM.",
- "og_desc": "Barbacoa coreana, guisos y especialidades del chef. Además, desayuno K-JjamBab, 7–10 AM, $13.99, sin propina.",
+ "og_desc": "Barbacoa coreana, guisos y especialidades del chef. Además, desayuno K-JjamBab, 7–10 AM, $12.99, sin propina.",
  "nav_signature": "Especialidades",
  "nav_menu": "Menú",
  "nav_breakfast": "Desayuno",
@@ -14,7 +14,7 @@
  "cta_menu": "Ver el menú",
  "cta_dir": "Cómo llegar",
  "chefs_choice": "Recomendación del chef",
- "q_breakfast": "Mañanas de 7–10 AM: desayuno en bandeja K-JjamBab, $13.99, sin propina",
+ "q_breakfast": "Mañanas de 7–10 AM: desayuno en bandeja K-JjamBab, $12.99, sin propina",
  "q_hours": "Abierto de 7 AM–10 PM, los 365 días",
  "sig_eyebrow": "Especialidades del chef",
  "sig_title": "Lo que hace volver a la gente.",
@@ -143,5 +143,7 @@
  "cmp_note": "Las cifras de K-JjamBab son estimadas. McDonald's: promedio de 15 artículos de desayuno. IHOP: promedio de 5 omelettes, sin acompañamientos. Según información nutricional publicada, noviembre de 2026.",
  "cmp_fatpct": "Calorías de la grasa",
  "cmp_pf": "Proteína respecto a la grasa",
- "cmp_tag": "Rica en proteína y, por naturaleza, con menor proporción de grasa: una comida coreana equilibrada"
+ "cmp_tag": "Rica en proteína y, por naturaleza, con menor proporción de grasa: una comida coreana equilibrada",
+ "rv_count": "{n} reseñas en Google",
+ "rv_all": "Ver todas las reseñas en Google"
 }

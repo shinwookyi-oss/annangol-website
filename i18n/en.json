@@ -1,7 +1,7 @@
 {
  "title": "AnnanGol Korean BBQ",
  "meta_desc": "AnnanGol (아난골), Korean charcoal BBQ and home-style Korean food in Annandale, VA. LA galbi, pork galbi, jokbal, stews and hot pots. K-JjamBab tray breakfast every morning 7–10 AM.",
- "og_desc": "Korean BBQ, stews and chef specials. Plus K-JjamBab breakfast, 7–10 AM, $13.99, no tip.",
+ "og_desc": "Korean BBQ, stews and chef specials. Plus K-JjamBab breakfast, 7–10 AM, $12.99, no tip.",
  "nav_signature": "Signature",
  "nav_menu": "Menu",
  "nav_breakfast": "Breakfast",
@@ -13,7 +13,7 @@
  "cta_menu": "See the menu",
  "cta_dir": "Get directions",
  "chefs_choice": "Chef's choice",
- "q_breakfast": "Mornings 7–10 AM: K-JjamBab tray breakfast, $13.99, no tip",
+ "q_breakfast": "Mornings 7–10 AM: K-JjamBab tray breakfast, $12.99, no tip",
  "q_hours": "Open 7 AM–10 PM, 365 days",
  "sig_eyebrow": "Chef specials",
  "sig_title": "What people come back for.",
@@ -143,5 +143,7 @@
  "cmp_note": "K-JjamBab figures are estimates. McDonald's: average of 15 breakfast items. IHOP: average of 5 omelettes, sides not included. Based on published nutrition information, November 2026.",
  "cmp_fatpct": "Calories from fat",
  "cmp_pf": "Protein compared with fat",
- "cmp_tag": "High in protein, with a naturally lower share of fat: a balanced Korean meal"
+ "cmp_tag": "High in protein, with a naturally lower share of fat: a balanced Korean meal",
+ "rv_count": "{n} Google reviews",
+ "rv_all": "See all reviews on Google"
 }

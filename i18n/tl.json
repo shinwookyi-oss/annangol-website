@@ -1,7 +1,7 @@
 {
  "title": "AnnanGol Korean BBQ",
  "meta_desc": "AnnanGol (아난골), Korean charcoal BBQ at lutong-bahay na pagkaing Koreano sa Annandale, VA. LA galbi, pork galbi, jokbal, mga nilaga at hot pot. K-JjamBab tray breakfast tuwing umaga, 7–10 AM.",
- "og_desc": "Korean BBQ, mga sabaw at specialty ng chef. Dagdag pa ang K-JjamBab breakfast, 7–10 AM, $13.99, walang tip.",
+ "og_desc": "Korean BBQ, mga sabaw at specialty ng chef. Dagdag pa ang K-JjamBab breakfast, 7–10 AM, $12.99, walang tip.",
  "nav_signature": "Signature",
  "nav_menu": "Menu",
  "nav_breakfast": "Almusal",
@@ -13,7 +13,7 @@
  "cta_menu": "Tingnan ang menu",
  "cta_dir": "Kumuha ng direksyon",
  "chefs_choice": "Pili ng chef",
- "q_breakfast": "Umaga 7–10 AM: K-JjamBab tray breakfast, $13.99, walang tip",
+ "q_breakfast": "Umaga 7–10 AM: K-JjamBab tray breakfast, $12.99, walang tip",
  "q_hours": "Bukas 7 AM–10 PM, 365 araw",
  "sig_eyebrow": "Specialty ng chef",
  "sig_title": "Ang binabalik-balikan ng mga tao.",
@@ -140,5 +140,7 @@
  "cmp_note": "Tantiya ang mga numero ng K-JjamBab. McDonald's: average ng 15 almusal na item. IHOP: average ng 5 omelette, hindi kasama ang sides. Batay sa nailathalang impormasyon sa nutrisyon, Nobyembre 2026.",
  "cmp_fatpct": "Calories mula sa taba",
  "cmp_pf": "Protina kumpara sa taba",
- "cmp_tag": "Mataas sa protina, likas na mas mababa ang bahagi ng taba: balanseng Koreanong kainan"
+ "cmp_tag": "Mataas sa protina, likas na mas mababa ang bahagi ng taba: balanseng Koreanong kainan",
+ "rv_count": "{n} review sa Google",
+ "rv_all": "Tingnan ang lahat ng review sa Google"
 }

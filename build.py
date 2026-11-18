@@ -61,7 +61,7 @@ def build():
             pre = '' if root else '../'
             html = tpl
             d['hide_if_ko'] = 'hidden' if code == 'ko' else ''
-            d['js_strings'] = json.dumps({k: d[k] for k in ('copy', 'copied', 'selected', 'wk_today', 'wk_soup', 'wk_sides', 'wk_special', 'wk_until', 'wk_want', 'sg_thanks', 'sg_err', 'dr_s', 'dr_m', 'dr_l', 'ph_view', 'nu_pro', 'nu_fat', 'nu_est', 'cmp_title', 'cmp_cal', 'cmp_kj', 'cmp_mcd', 'cmp_ihop', 'cmp_note', 'cmp_fatpct', 'cmp_pf', 'cmp_tag')}, ensure_ascii=False)
+            d['js_strings'] = json.dumps({k: d[k] for k in ('copy', 'copied', 'selected', 'rv_count', 'rv_all', 'rv_src', 'wk_today', 'wk_soup', 'wk_sides', 'wk_special', 'wk_until', 'wk_want', 'sg_thanks', 'sg_err', 'dr_s', 'dr_m', 'dr_l', 'ph_view', 'nu_pro', 'nu_fat', 'nu_est', 'cmp_title', 'cmp_cal', 'cmp_kj', 'cmp_mcd', 'cmp_ihop', 'cmp_note', 'cmp_fatpct', 'cmp_pf', 'cmp_tag')}, ensure_ascii=False)
             html = re.sub(r'\{\{(\w+)\}\}', lambda m: d[m.group(1)], html)
             html = html.replace('<html lang="en">', f'<html lang="{code}"' + (' dir="rtl"' if rtl else '') + '>')
             # asset paths

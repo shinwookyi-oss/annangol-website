@@ -1,7 +1,7 @@
 {
  "title": "AnnanGol 韩式烤肉",
  "meta_desc": "AnnanGol（아난골）位于弗吉尼亚州安嫩代尔，提供韩式炭火烤肉和韩国家常菜。LA galbi（LA牛排骨）、猪排骨、jokbal（卤猪蹄）、炖汤和火锅。每天早上7–10点供应K-JjamBab餐盘早餐。",
- "og_desc": "韩式烤肉、炖汤和主厨特色菜。另有K-JjamBab早餐，早上7–10点，$13.99，免小费。",
+ "og_desc": "韩式烤肉、炖汤和主厨特色菜。另有K-JjamBab早餐，早上7–10点，$12.99，免小费。",
  "nav_signature": "招牌",
  "nav_menu": "菜单",
  "nav_breakfast": "早餐",
@@ -13,7 +13,7 @@
  "cta_menu": "查看菜单",
  "cta_dir": "导航前往",
  "chefs_choice": "主厨推荐",
- "q_breakfast": "早上7–10点：K-JjamBab餐盘早餐，$13.99，免小费",
+ "q_breakfast": "早上7–10点：K-JjamBab餐盘早餐，$12.99，免小费",
  "q_hours": "营业时间早上7点至晚上10点，全年365天",
  "sig_eyebrow": "主厨特色",
  "sig_title": "让人一来再来的美味。",
@@ -143,5 +143,7 @@
  "cmp_note": "K-JjamBab 的数值为估算值。麦当劳：15 种早餐单品的平均值。IHOP：5 种煎蛋卷的平均值，不含配餐。依据 2026 年 11 月公布的营养信息。",
  "cmp_fatpct": "脂肪供能比",
  "cmp_pf": "蛋白质与脂肪之比",
- "cmp_tag": "高蛋白、脂肪占比本来就低的均衡韩式一餐"
+ "cmp_tag": "高蛋白、脂肪占比本来就低的均衡韩式一餐",
+ "rv_count": "{n} 条 Google 评价",
+ "rv_all": "在 Google 上查看全部评价"
 }

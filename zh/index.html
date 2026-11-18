@@ -6,7 +6,7 @@
 <title>AnnanGol 韩式烤肉</title>
 <meta name="description" content="AnnanGol（아난골）位于弗吉尼亚州安嫩代尔，提供韩式炭火烤肉和韩国家常菜。LA galbi（LA牛排骨）、猪排骨、jokbal（卤猪蹄）、炖汤和火锅。每天早上7–10点供应K-JjamBab餐盘早餐。">
 <meta property="og:title" content="AnnanGol Korean BBQ · Annandale, VA">
-<meta property="og:description" content="韩式烤肉、炖汤和主厨特色菜。另有K-JjamBab早餐，早上7–10点，$13.99，免小费。">
+<meta property="og:description" content="韩式烤肉、炖汤和主厨特色菜。另有K-JjamBab早餐，早上7–10点，$12.99，免小费。">
 <meta property="og:image" content="https://annangol.com/img/m_la_galbi.jpg">
 <link rel="canonical" href="https://annangol.com/zh/">
 <link rel="alternate" hreflang="en" href="https://annangol.com/en/">
@@ -302,6 +302,14 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .rev q{font:500 17px/1.55 var(--f-sans);quotes:none}
 .rev q.kr{font-family:var(--f-kr)}
 .rev .who{margin-top:auto;font-size:14px;color:var(--muted)}
+.rev .who a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.rev q.live{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.rev-rate{margin-top:10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;font-size:16px;color:var(--muted);text-decoration:none}
+.rev-rate b{font-size:22px;color:var(--ink)}
+.rev-rate .st{color:var(--gold);letter-spacing:2px}
+.rev-rate u{text-underline-offset:3px}
+.rev-more{margin-top:18px;font-size:15px}
+.rev-more a{color:var(--muted)}
 .rev-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 32px}
 .rev-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
 .rev-cta p{font-size:16px;color:var(--muted)}
@@ -382,7 +390,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   </div>
   <div class="quick">
     <div class="wrap">
-      <a href="#breakfast" id="qAm">早上7–10点：K-JjamBab餐盘早餐，$13.99，免小费</a>
+      <a href="#breakfast" id="qAm">早上7–10点：K-JjamBab餐盘早餐，$12.99，免小费</a>
       <a href="#visit">4215 Tom Davis Dr, Annandale</a>
       <span>营业时间早上7点至晚上10点，全年365天</span>
       <span>(703) 914-4600</span>
@@ -409,14 +417,16 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
     <div class="wrap">
       <div class="rev-head">
         <div><p class="eyebrow">评价</p>
-        <h2 class="h2">听听顾客怎么说。</h2></div>
+        <h2 class="h2">听听顾客怎么说。</h2>
+        <a class="rev-rate" id="rvRate" target="_blank" rel="noopener" hidden></a></div>
         <div class="rev-cta"><p>来用过餐吗？欢迎留下您的真实感受。</p><a class="btn" href="https://g.page/r/CbFyaprUaqgNEAE/review" target="_blank" rel="noopener">撰写Google评价</a></div>
       </div>
-      <div class="revs">
+      <div class="revs" id="rvList">
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Hidden gem in Annandale! This restaurant reminds me of a traditional Korean food when I was a child. I recommend any of the soups with rice!</q><figcaption class="who">Joon Y. · Google评价</figcaption></figure>
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q class="kr">소머리+도가니 국밥 너무 맛있어요!</q><figcaption class="who">Janice K. · Google评价</figcaption></figure>
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Nice food, nice service, nice price.</q><figcaption class="who">Dae Hyun K. · Google评价</figcaption></figure>
       </div>
+      <p class="rev-more" id="rvMore" hidden><a target="_blank" rel="noopener"></a></p>
     </div>
   </section>
 
@@ -463,7 +473,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <p class="am-tag">健康的一天，从K-JjamBab开始。有肉有菜，营养均衡的韩式早餐。</p>
         <p>午餐之前，AnnanGol供应K-JjamBab——韩国军队风格的餐盘早餐：米饭配煎蛋、一碗热汤、三四样小菜，以及每天更换的主菜。另配烤gim（海苔）。</p>
         <p class="kr" >당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
-        <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$13.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>每天早上7–10点</span></div>
+        <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$12.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>每天早上7–10点</span></div>
         <div class="offers" id="amOffers" hidden></div>
       </div>
       <div class="trays">
@@ -586,12 +596,42 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="下一张">›</button>
 </dialog>
 <script>
-const T={"copy": "复制", "copied": "已复制", "selected": "已选择", "wk_today": "今天", "wk_soup": "汤", "wk_sides": "小菜", "wk_special": "特价", "wk_until": "至 {d}", "wk_want": "想吃", "sg_thanks": "谢谢！我们会阅读每一条留言。", "sg_err": "发送失败，请重试。", "dr_s": "小份", "dr_m": "中份", "dr_l": "大份", "ph_view": "查看照片", "nu_pro": "蛋白质", "nu_fat": "脂肪", "nu_est": "估算值", "cmp_title": "一餐营养对比", "cmp_cal": "热量", "cmp_kj": "K-JjamBab（本周平均）", "cmp_mcd": "麦当劳早餐（单品平均）", "cmp_ihop": "IHOP 煎蛋卷（平均）", "cmp_note": "K-JjamBab 的数值为估算值。麦当劳：15 种早餐单品的平均值。IHOP：5 种煎蛋卷的平均值，不含配餐。依据 2026 年 11 月公布的营养信息。", "cmp_fatpct": "脂肪供能比", "cmp_pf": "蛋白质与脂肪之比", "cmp_tag": "高蛋白、脂肪占比本来就低的均衡韩式一餐"};
+const T={"copy": "复制", "copied": "已复制", "selected": "已选择", "rv_count": "{n} 条 Google 评价", "rv_all": "在 Google 上查看全部评价", "rv_src": "Google评价", "wk_today": "今天", "wk_soup": "汤", "wk_sides": "小菜", "wk_special": "特价", "wk_until": "至 {d}", "wk_want": "想吃", "sg_thanks": "谢谢！我们会阅读每一条留言。", "sg_err": "发送失败，请重试。", "dr_s": "小份", "dr_m": "中份", "dr_l": "大份", "ph_view": "查看照片", "nu_pro": "蛋白质", "nu_fat": "脂肪", "nu_est": "估算值", "cmp_title": "一餐营养对比", "cmp_cal": "热量", "cmp_kj": "K-JjamBab（本周平均）", "cmp_mcd": "麦当劳早餐（单品平均）", "cmp_ihop": "IHOP 煎蛋卷（平均）", "cmp_note": "K-JjamBab 的数值为估算值。麦当劳：15 种早餐单品的平均值。IHOP：5 种煎蛋卷的平均值，不含配餐。依据 2026 年 11 月公布的营养信息。", "cmp_fatpct": "脂肪供能比", "cmp_pf": "蛋白质与脂肪之比", "cmp_tag": "高蛋白、脂肪占比本来就低的均衡韩式一餐"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
   try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
 }));
+</script>
+<script>
+/* Google rating and recent reviews, read through the site's own API (the built-in reviews stay when it is off or unreachable). */
+(function(){
+  const list=document.getElementById('rvList'); if(!list||!window.fetch) return;
+  const lang=document.documentElement.lang||'en';
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const safe=u=>/^https:\/\//.test(u||'')?u:'';
+  const stars=n=>'\u2605'.repeat(n)+'\u2606'.repeat(5-n);
+  let rtf=null; try{rtf=new Intl.RelativeTimeFormat(lang,{numeric:'auto'})}catch(e){}
+  const ago=t=>{const ms=Date.parse(t); if(!rtf||isNaN(ms)) return '';
+    const d=Math.max(0,Math.round((Date.now()-ms)/864e5));
+    return d<7?rtf.format(-d,'day'):d<30?rtf.format(-Math.round(d/7),'week'):d<365?rtf.format(-Math.round(d/30),'month'):rtf.format(-Math.round(d/365),'year')};
+  fetch('/display/api.php?a=reviews').then(r=>r.json()).then(j=>{
+    if(!j||!j.on) return;
+    const url=safe(j.url);
+    if(j.rating>0&&j.count>0){
+      const a=document.getElementById('rvRate'), n=new Intl.NumberFormat(lang).format(j.count);
+      a.innerHTML='<b>'+esc(Number(j.rating).toFixed(1))+'</b><span class="st" aria-hidden="true">'+stars(Math.round(j.rating))+'</span><u>'+esc(T.rv_count.replace('{n}',n))+'</u>';
+      if(url) a.href=url; a.hidden=false;
+    }
+    const rs=(Array.isArray(j.reviews)?j.reviews:[]).filter(r=>r&&r.text&&r.name).slice(0,3);
+    if(rs.length<3) return;
+    list.innerHTML=rs.map(r=>{const s=Math.max(1,Math.min(5,+r.stars||5)), who=safe(r.uri), when=ago(r.time);
+      return '<figure class="rev" style="margin:0"><span class="st" aria-label="'+s+' / 5">'+stars(s)+'</span>'+
+        '<q class="live'+(/[\uAC00-\uD7A3]/.test(r.text)?' kr':'')+'">'+esc(r.text)+'</q>'+
+        '<figcaption class="who">'+(who?'<a href="'+esc(who)+'" target="_blank" rel="noopener">'+esc(r.name)+'</a>':esc(r.name))+' \u00B7 '+esc(T.rv_src)+(when?' \u00B7 '+esc(when):'')+'</figcaption></figure>'}).join('');
+    if(url){const m=document.getElementById('rvMore'), a=m.firstElementChild; a.href=url; a.textContent=T.rv_all+' \u2192'; m.hidden=false}
+  }).catch(()=>{});
+})();
 </script>
 <script>
 /* Weekly K-JjamBab menu and current price, read from the in-store display schedule. */

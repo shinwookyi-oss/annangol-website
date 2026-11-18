@@ -301,7 +301,7 @@
   function defaults() {
     return {
       settings: { sound: true, shuffle: false, showBar: true, barText: 'Open 7 AM – 10 PM Daily · (703) 914-4600' },
-      menu: { price: '$13.99', special: '', specialLabel: '특가', specialUntil: '', note: '매일 아침 7–10 AM', tagline: '한국인의 힘은 든든한 아침 짬밥에서',
+      menu: { price: '$12.99', special: '', specialLabel: '특가', specialUntil: '', note: '매일 아침 7–10 AM', tagline: '한국인의 힘은 든든한 아침 짬밥에서',
         evText: '11월 16일 – 30일 · 매일 선착순 10명 K-짬밥 아침 무료', evTextEn: 'Nov 16 – 30 · Free K-JjamBab breakfast for the first 10 guests daily', evTitle: 'K-짬밥 아침 무료 체험', evTitleEn: 'Free K-JjamBab breakfast trial', evBody: '11월 16일 – 30일, 매일 아침 7:00에 5명, 8:30에 5명. K-짬밥을 처음 드시는 분, 매장 식사, 1인 1회. 식사 후 설문을 작성하시면 다음 방문 $2 할인권을 드립니다.', evBodyEn: 'Nov 16 – 30. Every morning, 5 guests at 7:00 AM and 5 guests at 8:30 AM. First-time guests, dine-in, once per person. Fill out a short survey after your meal and get $2 off your next visit.', evStart: '2026-11-15', evEnd: '2026-11-30' },
       schedule: {},
       items: [
@@ -908,7 +908,7 @@
     adminEl.innerHTML = '<div class="login"><p class="help">연결 중…</p></div>';
     call('me', { credentials: 'same-origin' }).then(function (r) {
       if (!r.ok) throw 0;
-      if (r.data.authed) pull().then(function () { renderAdmin(); loadFb(); loadPhotos(); }); else renderLogin('');
+      if (r.data.authed) pull().then(function () { renderAdmin(); loadFb(); loadPhotos(); loadRv(); }); else renderLogin('');
     }).catch(function () {
       adminEl.innerHTML = '<div class="login"><h1>관리자</h1><p class="warn">서버에 연결하지 못했습니다. 이 페이지는 annangol.com/display/ 주소로 열어야 관리자 기능이 작동합니다.</p><button id="btnBack">돌아가기</button></div>';
     });
@@ -924,7 +924,7 @@
     e.preventDefault();
     if (e.target.id !== 'loginForm') return;
     postJson('login', { password: document.getElementById('pw').value }).then(function (r) {
-      if (r.ok && r.data.authed) pull().then(function () { renderAdmin(); loadFb(); loadPhotos(); }); else renderLogin('비밀번호가 맞지 않습니다.');
+      if (r.ok && r.data.authed) pull().then(function () { renderAdmin(); loadFb(); loadPhotos(); loadRv(); }); else renderLogin('비밀번호가 맞지 않습니다.');
     }).catch(function () { renderLogin('서버에 연결하지 못했습니다.'); });
   });
 
@@ -1025,6 +1025,27 @@
     }
     h += '</div><div class="addrow"><button id="btnCopyWeek">바로 앞 주 내용을 이 주로 복사</button><button class="danger" id="btnClearWeek">이 주 비우기</button></div>';
     return h;
+  }
+
+  var rv = null, rvMsg = '';   // 구글 리뷰 연동 상태 (키 자체는 서버에서 내려오지 않음)
+  function rvHtml() {
+    if (!rv) return '<p class="note">불러오는 중…</p>';
+    var st = !rv.hasKey ? '꺼짐 — API 키가 없습니다.' :
+      rv.error ? '오류: ' + esc(rv.error) + (rv.rating ? ' (마지막으로 받은 내용을 표시 중)' : '') :
+      rv.rating ? '연결됨 — 평점 ' + esc(Number(rv.rating).toFixed(1)) + ' · 리뷰 ' + esc(rv.count) + '개 · 사이트에 표시할 수 있는 리뷰 ' + esc(rv.shown) + '개' + (rv.shown < 3 ? ' (3개 미만이면 기존 리뷰 카드를 그대로 둡니다)' : '') : '키 저장됨 — 아직 받아 온 내용이 없습니다.';
+    var opt = function (v, l) { return '<option value="' + v + '"' + (rv.minStars === v ? ' selected' : '') + '>' + l + '</option>'; };
+    return '<div class="grid"><label class="c4" style="grid-column:span 6">Google Places API 키' + (rv.hasKey ? ' (저장됨 · 바꿀 때만 입력)' : '') + '<input type="password" id="rvKey" autocomplete="off" placeholder="AIza…"></label>' +
+      '<label class="c3">표시할 최소 별점<select id="rvMin">' + opt(1, '모두 표시') + opt(3, '3점 이상') + opt(4, '4점 이상') + opt(5, '5점만') + '</select></label></div>' +
+      '<div class="addrow"><button id="btnRvSave">저장하고 확인</button>' + (rv.hasKey ? '<button class="danger" id="btnRvOff">연동 끄기 (키 삭제)</button>' : '') + '</div>' +
+      '<p class="note">' + st + (rvMsg ? ' · ' + esc(rvMsg) : '') + '</p>';
+  }
+  function rvPaint() { var el = document.getElementById('rv'); if (el) el.innerHTML = rvHtml(); }
+  function loadRv() { call('reviews_cfg', { credentials: 'same-origin' }).then(function (r) { if (r.ok) { rv = r.data; rvPaint(); } }).catch(function () {}); }
+  function rvSave(off) {
+    var k = document.getElementById('rvKey'), m = document.getElementById('rvMin');
+    rvMsg = '확인 중…'; var body = { key: off ? '' : k.value.trim(), minStars: +m.value, off: !!off }; rvPaint();
+    postJson('reviews_cfg', body).then(function (r) { if (r.ok) { rv = r.data; rvMsg = off ? '연동을 껐습니다.' : '저장했습니다.'; } else rvMsg = '저장하지 못했습니다.'; rvPaint(); })
+      .catch(function () { rvMsg = '서버에 연결하지 못했습니다.'; rvPaint(); });
   }
 
   var fb = null;   // 손님 제안과 원해요 수 (관리자 화면을 열 때 불러옴)
@@ -1209,6 +1230,8 @@
       '<label class="c3">표시 시작일<input type="date" data-menu="evStart" value="' + esc(m.evStart) + '"></label>' +
       '<label class="c3">표시 종료일 (지나면 자동으로 숨김)<input type="date" data-menu="evEnd" value="' + esc(m.evEnd) + '"></label></div>';
 
+    h += '<h2>구글 리뷰 자동 연동</h2><p class="help">Google Places API 키를 넣으면 웹사이트 리뷰 칸에 구글 평점 · 리뷰 수와 최근 리뷰가 자동으로 나옵니다. 한 시간에 한 번만 구글에서 새로 받아 오고, 키는 서버에만 보관되어 손님 화면에는 나가지 않습니다. 키가 없거나 구글이 응답하지 않으면 기존에 넣어 둔 리뷰 3개가 그대로 보입니다.</p><div id="rv">' + rvHtml() + '</div>';
+
     h += '<h2>재생 목록</h2><div class="addrow">' +
       '<button data-add="youtube">+ 유튜브 (영상 · 재생목록)</button><button data-add="music">+ 사이사이 음악 영상 (유튜브)</button><button data-add="image">+ 이미지 · 포스터</button>' +
       '<button data-add="video">+ 동영상 파일</button><button data-add="menu">+ 짬밥 메뉴</button><button data-add="text">+ 안내 문구</button></div><div id="items">';
@@ -1242,6 +1265,8 @@
   adminEl.addEventListener('click', function (e) {
     var t = e.target;
     if (t.id === 'btnBack' || t.id === 'btnDone') { if (t.id === 'btnDone') { clearTimeout(saveTimer); pushState(); } showStart(false); return; }
+    if (t.id === 'btnRvSave') { rvSave(false); return; }
+    if (t.id === 'btnRvOff') { if (!t.dataset.sure) { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 연동 끄기'; return; } rvSave(true); return; }
     if (t.id === 'btnLogout') { postJson('logout', {}).then(function () { showStart(false); }).catch(function () { showStart(false); }); return; }
     if (t.dataset.fbdel) {
       if (!t.dataset.sure) { t.dataset.sure = '1'; t.textContent = '한 번 더 누르면 삭제'; return; }

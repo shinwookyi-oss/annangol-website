@@ -6,7 +6,7 @@
 <title>AnnanGol কোরিয়ান বারবিকিউ</title>
 <meta name="description" content="AnnanGol (아난골), অ্যানানডেল, ভার্জিনিয়ায় কয়লায় ঝলসানো কোরিয়ান বারবিকিউ ও ঘরোয়া কোরিয়ান খাবার। LA galbi, পর্ক galbi, jokbal, স্ট্যু আর হট পট। প্রতিদিন সকাল 7–10টা K-JjamBab ট্রে নাস্তা।">
 <meta property="og:title" content="AnnanGol Korean BBQ · Annandale, VA">
-<meta property="og:description" content="কোরিয়ান বারবিকিউ, স্ট্যু ও শেফের বিশেষ পদ। সঙ্গে K-JjamBab নাস্তা, সকাল 7–10টা, $13.99, টিপ লাগবে না।">
+<meta property="og:description" content="কোরিয়ান বারবিকিউ, স্ট্যু ও শেফের বিশেষ পদ। সঙ্গে K-JjamBab নাস্তা, সকাল 7–10টা, $12.99, টিপ লাগবে না।">
 <meta property="og:image" content="https://annangol.com/img/m_la_galbi.jpg">
 <link rel="canonical" href="https://annangol.com/bn/">
 <link rel="alternate" hreflang="en" href="https://annangol.com/en/">
@@ -302,6 +302,14 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .rev q{font:500 17px/1.55 var(--f-sans);quotes:none}
 .rev q.kr{font-family:var(--f-kr)}
 .rev .who{margin-top:auto;font-size:14px;color:var(--muted)}
+.rev .who a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.rev q.live{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.rev-rate{margin-top:10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;font-size:16px;color:var(--muted);text-decoration:none}
+.rev-rate b{font-size:22px;color:var(--ink)}
+.rev-rate .st{color:var(--gold);letter-spacing:2px}
+.rev-rate u{text-underline-offset:3px}
+.rev-more{margin-top:18px;font-size:15px}
+.rev-more a{color:var(--muted)}
 .rev-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 32px}
 .rev-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
 .rev-cta p{font-size:16px;color:var(--muted)}
@@ -382,7 +390,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   </div>
   <div class="quick">
     <div class="wrap">
-      <a href="#breakfast" id="qAm">সকাল 7–10টা: K-JjamBab ট্রে নাস্তা, $13.99, টিপ লাগবে না</a>
+      <a href="#breakfast" id="qAm">সকাল 7–10টা: K-JjamBab ট্রে নাস্তা, $12.99, টিপ লাগবে না</a>
       <a href="#visit">4215 Tom Davis Dr, Annandale</a>
       <span>সকাল 7টা–রাত 10টা খোলা, 365 দিন</span>
       <span>(703) 914-4600</span>
@@ -409,14 +417,16 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
     <div class="wrap">
       <div class="rev-head">
         <div><p class="eyebrow">রিভিউ</p>
-        <h2 class="h2">অতিথিরা যা বলছেন।</h2></div>
+        <h2 class="h2">অতিথিরা যা বলছেন।</h2>
+        <a class="rev-rate" id="rvRate" target="_blank" rel="noopener" hidden></a></div>
         <div class="rev-cta"><p>আমাদের এখানে খেয়েছেন? আপনার অভিজ্ঞতা জানান।</p><a class="btn" href="https://g.page/r/CbFyaprUaqgNEAE/review" target="_blank" rel="noopener">Google রিভিউ লিখুন</a></div>
       </div>
-      <div class="revs">
+      <div class="revs" id="rvList">
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Hidden gem in Annandale! This restaurant reminds me of a traditional Korean food when I was a child. I recommend any of the soups with rice!</q><figcaption class="who">Joon Y. · Google রিভিউ</figcaption></figure>
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q class="kr">소머리+도가니 국밥 너무 맛있어요!</q><figcaption class="who">Janice K. · Google রিভিউ</figcaption></figure>
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Nice food, nice service, nice price.</q><figcaption class="who">Dae Hyun K. · Google রিভিউ</figcaption></figure>
       </div>
+      <p class="rev-more" id="rvMore" hidden><a target="_blank" rel="noopener"></a></p>
     </div>
   </section>
 
@@ -463,7 +473,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <p class="am-tag">K-JjamBab দিয়ে সুস্থভাবে দিন শুরু করুন। মাংস আর সবজি, সুষম কোরিয়ান নাস্তা।</p>
         <p>দুপুরের খাবারের আগে AnnanGol পরিবেশন করে K-JjamBab, কোরিয়ান সামরিক ধাঁচের ট্রে নাস্তা: ডিমভাজাসহ ভাত, গরম স্যুপ, তিন-চারটি সাইড ডিশ আর প্রতিদিন বদলানো একটি প্রধান পদ। পাশে থাকে সেঁকা gim (সামুদ্রিক শৈবাল)।</p>
         <p class="kr" >당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
-        <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$13.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>প্রতিদিন সকাল 7–10টা</span></div>
+        <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$12.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>প্রতিদিন সকাল 7–10টা</span></div>
         <div class="offers" id="amOffers" hidden></div>
       </div>
       <div class="trays">
@@ -586,12 +596,42 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="পরের ছবি">›</button>
 </dialog>
 <script>
-const T={"copy": "কপি", "copied": "কপি হয়েছে", "selected": "নির্বাচিত", "wk_today": "আজ", "wk_soup": "স্যুপ", "wk_sides": "সাইড ডিশ", "wk_special": "বিশেষ মূল্য", "wk_until": "{d} পর্যন্ত", "wk_want": "আমি এটা চাই", "sg_thanks": "ধন্যবাদ! আমরা প্রতিটি বার্তা পড়ি।", "sg_err": "পাঠানো যায়নি। আবার চেষ্টা করুন।", "dr_s": "ছোট", "dr_m": "মাঝারি", "dr_l": "বড়", "ph_view": "ছবি দেখুন", "nu_pro": "প্রোটিন", "nu_fat": "চর্বি", "nu_est": "আনুমানিক", "cmp_title": "এক বেলার খাবারের তুলনা", "cmp_cal": "ক্যালরি", "cmp_kj": "K-JjamBab (এই সপ্তাহের গড়)", "cmp_mcd": "ম্যাকডোনাল্ডসের নাশতা (প্রতি আইটেমের গড়)", "cmp_ihop": "IHOP অমলেট (গড়)", "cmp_note": "K-JjamBab-এর সংখ্যাগুলো আনুমানিক। ম্যাকডোনাল্ডস: নাশতার ১৫টি আইটেমের গড়। IHOP: ৫টি অমলেটের গড়, সাইড ছাড়া। প্রকাশিত পুষ্টি তথ্যের ভিত্তিতে, নভেম্বর ২০২৬।", "cmp_fatpct": "চর্বি থেকে ক্যালরি", "cmp_pf": "চর্বির তুলনায় প্রোটিন", "cmp_tag": "উচ্চ প্রোটিন, স্বাভাবিকভাবেই চর্বির অংশ কম: সুষম কোরিয়ান খাবার"};
+const T={"copy": "কপি", "copied": "কপি হয়েছে", "selected": "নির্বাচিত", "rv_count": "Google-এ {n}টি রিভিউ", "rv_all": "Google-এ সব রিভিউ দেখুন", "rv_src": "Google রিভিউ", "wk_today": "আজ", "wk_soup": "স্যুপ", "wk_sides": "সাইড ডিশ", "wk_special": "বিশেষ মূল্য", "wk_until": "{d} পর্যন্ত", "wk_want": "আমি এটা চাই", "sg_thanks": "ধন্যবাদ! আমরা প্রতিটি বার্তা পড়ি।", "sg_err": "পাঠানো যায়নি। আবার চেষ্টা করুন।", "dr_s": "ছোট", "dr_m": "মাঝারি", "dr_l": "বড়", "ph_view": "ছবি দেখুন", "nu_pro": "প্রোটিন", "nu_fat": "চর্বি", "nu_est": "আনুমানিক", "cmp_title": "এক বেলার খাবারের তুলনা", "cmp_cal": "ক্যালরি", "cmp_kj": "K-JjamBab (এই সপ্তাহের গড়)", "cmp_mcd": "ম্যাকডোনাল্ডসের নাশতা (প্রতি আইটেমের গড়)", "cmp_ihop": "IHOP অমলেট (গড়)", "cmp_note": "K-JjamBab-এর সংখ্যাগুলো আনুমানিক। ম্যাকডোনাল্ডস: নাশতার ১৫টি আইটেমের গড়। IHOP: ৫টি অমলেটের গড়, সাইড ছাড়া। প্রকাশিত পুষ্টি তথ্যের ভিত্তিতে, নভেম্বর ২০২৬।", "cmp_fatpct": "চর্বি থেকে ক্যালরি", "cmp_pf": "চর্বির তুলনায় প্রোটিন", "cmp_tag": "উচ্চ প্রোটিন, স্বাভাবিকভাবেই চর্বির অংশ কম: সুষম কোরিয়ান খাবার"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
   try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
 }));
+</script>
+<script>
+/* Google rating and recent reviews, read through the site's own API (the built-in reviews stay when it is off or unreachable). */
+(function(){
+  const list=document.getElementById('rvList'); if(!list||!window.fetch) return;
+  const lang=document.documentElement.lang||'en';
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const safe=u=>/^https:\/\//.test(u||'')?u:'';
+  const stars=n=>'\u2605'.repeat(n)+'\u2606'.repeat(5-n);
+  let rtf=null; try{rtf=new Intl.RelativeTimeFormat(lang,{numeric:'auto'})}catch(e){}
+  const ago=t=>{const ms=Date.parse(t); if(!rtf||isNaN(ms)) return '';
+    const d=Math.max(0,Math.round((Date.now()-ms)/864e5));
+    return d<7?rtf.format(-d,'day'):d<30?rtf.format(-Math.round(d/7),'week'):d<365?rtf.format(-Math.round(d/30),'month'):rtf.format(-Math.round(d/365),'year')};
+  fetch('/display/api.php?a=reviews').then(r=>r.json()).then(j=>{
+    if(!j||!j.on) return;
+    const url=safe(j.url);
+    if(j.rating>0&&j.count>0){
+      const a=document.getElementById('rvRate'), n=new Intl.NumberFormat(lang).format(j.count);
+      a.innerHTML='<b>'+esc(Number(j.rating).toFixed(1))+'</b><span class="st" aria-hidden="true">'+stars(Math.round(j.rating))+'</span><u>'+esc(T.rv_count.replace('{n}',n))+'</u>';
+      if(url) a.href=url; a.hidden=false;
+    }
+    const rs=(Array.isArray(j.reviews)?j.reviews:[]).filter(r=>r&&r.text&&r.name).slice(0,3);
+    if(rs.length<3) return;
+    list.innerHTML=rs.map(r=>{const s=Math.max(1,Math.min(5,+r.stars||5)), who=safe(r.uri), when=ago(r.time);
+      return '<figure class="rev" style="margin:0"><span class="st" aria-label="'+s+' / 5">'+stars(s)+'</span>'+
+        '<q class="live'+(/[\uAC00-\uD7A3]/.test(r.text)?' kr':'')+'">'+esc(r.text)+'</q>'+
+        '<figcaption class="who">'+(who?'<a href="'+esc(who)+'" target="_blank" rel="noopener">'+esc(r.name)+'</a>':esc(r.name))+' \u00B7 '+esc(T.rv_src)+(when?' \u00B7 '+esc(when):'')+'</figcaption></figure>'}).join('');
+    if(url){const m=document.getElementById('rvMore'), a=m.firstElementChild; a.href=url; a.textContent=T.rv_all+' \u2192'; m.hidden=false}
+  }).catch(()=>{});
+})();
 </script>
 <script>
 /* Weekly K-JjamBab menu and current price, read from the in-store display schedule. */

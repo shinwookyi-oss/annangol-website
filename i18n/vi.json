@@ -1,7 +1,7 @@
 {
  "title": "AnnanGol – Thịt nướng Hàn Quốc",
  "meta_desc": "AnnanGol (아난골), thịt nướng than hoa Hàn Quốc và món Hàn kiểu nhà làm tại Annandale, VA. LA galbi, galbi heo, jokbal, món hầm và lẩu. Bữa sáng khay K-JjamBab mỗi sáng 7–10 giờ.",
- "og_desc": "Thịt nướng Hàn Quốc, món hầm và món đặc biệt của đầu bếp. Thêm bữa sáng K-JjamBab, 7–10 giờ sáng, $13.99, không cần tip.",
+ "og_desc": "Thịt nướng Hàn Quốc, món hầm và món đặc biệt của đầu bếp. Thêm bữa sáng K-JjamBab, 7–10 giờ sáng, $12.99, không cần tip.",
  "nav_signature": "Món đặc trưng",
  "nav_menu": "Thực đơn",
  "nav_breakfast": "Bữa sáng",
@@ -13,7 +13,7 @@
  "cta_menu": "Xem thực đơn",
  "cta_dir": "Chỉ đường",
  "chefs_choice": "Đầu bếp gợi ý",
- "q_breakfast": "Buổi sáng 7–10 giờ: bữa sáng khay K-JjamBab, $13.99, không cần tip",
+ "q_breakfast": "Buổi sáng 7–10 giờ: bữa sáng khay K-JjamBab, $12.99, không cần tip",
  "q_hours": "Mở cửa 7 giờ sáng–10 giờ tối, 365 ngày",
  "sig_eyebrow": "Món đặc biệt của đầu bếp",
  "sig_title": "Những món khiến khách quay lại.",
@@ -140,5 +140,7 @@
  "cmp_note": "Số liệu của K-JjamBab là ước tính. McDonald's: trung bình của 15 món ăn sáng. IHOP: trung bình của 5 món omelette, chưa gồm món kèm. Theo thông tin dinh dưỡng đã công bố, tháng 11 năm 2026.",
  "cmp_fatpct": "Calo từ chất béo",
  "cmp_pf": "Đạm so với chất béo",
- "cmp_tag": "Giàu đạm, tỷ lệ chất béo vốn thấp hơn: một bữa ăn Hàn Quốc cân bằng"
+ "cmp_tag": "Giàu đạm, tỷ lệ chất béo vốn thấp hơn: một bữa ăn Hàn Quốc cân bằng",
+ "rv_count": "{n} đánh giá trên Google",
+ "rv_all": "Xem tất cả đánh giá trên Google"
 }

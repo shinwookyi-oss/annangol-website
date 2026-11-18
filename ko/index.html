@@ -6,7 +6,7 @@
 <title>아난골 숯불구이</title>
 <meta name="description" content="아난골(AnnanGol), 애난데일의 한국식 숯불구이와 정갈한 한식. LA갈비, 돼지갈비, 족발, 찌개와 탕. 매일 아침 7–10시 K-짬밥 식판 조식.">
 <meta property="og:title" content="AnnanGol Korean BBQ · Annandale, VA">
-<meta property="og:description" content="숯불구이, 찌개, 특선요리. 아침 7–10시 K-짬밥 $13.99, 팁 없음.">
+<meta property="og:description" content="숯불구이, 찌개, 특선요리. 아침 7–10시 K-짬밥 $12.99, 팁 없음.">
 <meta property="og:image" content="https://annangol.com/img/m_la_galbi.jpg">
 <link rel="canonical" href="https://annangol.com/ko/">
 <link rel="alternate" hreflang="en" href="https://annangol.com/en/">
@@ -302,6 +302,14 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .rev q{font:500 17px/1.55 var(--f-sans);quotes:none}
 .rev q.kr{font-family:var(--f-kr)}
 .rev .who{margin-top:auto;font-size:14px;color:var(--muted)}
+.rev .who a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.rev q.live{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.rev-rate{margin-top:10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;font-size:16px;color:var(--muted);text-decoration:none}
+.rev-rate b{font-size:22px;color:var(--ink)}
+.rev-rate .st{color:var(--gold);letter-spacing:2px}
+.rev-rate u{text-underline-offset:3px}
+.rev-more{margin-top:18px;font-size:15px}
+.rev-more a{color:var(--muted)}
 .rev-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 32px}
 .rev-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
 .rev-cta p{font-size:16px;color:var(--muted)}
@@ -382,7 +390,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   </div>
   <div class="quick">
     <div class="wrap">
-      <a href="#breakfast" id="qAm">아침 7–10시: K-짬밥 식판 조식 $13.99, 팁 없음</a>
+      <a href="#breakfast" id="qAm">아침 7–10시: K-짬밥 식판 조식 $12.99, 팁 없음</a>
       <a href="#visit">4215 Tom Davis Dr, Annandale</a>
       <span>아침 7시–밤 10시, 365일 영업</span>
       <span>(703) 914-4600</span>
@@ -409,14 +417,16 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
     <div class="wrap">
       <div class="rev-head">
         <div><p class="eyebrow">리뷰</p>
-        <h2 class="h2">손님들의 이야기.</h2></div>
+        <h2 class="h2">손님들의 이야기.</h2>
+        <a class="rev-rate" id="rvRate" target="_blank" rel="noopener" hidden></a></div>
         <div class="rev-cta"><p>아난골에서 식사하셨나요? 솔직한 한마디를 남겨 주세요.</p><a class="btn" href="https://g.page/r/CbFyaprUaqgNEAE/review" target="_blank" rel="noopener">구글 리뷰 쓰기</a></div>
       </div>
-      <div class="revs">
+      <div class="revs" id="rvList">
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Hidden gem in Annandale! This restaurant reminds me of a traditional Korean food when I was a child. I recommend any of the soups with rice!</q><figcaption class="who">Joon Y. · 구글 리뷰</figcaption></figure>
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q class="kr">소머리+도가니 국밥 너무 맛있어요!</q><figcaption class="who">Janice K. · 구글 리뷰</figcaption></figure>
         <figure class="rev" style="margin:0"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><q>Nice food, nice service, nice price.</q><figcaption class="who">Dae Hyun K. · 구글 리뷰</figcaption></figure>
       </div>
+      <p class="rev-more" id="rvMore" hidden><a target="_blank" rel="noopener"></a></p>
     </div>
   </section>
 
@@ -463,7 +473,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <p class="am-tag">당신의 건강, K-짬밥으로 시작하세요. 고기와 야채, 균형 잡힌 한국식 아침.</p>
         <p>점심 전 아침 시간에는 K-짬밥을 냅니다. 계란후라이를 올린 밥, 따뜻한 국, 반찬 3~4가지, 그리고 매일 바뀌는 메인. 김은 따로 곁들여 드립니다.</p>
         <p class="kr" hidden>당신을 지켜줄 아침의 든든한 한 끼 식사.</p>
-        <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$13.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>매일 아침 7–10시</span></div>
+        <div class="row"><span class="deal" id="amDeal" hidden></span><span class="price" id="amPrice">$12.99</span><span class="was" id="amWas" hidden></span><span class="stamp">NO TIP</span><span>매일 아침 7–10시</span></div>
         <div class="offers" id="amOffers" hidden></div>
       </div>
       <div class="trays">
@@ -586,12 +596,42 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
   <button type="button" class="nx" data-pv="1" aria-label="다음 사진">›</button>
 </dialog>
 <script>
-const T={"copy": "복사", "copied": "복사됨", "selected": "선택됨", "wk_today": "오늘", "wk_soup": "국", "wk_sides": "반찬", "wk_special": "특가", "wk_until": "{d}까지", "wk_want": "원해요", "sg_thanks": "감사합니다! 보내주신 내용은 모두 읽고 있습니다.", "sg_err": "보내지 못했습니다. 다시 시도해 주세요.", "dr_s": "소", "dr_m": "중", "dr_l": "대", "ph_view": "사진 크게 보기", "nu_pro": "단백질", "nu_fat": "지방", "nu_est": "추정치", "cmp_title": "한 끼 영양 비교", "cmp_cal": "열량", "cmp_kj": "K-짬밥 (주간 평균)", "cmp_mcd": "맥도날드 아침 메뉴 (평균)", "cmp_ihop": "IHOP 오믈렛 (평균)", "cmp_note": "K-짬밥 수치는 추정치입니다. 맥도날드는 아침 메뉴 15종, IHOP은 오믈렛 5종(곁들임 제외)의 평균입니다. 2026년 11월 공개 영양정보 기준.", "cmp_fatpct": "열량 중 지방 비율", "cmp_pf": "지방 대비 단백질", "cmp_tag": "고단백에 지방 비율이 낮은, 균형 잡힌 한식 한 끼"};
+const T={"copy": "복사", "copied": "복사됨", "selected": "선택됨", "rv_count": "구글 리뷰 {n}개", "rv_all": "구글에서 리뷰 전체 보기", "rv_src": "구글 리뷰", "wk_today": "오늘", "wk_soup": "국", "wk_sides": "반찬", "wk_special": "특가", "wk_until": "{d}까지", "wk_want": "원해요", "sg_thanks": "감사합니다! 보내주신 내용은 모두 읽고 있습니다.", "sg_err": "보내지 못했습니다. 다시 시도해 주세요.", "dr_s": "소", "dr_m": "중", "dr_l": "대", "ph_view": "사진 크게 보기", "nu_pro": "단백질", "nu_fat": "지방", "nu_est": "추정치", "cmp_title": "한 끼 영양 비교", "cmp_cal": "열량", "cmp_kj": "K-짬밥 (주간 평균)", "cmp_mcd": "맥도날드 아침 메뉴 (평균)", "cmp_ihop": "IHOP 오믈렛 (평균)", "cmp_note": "K-짬밥 수치는 추정치입니다. 맥도날드는 아침 메뉴 15종, IHOP은 오믈렛 5종(곁들임 제외)의 평균입니다. 2026년 11월 공개 영양정보 기준.", "cmp_fatpct": "열량 중 지방 비율", "cmp_pf": "지방 대비 단백질", "cmp_tag": "고단백에 지방 비율이 낮은, 균형 잡힌 한식 한 끼"};
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const el=document.getElementById(b.dataset.copy), t=el.textContent.trim();
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
   try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
 }));
+</script>
+<script>
+/* Google rating and recent reviews, read through the site's own API (the built-in reviews stay when it is off or unreachable). */
+(function(){
+  const list=document.getElementById('rvList'); if(!list||!window.fetch) return;
+  const lang=document.documentElement.lang||'en';
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const safe=u=>/^https:\/\//.test(u||'')?u:'';
+  const stars=n=>'\u2605'.repeat(n)+'\u2606'.repeat(5-n);
+  let rtf=null; try{rtf=new Intl.RelativeTimeFormat(lang,{numeric:'auto'})}catch(e){}
+  const ago=t=>{const ms=Date.parse(t); if(!rtf||isNaN(ms)) return '';
+    const d=Math.max(0,Math.round((Date.now()-ms)/864e5));
+    return d<7?rtf.format(-d,'day'):d<30?rtf.format(-Math.round(d/7),'week'):d<365?rtf.format(-Math.round(d/30),'month'):rtf.format(-Math.round(d/365),'year')};
+  fetch('/display/api.php?a=reviews').then(r=>r.json()).then(j=>{
+    if(!j||!j.on) return;
+    const url=safe(j.url);
+    if(j.rating>0&&j.count>0){
+      const a=document.getElementById('rvRate'), n=new Intl.NumberFormat(lang).format(j.count);
+      a.innerHTML='<b>'+esc(Number(j.rating).toFixed(1))+'</b><span class="st" aria-hidden="true">'+stars(Math.round(j.rating))+'</span><u>'+esc(T.rv_count.replace('{n}',n))+'</u>';
+      if(url) a.href=url; a.hidden=false;
+    }
+    const rs=(Array.isArray(j.reviews)?j.reviews:[]).filter(r=>r&&r.text&&r.name).slice(0,3);
+    if(rs.length<3) return;
+    list.innerHTML=rs.map(r=>{const s=Math.max(1,Math.min(5,+r.stars||5)), who=safe(r.uri), when=ago(r.time);
+      return '<figure class="rev" style="margin:0"><span class="st" aria-label="'+s+' / 5">'+stars(s)+'</span>'+
+        '<q class="live'+(/[\uAC00-\uD7A3]/.test(r.text)?' kr':'')+'">'+esc(r.text)+'</q>'+
+        '<figcaption class="who">'+(who?'<a href="'+esc(who)+'" target="_blank" rel="noopener">'+esc(r.name)+'</a>':esc(r.name))+' \u00B7 '+esc(T.rv_src)+(when?' \u00B7 '+esc(when):'')+'</figcaption></figure>'}).join('');
+    if(url){const m=document.getElementById('rvMore'), a=m.firstElementChild; a.href=url; a.textContent=T.rv_all+' \u2192'; m.hidden=false}
+  }).catch(()=>{});
+})();
 </script>
 <script>
 /* Weekly K-JjamBab menu and current price, read from the in-store display schedule. */

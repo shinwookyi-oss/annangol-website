@@ -117,6 +117,78 @@ function clip($v, int $max): string {
     $s = trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', (string)$v) ?? '');
     return function_exists('mb_substr') ? mb_substr($s, 0, $max) : substr($s, 0, $max);
 }
+
+// ---- Google reviews for the website (Places API) --------------------------------------
+// The API key lives in <display data dir>/reviews.json and is never sent to a browser or
+// put in state.json. Google is asked at most once per REVIEWS_TTL; a failed request is not
+// retried for REVIEWS_RETRY seconds, and the last good answer is shown meanwhile.
+const REVIEWS_TTL = 3600;
+const REVIEWS_RETRY = 600;
+const REVIEWS_QUERY = 'AnnanGol 4215 Tom Davis Dr Annandale VA 22003';
+function reviews_http(string $method, string $url, string $key, string $mask, ?array $body = null): array {
+    $hdr = ['X-Goog-Api-Key: ' . $key, 'X-Goog-FieldMask: ' . $mask, 'Content-Type: application/json'];
+    $raw = false; $code = 0;
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => $hdr, CURLOPT_TIMEOUT => 8, CURLOPT_CONNECTTIMEOUT => 5]);
+        if ($method === 'POST') { curl_setopt($ch, CURLOPT_POST, true); curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body)); }
+        $raw = curl_exec($ch); $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+    } else {
+        $ctx = stream_context_create(['http' => ['method' => $method, 'header' => implode("\r\n", $hdr), 'timeout' => 8,
+                                                 'ignore_errors' => true, 'content' => $body === null ? '' : json_encode($body)]]);
+        $raw = @file_get_contents($url, false, $ctx);
+        if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) $code = (int)$m[1];
+    }
+    $j = is_string($raw) ? json_decode($raw, true) : null;
+    if ($code === 200 && is_array($j)) return ['ok' => true, 'data' => $j];
+    $msg = is_array($j) ? (string)($j['error']['message'] ?? '') : '';
+    return ['ok' => false, 'error' => clip($msg !== '' ? $msg : ($code ? "HTTP $code" : 'no connection'), 300)];
+}
+// Ask Google now and keep the answer; returns '' or the reason it did not work.
+function reviews_refresh(): string {
+    $file = display_dir() . '/reviews.json';
+    $cfg = json_read($file);
+    $key = (string)($cfg['key'] ?? '');
+    if ($key === '') return 'no key';
+    $pid = (string)($cfg['placeId'] ?? ''); $err = '';
+    if ($pid === '') {                                     // the place ID is looked up once and kept
+        $r = reviews_http('POST', 'https://places.googleapis.com/v1/places:searchText', $key, 'places.id', ['textQuery' => REVIEWS_QUERY]);
+        if (!$r['ok']) $err = $r['error'];
+        else { $pid = (string)($r['data']['places'][0]['id'] ?? ''); if ($pid === '') $err = 'place not found'; }
+    }
+    $data = null;
+    if ($err === '') {
+        $r = reviews_http('GET', 'https://places.googleapis.com/v1/places/' . rawurlencode($pid), $key, 'id,rating,userRatingCount,googleMapsUri,reviews');
+        if (!$r['ok']) $err = $r['error'];
+        else {
+            $p = $r['data']; $list = [];
+            foreach ((array)($p['reviews'] ?? []) as $v) {
+                $text = clip($v['originalText']['text'] ?? ($v['text']['text'] ?? ''), 1200);
+                $name = clip($v['authorAttribution']['displayName'] ?? '', 80);
+                if ($text === '' || $name === '') continue;
+                $list[] = ['name' => $name, 'uri' => clip($v['authorAttribution']['uri'] ?? '', 300), 'stars' => (int)round((float)($v['rating'] ?? 0)),
+                           'text' => $text, 'time' => clip($v['publishTime'] ?? '', 40), 'url' => clip($v['googleMapsUri'] ?? '', 300)];
+            }
+            $data = ['rating' => round((float)($p['rating'] ?? 0), 1), 'count' => (int)($p['userRatingCount'] ?? 0),
+                     'url' => clip($p['googleMapsUri'] ?? '', 300), 'reviews' => $list];
+        }
+    }
+    json_update($file, function (&$d) use ($pid, $data, $err) {
+        if ($pid !== '') $d['placeId'] = $pid;
+        $d['tried'] = time(); $d['error'] = $err;
+        if ($data !== null) $d['cache'] = ['at' => time(), 'data' => $data];
+    });
+    return $err;
+}
+function reviews_status(): array {                         // for the admin screen; the key itself is never returned
+    $c = json_read(display_dir() . '/reviews.json'); $d = $c['cache']['data'] ?? null;
+    return ['hasKey' => !empty($c['key']), 'minStars' => (int)($c['minStars'] ?? 4), 'error' => (string)($c['error'] ?? ''),
+            'rating' => $d['rating'] ?? null, 'count' => $d['count'] ?? null, 'shown' => is_array($d) ? count(reviews_pick($d, (int)($c['minStars'] ?? 4))) : 0,
+            'at' => (int)($c['cache']['at'] ?? 0)];
+}
+function reviews_pick(array $d, int $min): array {
+    return array_values(array_filter((array)($d['reviews'] ?? []), function ($r) use ($min) { return (int)($r['stars'] ?? 0) >= $min; }));
+}
 function media_name(string $f): ?string {
     return preg_match('/^[a-f0-9]{16}\.(' . implode('|', array_keys(DISPLAY_EXT)) . ')$/', $f) ? $f : null;
 }
@@ -391,6 +463,36 @@ try {
         out(['ok' => true]);
     }
 
+    if ($a === 'reviews') {                                // public: Google rating and reviews for the website
+        $file = display_dir() . '/reviews.json';
+        $c = json_read($file);
+        if (empty($c['key'])) out(['on' => false]);
+        $at = (int)($c['cache']['at'] ?? 0);
+        if (time() - $at >= REVIEWS_TTL && time() - (int)($c['tried'] ?? 0) >= ($at ? min(REVIEWS_RETRY, REVIEWS_TTL) : REVIEWS_RETRY)) {
+            try { reviews_refresh(); } catch (Throwable $e) {}
+            $c = json_read($file);
+        }
+        $d = $c['cache']['data'] ?? null;
+        if (!is_array($d) || time() - (int)($c['cache']['at'] ?? 0) > 86400) out(['on' => false]);
+        out(['on' => true, 'rating' => $d['rating'], 'count' => $d['count'], 'url' => $d['url'],
+             'reviews' => reviews_pick($d, (int)($c['minStars'] ?? 4))]);
+    }
+    if ($a === 'reviews_cfg') {                            // admin: API key and the lowest star rating to show
+        need_auth();
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+            $in = json_decode((string)file_get_contents('php://input'), true) ?: [];
+            $key = preg_replace('/[^A-Za-z0-9_\-]/', '', (string)($in['key'] ?? ''));
+            $min = max(1, min(5, (int)($in['minStars'] ?? 4)));
+            $off = !empty($in['off']);
+            json_update(display_dir() . '/reviews.json', function (&$d) use ($key, $min, $off) {
+                if ($off) { $d = ['minStars' => $min]; return; }
+                if ($key !== '') { $d['key'] = $key; unset($d['placeId']); }
+                $d['minStars'] = $min;
+            });
+            if (!$off && $key !== '') { try { reviews_refresh(); } catch (Throwable $e) {} }
+        }
+        out(reviews_status());
+    }
     if ($a === 'me') { start_session(); out(['authed' => !empty($_SESSION['ok'])]); }
 
     if ($a === 'login') {
