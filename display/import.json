@@ -1,16 +1,27 @@
 {
- "id": "fix-2026-11-17-egg",
+ "id": "fix-2026-11-28-curry-sat",
  "schedule": {
-  "2026-11-17": {
-   "main": "못난이",
-   "soup": "아난골 얼큰 게 해장국",
-   "sides": "김치 · 콩자반 · 콩나물무침 · 동그랑소세지 · 계란부침 · 오뎅",
-   "mainEn": "Monnani pork",
-   "soupEn": "AnnanGol spicy crab hangover soup",
-   "sidesEn": "Kimchi · Sweet black beans · Bean sprouts · Egg-battered sausage · Pan-fried egg · Fish cake",
-   "kcal": "1120",
-   "pro": "64",
-   "fat": "48"
+  "2026-11-25": {
+   "main": "제육볶음",
+   "soup": "콩나물국",
+   "sides": "김치 · 깻잎 · 콩자반 · 오뎅",
+   "mainEn": "Spicy stir-fried pork",
+   "soupEn": "Bean sprout soup",
+   "sidesEn": "Kimchi · Perilla leaves · Sweet black beans · Fish cake",
+   "kcal": "820",
+   "pro": "43",
+   "fat": "29"
+  },
+  "2026-11-28": {
+   "main": "카레",
+   "soup": "아난골 무국",
+   "sides": "깍두기 · 미역줄기 · 고추장아찌 · 오뎅",
+   "mainEn": "Korean curry",
+   "soupEn": "AnnanGol radish soup",
+   "sidesEn": "Radish kimchi · Seaweed stems · Pickled peppers · Fish cake",
+   "kcal": "810",
+   "pro": "32",
+   "fat": "27"
   }
  }
 }
