@@ -145,5 +145,15 @@
  "cmp_pf": "Protein compared with fat",
  "cmp_tag": "High in protein, with a naturally lower share of fat: a balanced Korean meal",
  "rv_count": "{n} Google reviews",
- "rv_all": "See all reviews on Google"
+ "rv_all": "See all reviews on Google",
+ "call": "Call",
+ "dir_short": "Directions",
+ "order_short": "Order",
+ "pickup": "Pickup",
+ "delivery": "Delivery",
+ "grp_title": "Group dining",
+ "grp_p": "Our party room seats up to 30 guests. Call us to reserve.",
+ "grp_call": "Call to reserve",
+ "spicy": "Spicy",
+ "all": "All"
 }

@@ -142,5 +142,15 @@
  "cmp_pf": "Đạm so với chất béo",
  "cmp_tag": "Giàu đạm, tỷ lệ chất béo vốn thấp hơn: một bữa ăn Hàn Quốc cân bằng",
  "rv_count": "{n} đánh giá trên Google",
- "rv_all": "Xem tất cả đánh giá trên Google"
+ "rv_all": "Xem tất cả đánh giá trên Google",
+ "call": "Gọi điện",
+ "dir_short": "Chỉ đường",
+ "order_short": "Đặt món",
+ "pickup": "Đến lấy",
+ "delivery": "Giao hàng",
+ "grp_title": "Tiệc nhóm",
+ "grp_p": "Phòng tiệc riêng có sức chứa tối đa 30 khách. Vui lòng gọi để đặt chỗ.",
+ "grp_call": "Gọi để đặt chỗ",
+ "spicy": "Cay",
+ "all": "Tất cả"
 }

@@ -240,7 +240,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .sg textarea,.sg input:not([type=radio]){font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:11px 13px;width:100%}
 .sg textarea{min-height:96px;resize:vertical;display:block}
 .sg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.sg .sg-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.sg .sg-hp{position:absolute;inset-inline-start:-9999px;width:1px;height:1px;opacity:0}
 .sg-act{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:14px}
 .sg-act .btn{border:0;cursor:pointer;font-family:inherit}
 #sgMsg{font-size:14px;font-weight:600}
@@ -328,6 +328,38 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .store img{border-radius:18px;width:100%}
 @media (max-width:860px){.visit{grid-template-columns:1fr}}
 
+.tel{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.quick a[href^="tel:"]{text-decoration:underline;text-underline-offset:3px}
+.ord{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px}
+.ord a{border:1.5px solid var(--ember);color:var(--ember);border-radius:999px;padding:5px 14px;font-size:14px;font-weight:700;text-decoration:none}
+.ord a:hover{background:var(--ember);color:var(--ember-ink)}
+.ord-k{font-size:13px;color:var(--muted);margin-inline-start:6px}
+.grp{margin-top:20px;background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:22px 26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 28px}
+.grp h3{margin:0;font-size:20px}
+.grp h3 .kr{font:500 15px var(--f-kr);color:var(--muted);margin-inline-start:8px}
+.grp p{margin:6px 0 0;color:var(--muted)}
+html:lang(ko) #menu .board h3 .kr,html:lang(ko) #menu h3.sub .kr{display:none}
+.mtabs{margin-top:28px;display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs[hidden]{display:none}
+.mtabs button{flex:none;font:600 14px var(--f-sans);border:1.5px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+.mtabs button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.hot-key{margin:14px 0 0;font-size:14px;color:var(--muted)}
+#menu h3.sub[hidden],#menu .sig[hidden],#menu .board[hidden]{display:none}
+#menu .boards.one{grid-template-columns:1fr}
+.mbar{display:none}
+@media (max-width:820px){
+  .mbar{display:grid;grid-template-columns:1fr 1fr 1.2fr;position:fixed;inset-inline:0;bottom:0;z-index:6;background:var(--char);color:var(--char-ink);padding-bottom:env(safe-area-inset-bottom,0px);border-top:1px solid rgba(255,255,255,.14)}
+  .mbar a{display:flex;align-items:center;justify-content:center;min-height:52px;padding:6px 8px;font-weight:700;font-size:15px;text-decoration:none;text-align:center;line-height:1.2}
+  .mbar a+a{border-inline-start:1px solid rgba(255,255,255,.14)}
+  .mbar .go{background:var(--ember);color:var(--ember-ink)}
+  body{padding-bottom:calc(52px + env(safe-area-inset-bottom,0px))}
+}
+@media print{.mbar{display:none}}
+footer nav{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;font-weight:600}
+footer nav a{text-decoration:none;opacity:.85}
+footer nav a:hover{opacity:1}
+footer small a{color:inherit}
 footer{background:var(--char);color:var(--char-ink)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:center;justify-content:space-between;padding-block:26px}
 footer img{height:46px;width:auto}
@@ -393,7 +425,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <a href="#breakfast" id="qAm">Mornings 7–10 AM: K-JjamBab tray breakfast, $12.99, no tip</a>
       <a href="#visit">4215 Tom Davis Dr, Annandale</a>
       <span>Open 7 AM–10 PM, 365 days</span>
-      <span>(703) 914-4600</span>
+      <a href="tel:+17039144600">(703) 914-4600</a>
     </div>
   </div>
 
@@ -435,26 +467,28 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <p class="eyebrow">Menu</p>
       <h2 class="h2">The full board.</h2>
       <p class="h2-kr">Prices are on our online order page.</p>
-      <h3 class="sub">Soups &amp; hot pots <span class="kr">국물 요리</span></h3>
-      <div class="sig sm"><article class="dish"><img src="../img/m_galbitang.jpg" loading="lazy" alt="Galbi Tang, 갈비탕"><div class="b"><h3>Galbi Tang</h3><span class="k">갈비탕</span><p class="d">Beef short rib soup with glass noodles.</p></div></article><article class="dish"><img src="../img/m_soontofu.jpg" loading="lazy" alt="Soon Tofu, 순두부"><div class="b"><h3>Soon Tofu</h3><span class="k">순두부</span><p class="d">Spicy soft tofu stew, beef or seafood.</p></div></article><article class="dish"><img src="../img/m_yukgaejang_v4.jpg" loading="lazy" alt="Yuk Gae Jang, 육개장"><div class="b"><h3>Yuk Gae Jang</h3><span class="k">육개장</span><p class="d">Spicy shredded beef and vegetable soup.</p></div></article><article class="dish"><img src="../img/m_siraegi.jpg" loading="lazy" alt="Siraegi Doenjang Guk, 시래기 된장국"><div class="b"><h3>Siraegi Doenjang Guk</h3><span class="k">시래기 된장국</span><p class="d">Dried radish greens in soybean paste broth.</p></div></article><article class="dish"><img src="../img/m_kimchijjigae.jpg" loading="lazy" alt="Kongchi Kimchi Jjigae, 꽁치 김치찌개"><div class="b"><h3>Kongchi Kimchi Jjigae</h3><span class="k">꽁치 김치찌개</span><p class="d">Aged kimchi stew with saury and tofu.</p></div></article><article class="dish"><img src="../img/m_saengtae.jpg" loading="lazy" alt="Saengtae Tang, 생태탕"><div class="b"><h3>Saengtae Tang</h3><span class="k">생태탕</span><p class="d">Spicy fresh pollack soup.</p></div></article></div>
+      <div class="mtabs" id="mTabs" role="group" aria-label="Menu" hidden><button type="button" data-m="" aria-pressed="true">All</button><button type="button" data-m="bbq" aria-pressed="false">BBQ</button><button type="button" data-m="meals" aria-pressed="false">Meals &amp; Hot Pots</button><button type="button" data-m="lunch" aria-pressed="false">Lunch Specials</button><button type="button" data-m="chef" aria-pressed="false">Chef Specials</button><button type="button" data-m="cas" aria-pressed="false">Casseroles</button><button type="button" data-m="app" aria-pressed="false">Appetizers</button></div>
+      <p class="hot-key"><span class="hot">🌶</span> Spicy</p>
+      <h3 class="sub" data-m="meals">Soups &amp; hot pots <span class="kr">국물 요리</span></h3>
+      <div class="sig sm" data-m="meals"><article class="dish"><img src="../img/m_galbitang.jpg" loading="lazy" alt="Galbi Tang, 갈비탕"><div class="b"><h3>Galbi Tang</h3><span class="k">갈비탕</span><p class="d">Beef short rib soup with glass noodles.</p></div></article><article class="dish"><img src="../img/m_soontofu.jpg" loading="lazy" alt="Soon Tofu, 순두부"><div class="b"><h3>Soon Tofu</h3><span class="k">순두부</span><p class="d">Spicy soft tofu stew, beef or seafood.</p></div></article><article class="dish"><img src="../img/m_yukgaejang_v4.jpg" loading="lazy" alt="Yuk Gae Jang, 육개장"><div class="b"><h3>Yuk Gae Jang</h3><span class="k">육개장</span><p class="d">Spicy shredded beef and vegetable soup.</p></div></article><article class="dish"><img src="../img/m_siraegi.jpg" loading="lazy" alt="Siraegi Doenjang Guk, 시래기 된장국"><div class="b"><h3>Siraegi Doenjang Guk</h3><span class="k">시래기 된장국</span><p class="d">Dried radish greens in soybean paste broth.</p></div></article><article class="dish"><img src="../img/m_kimchijjigae.jpg" loading="lazy" alt="Kongchi Kimchi Jjigae, 꽁치 김치찌개"><div class="b"><h3>Kongchi Kimchi Jjigae</h3><span class="k">꽁치 김치찌개</span><p class="d">Aged kimchi stew with saury and tofu.</p></div></article><article class="dish"><img src="../img/m_saengtae.jpg" loading="lazy" alt="Saengtae Tang, 생태탕"><div class="b"><h3>Saengtae Tang</h3><span class="k">생태탕</span><p class="d">Spicy fresh pollack soup.</p></div></article></div>
       <div class="boards">
-        <div class="board">
-          <h3>BBQ <span class="kr">숯불구이</span></h3><p class="note">Minimum of two people for BBQ · 2인분 이상 주문</p>
+        <div class="board" data-m="bbq">
+          <h3>BBQ <span class="kr">숯불구이</span></h3><p class="note">Minimum of two people for BBQ<span > · 2인분 이상 주문</span></p>
           <ul><li><span class="n">Motnani Pork Galbi <span class="hot">🌶</span><span class="kr">못난이 돼지갈비</span></span><span class="ds">Pork in our special spicy sauce</span></li><li><span class="n">Taereung Pork Galbi<span class="kr">태능 돼지갈비</span></span><span class="ds">Pork in our special sauce</span></li><li><span class="n">Saeng Samgyeopsal<span class="kr">생삼겹살</span></span><span class="ds">Fresh sliced pork belly</span></li><li><span class="n">Spicy Motnani Samgyeopsal <span class="hot">🌶</span><span class="kr">매운 못난이 삼겹살</span></span><span class="ds">Spicy sliced pork belly</span></li><li><span class="n">Bulpan Bulgogi<span class="kr">불판 불고기</span></span><span class="ds">Marinated prime rib on the griddle</span></li><li><span class="n">Yuksoo Bulgogi<span class="kr">육수 불고기</span></span><span class="ds">Marinated prime rib in a light broth</span></li><li><span class="n">Galbi Jumulleok<span class="kr">갈비 주물럭</span></span></li><li><span class="n">Yangnyum Wang Galbi<span class="kr">양념 왕갈비</span></span><span class="ds">Beef prime ribs marinated in soy sauce</span></li><li><span class="n">LA Galbi<span class="kr">LA 갈비</span></span><span class="ds">Beef short rib marinated in soy sauce</span></li></ul>
-        </div><div class="board">
+        </div><div class="board" data-m="lunch">
           <h3>Lunch Specials <span class="kr">런치 스페셜</span></h3>
           <ul><li><span class="n">Motnani Pork Ssambap<span class="kr">못난이 쌈밥</span></span></li><li><span class="n">Taereung Ssambap<span class="kr">태능 쌈밥</span></span></li><li><span class="n">Beef Jumulleok Ssambap<span class="kr">주물럭 쌈밥</span></span></li><li><span class="n">Mak Naengmyeon <span class="hot">🌶</span><span class="kr">막냉면</span></span></li><li><span class="n">Mul Naengmyeon<span class="kr">물냉면</span></span></li><li><span class="n">Bibim Naengmyeon <span class="hot">🌶</span><span class="kr">비빔 냉면</span></span></li></ul>
-        </div><div class="board wide">
+        </div><div class="board wide" data-m="meals">
           <h3>Meals &amp; Hot Pots <span class="kr">식사 및 탕류</span></h3>
           <ul><li><span class="n">So Meori Gukbap<span class="kr">소머리 국밥</span></span></li><li><span class="n">Dogani Tang<span class="kr">도가니탕</span></span></li><li><span class="n">So Meori + Dogani<span class="kr">소머리+도가니탕</span></span></li><li><span class="n">Grilled Mackerel<span class="kr">고등어구이</span></span></li><li><span class="n">Grilled Hairtail<span class="kr">갈치구이</span></span></li><li><span class="n">Soon Tofu <span class="hot">🌶</span><span class="kr">순두부</span></span></li><li><span class="n">AnnanGol Janggook<span class="kr">아난골 장국</span></span></li><li><span class="n">Hae Jang Guk<span class="kr">해장국</span></span></li><li><span class="n">Pork Gochujang Tofu Jjigae <span class="hot">🌶</span><span class="kr">돼지 고추장 두부찌개</span></span></li><li><span class="n">Anchovy Siraegi Doenjang Guk<span class="kr">멸치 시래기 된장국</span></span></li><li><span class="n">Yanggu Siraegi Doenjang Guk<span class="kr">양구 시래기 된장국</span></span></li><li><span class="n">Gamja Tang <span class="hot">🌶</span><span class="kr">감자탕</span></span></li><li><span class="n">Yuk Gae Jang <span class="hot">🌶</span><span class="kr">육개장</span></span></li><li><span class="n">Galbi Tang<span class="kr">갈비탕</span></span></li><li><span class="n">Ugeoji Galbi Tang<span class="kr">우거지 갈비탕</span></span></li><li><span class="n">Galbi Dolsot Bibimbap<span class="kr">갈비 돌솥 비빔밥</span></span></li><li><span class="n">Kongchi Kimchi Jjigae <span class="hot">🌶</span><span class="kr">꽁치 김치찌개</span></span></li><li><span class="n">Mukeunji Kimchi Jjigae <span class="hot">🌶</span><span class="kr">묵은지 김치찌개</span></span></li><li><span class="n">Hwangtae Kongnamul Haejangguk<span class="kr">황태 콩나물 해장국</span></span></li><li><span class="n">Ojingeo Jjigae <span class="hot">🌶</span><span class="kr">오징어 찌개</span></span></li><li><span class="n">Saengtae Tang <span class="hot">🌶</span><span class="kr">생태탕</span></span></li><li><span class="n">Saengtae Jiri<span class="kr">생태 지리</span></span><span class="ds">Clear, mild pollack soup</span></li><li><span class="n">Bulgogi Deopbap<span class="kr">불고기 덮밥</span></span></li><li><span class="n">Jeyuk Deopbap <span class="hot">🌶</span><span class="kr">제육 덮밥</span></span></li><li><span class="n">Samgye Tang<span class="kr">삼계탕</span></span></li></ul>
-        </div><div class="board">
+        </div><div class="board" data-m="chef">
           <h3>Chef Specials <span class="kr">특선요리</span></h3>
           <ul><li><span class="n">Dogani Muchim <span class="hot">🌶</span><span class="kr">도가니 무침</span></span></li><li><span class="n">Ojingeo Bokkeum <span class="hot">🌶</span><span class="kr">오징어 볶음</span></span></li><li><span class="n">Jeyuk Bokkeum <span class="hot">🌶</span><span class="kr">제육볶음</span></span></li><li><span class="n">Mr. Jok Bal<span class="kr">Mr. 족발</span></span></li><li><span class="n">Bul Jok Bal <span class="hot">🌶</span><span class="kr">불족발</span></span></li><li><span class="n">LA Galbi<span class="kr">LA 갈비</span></span></li><li><span class="n">Ah Gwi Jjim <span class="hot">🌶</span><span class="kr">아귀찜</span></span></li><li><span class="n">Bul Dak Bal <span class="hot">🌶</span><span class="kr">불닭발</span></span></li></ul>
-        </div><div class="board">
+        </div><div class="board" data-m="cas">
           <h3>Casseroles <span class="kr">전골</span></h3>
           <ul><li><span class="n">Gamja Tang Jeongol <span class="hot">🌶</span><span class="kr">감자탕 전골</span></span></li><li><span class="n">Gopchang Jeongol <span class="hot">🌶</span><span class="kr">곱창 전골</span></span></li><li><span class="n">Saengtae Tang Jeongol <span class="hot">🌶</span><span class="kr">생태탕 전골</span></span></li><li><span class="n">Budae Jjigae <span class="hot">🌶</span><span class="kr">부대찌개</span></span></li></ul>
         </div>
-        <div class="board wide">
+        <div class="board wide" data-m="app">
           <h3>Appetizers <span class="kr">분식</span></h3>
           <ul><li><span class="n">Kun Mandu, 8 pcs<span class="kr">군만두</span></span></li><li><span class="n">Kun Mandu, 12 pcs<span class="kr">군만두</span></span></li><li><span class="n">Pajeon<span class="kr">파전</span></span><span class="ds">Green onion pancake</span></li><li><span class="n">Yuk Jeon<span class="kr">육전</span></span><span class="ds">Pan-fried beef slices</span></li></ul>
         </div>
@@ -555,6 +589,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <figure><img src="../img/p_room.jpg" loading="lazy" alt="Long party tables in the back room"><figcaption>Party room for groups</figcaption></figure>
         <figure><img src="../img/m_banchan.jpg" loading="lazy" alt="Korean side dishes (banchan) in small white bowls"><figcaption>Korean side dishes (banchan) with every meal</figcaption></figure>
       </div>
+      <div class="grp"><div><h3>Group dining <span class="kr" >단체 모임</span></h3><p>Our party room seats up to 30 guests. Call us to reserve.</p></div><a class="btn" href="tel:+17039144600">Call to reserve</a></div>
     </div>
   </section>
 
@@ -566,13 +601,14 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
         <div class="card">
           <div class="rows">
             <div class="r"><div class="l">Address</div><div class="v">4215 Tom Davis Dr, Annandale, VA 22003</div></div>
-            <div class="r"><div class="l">Phone</div><div class="v"><span id="phone">(703) 914-4600</span><button class="copy" type="button" data-copy="phone">Copy</button></div></div>
+            <div class="r"><div class="l">Phone</div><div class="v"><a id="phone" class="tel" href="tel:+17039144600">(703) 914-4600</a><button class="copy" type="button" data-copy="phone">Copy</button></div></div>
             <div class="r"><div class="l">Hours</div><div class="v">K-JjamBab breakfast 7–10 AM<br>Full menu 10 AM–10 PM, 365 days a year</div></div>
+            <div class="r"><div class="l">Order</div><div class="ord"><a href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Pickup</a><span class="ord-k">Delivery</span><a href="https://www.doordash.com/store/annangol-restaurant-annandale-279656/1849749/" target="_blank" rel="noopener">DoorDash</a><a href="https://www.ubereats.com/store/annangol-4215-tom-davis-dr/wnXVhw9TU3WQazs67JfvBQ" target="_blank" rel="noopener">Uber Eats</a></div></div>
             <div class="r"><div class="l">Good to know</div><div class="svc"><span>Vegan options</span><span>High chairs</span><span>On-site parking</span><span>Group party room</span></div></div>
           </div>
           <div class="links">
             <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=AnnanGol+4215+Tom+Davis+Dr+Annandale+VA+22003" target="_blank" rel="noopener">Open in Google Maps</a>
-            <a class="btn ghost" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Order online</a>
+            <a class="btn ghost" href="tel:+17039144600">Call (703) 914-4600</a>
           </div>
         </div>
         <div class="store"><img src="../img/p_store.jpg" loading="lazy" alt="AnnanGol storefront with its pink Korean BBQ Restaurant sign"></div>
@@ -584,9 +620,16 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
 <footer>
   <div class="wrap">
     <img src="../img/annangol_logo.png" alt="AnnanGol Korean Barbecue 아난골">
-    <small>아난골 Korean BBQ Restaurant · 4215 Tom Davis Dr, Annandale, VA 22003 · (703) 914-4600</small>
+    <nav aria-label="Footer"><a href="#menu">Menu</a><a href="#breakfast">Breakfast</a><a href="#dosirock">Lunch Box</a><a href="#visit">Visit</a><a href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Order online</a></nav>
+    <small>© 2026 AnnanGol · 아난골 Korean BBQ Restaurant · 4215 Tom Davis Dr, Annandale, VA 22003 · <a href="tel:+17039144600">(703) 914-4600</a></small>
   </div>
 </footer>
+
+<nav class="mbar" aria-label="Quick actions">
+  <a href="tel:+17039144600">Call</a>
+  <a href="https://www.google.com/maps/search/?api=1&amp;query=AnnanGol+4215+Tom+Davis+Dr+Annandale+VA+22003" target="_blank" rel="noopener">Directions</a>
+  <a class="go" href="https://annangol.menu11.com/annandale/order" target="_blank" rel="noopener">Order</a>
+</nav>
 
 <dialog class="ph-view" id="phView" aria-label="View photo">
   <img id="phViewImg" alt="">
@@ -602,6 +645,20 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T.selected};
   try{navigator.clipboard.writeText(t).then(()=>{b.textContent=T.copied;setTimeout(()=>b.textContent=T.copy,1600)},sel)}catch(e){sel()}
 }));
+</script>
+<script>
+/* Menu tabs: show one part of the menu at a time (everything stays visible without JavaScript). */
+(function(){
+  const tabs=document.getElementById('mTabs'), menu=document.getElementById('menu'); if(!tabs||!menu) return;
+  const parts=menu.querySelectorAll('h3.sub[data-m],.sig[data-m],.board[data-m]'), boards=menu.querySelector('.boards');
+  tabs.hidden=false;
+  tabs.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return; const m=b.dataset.m;
+    parts.forEach(p=>p.hidden=!!m&&p.dataset.m!==m);
+    boards.classList.toggle('one',!!m);
+    tabs.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  });
+})();
 </script>
 <script>
 /* Google rating and recent reviews, read through the site's own API (the built-in reviews stay when it is off or unreachable). */

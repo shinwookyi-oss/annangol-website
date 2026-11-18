@@ -142,5 +142,15 @@
  "cmp_pf": "Protina kumpara sa taba",
  "cmp_tag": "Mataas sa protina, likas na mas mababa ang bahagi ng taba: balanseng Koreanong kainan",
  "rv_count": "{n} review sa Google",
- "rv_all": "Tingnan ang lahat ng review sa Google"
+ "rv_all": "Tingnan ang lahat ng review sa Google",
+ "call": "Tumawag",
+ "dir_short": "Direksyon",
+ "order_short": "Umorder",
+ "pickup": "Pickup",
+ "delivery": "Delivery",
+ "grp_title": "Para sa grupo",
+ "grp_p": "Kasya ang hanggang 30 bisita sa aming party room. Tumawag para magpareserba.",
+ "grp_call": "Tumawag para magpareserba",
+ "spicy": "Maanghang",
+ "all": "Lahat"
 }

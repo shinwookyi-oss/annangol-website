@@ -145,5 +145,15 @@
  "cmp_pf": "Proteína respecto a la grasa",
  "cmp_tag": "Rica en proteína y, por naturaleza, con menor proporción de grasa: una comida coreana equilibrada",
  "rv_count": "{n} reseñas en Google",
- "rv_all": "Ver todas las reseñas en Google"
+ "rv_all": "Ver todas las reseñas en Google",
+ "call": "Llamar",
+ "dir_short": "Cómo llegar",
+ "order_short": "Pedir",
+ "pickup": "Para recoger",
+ "delivery": "A domicilio",
+ "grp_title": "Grupos",
+ "grp_p": "Nuestro salón privado tiene capacidad para 30 personas. Llámenos para reservar.",
+ "grp_call": "Llamar para reservar",
+ "spicy": "Picante",
+ "all": "Todo"
 }

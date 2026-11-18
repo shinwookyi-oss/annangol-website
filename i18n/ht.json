@@ -142,5 +142,15 @@
  "cmp_pf": "Pwoteyin konpare ak grès",
  "cmp_tag": "Anpil pwoteyin, natirèlman mwens pati grès: yon repa koreyen ekilibre",
  "rv_count": "{n} revi sou Google",
- "rv_all": "Gade tout revi yo sou Google"
+ "rv_all": "Gade tout revi yo sou Google",
+ "call": "Rele",
+ "dir_short": "Direksyon",
+ "order_short": "Kòmande",
+ "pickup": "Vin pran",
+ "delivery": "Livrezon",
+ "grp_title": "Pou gwoup",
+ "grp_p": "Sal fèt nou an ka resevwa jiska 30 moun. Rele nou pou rezève.",
+ "grp_call": "Rele pou rezève",
+ "spicy": "Pike",
+ "all": "Tout"
 }

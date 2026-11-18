@@ -142,5 +142,15 @@
  "cmp_pf": "Protéines par rapport aux lipides",
  "cmp_tag": "Riche en protéines, avec une part de lipides naturellement plus faible : un repas coréen équilibré",
  "rv_count": "{n} avis Google",
- "rv_all": "Voir tous les avis sur Google"
+ "rv_all": "Voir tous les avis sur Google",
+ "call": "Appeler",
+ "dir_short": "Itinéraire",
+ "order_short": "Commander",
+ "pickup": "À emporter",
+ "delivery": "Livraison",
+ "grp_title": "Groupes",
+ "grp_p": "Notre salle privée accueille jusqu'à 30 personnes. Appelez-nous pour réserver.",
+ "grp_call": "Appeler pour réserver",
+ "spicy": "Épicé",
+ "all": "Tout"
 }

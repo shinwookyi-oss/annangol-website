@@ -145,5 +145,15 @@
  "cmp_pf": "蛋白质与脂肪之比",
  "cmp_tag": "高蛋白、脂肪占比本来就低的均衡韩式一餐",
  "rv_count": "{n} 条 Google 评价",
- "rv_all": "在 Google 上查看全部评价"
+ "rv_all": "在 Google 上查看全部评价",
+ "call": "电话",
+ "dir_short": "路线",
+ "order_short": "点餐",
+ "pickup": "自取",
+ "delivery": "外卖",
+ "grp_title": "团体聚餐",
+ "grp_p": "包间最多可容纳 30 位客人，请来电预订。",
+ "grp_call": "电话预订",
+ "spicy": "辣",
+ "all": "全部"
 }
