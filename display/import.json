@@ -1,27 +1,35 @@
 {
- "id": "fix-2026-11-28-curry-sat",
- "schedule": {
-  "2026-11-25": {
-   "main": "제육볶음",
-   "soup": "콩나물국",
-   "sides": "김치 · 깻잎 · 콩자반 · 오뎅",
-   "mainEn": "Spicy stir-fried pork",
-   "soupEn": "Bean sprout soup",
-   "sidesEn": "Kimchi · Perilla leaves · Sweet black beans · Fish cake",
-   "kcal": "820",
-   "pro": "43",
-   "fat": "29"
+ "id": "daily-photo-slides-2026-11-21",
+ "items_set": {
+  "imp-dosirock-p": {
+   "on": false
   },
-  "2026-11-28": {
-   "main": "카레",
-   "soup": "아난골 무국",
-   "sides": "깍두기 · 미역줄기 · 고추장아찌 · 오뎅",
-   "mainEn": "Korean curry",
-   "soupEn": "AnnanGol radish soup",
-   "sidesEn": "Radish kimchi · Seaweed stems · Pickled peppers · Fish cake",
-   "kcal": "810",
-   "pro": "32",
-   "fat": "27"
+  "imp-dosirock-l": {
+   "on": false
   }
- }
+ },
+ "items_add": [
+  {
+   "id": "ph-tray",
+   "type": "menu",
+   "view": "phtray",
+   "label": "오늘의 식판 사진",
+   "seconds": 12,
+   "from": "",
+   "to": "",
+   "screens": "all",
+   "on": true
+  },
+  {
+   "id": "ph-box",
+   "type": "menu",
+   "view": "phbox",
+   "label": "오늘의 도시락 사진 (K-DosiRock)",
+   "seconds": 14,
+   "from": "",
+   "to": "",
+   "screens": "all",
+   "on": true
+  }
+ ]
 }

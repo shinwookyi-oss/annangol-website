@@ -54,6 +54,38 @@
   .n-tag { font-size:calc(3.6 * var(--u)); font-weight:900; color:var(--cream); word-break:keep-all; }
   .n-tag span { padding:0 .25em; border-radius:.15em; background:linear-gradient(transparent 52%, rgba(224,179,84,.6) 52%); -webkit-box-decoration-break:clone; box-decoration-break:clone; }
   .n-tag small { display:block; font-size:.6em; font-weight:700; color:var(--gold); margin-top:.35em; }
+  /* 날짜별 사진 슬라이드 (식판 · 도시락) */
+  .ph43 { position:relative; width:100%; padding-top:75%; overflow:hidden; background:#241812; }
+  .ph43 img { position:absolute; left:0; top:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .slide.photo .p-img { flex:0 0 calc(104 * var(--u)); border-radius:calc(2 * var(--u)); overflow:hidden; box-shadow:0 calc(1 * var(--u)) calc(4 * var(--u)) rgba(0,0,0,.5); }
+  .portrait .slide.photo .p-img { flex:0 0 auto; width:100%; }
+  .p-side { flex:1; min-width:0; display:flex; flex-direction:column; gap:calc(2.6 * var(--u)); }
+  .p-side .kj { font-size:calc(8 * var(--u)); }
+  .p-date { font-size:calc(4.8 * var(--u)); font-weight:900; color:var(--gold); line-height:1.25; word-break:keep-all; }
+  .p-date small { display:block; font-size:.6em; font-weight:700; color:var(--muted); margin-top:.3em; }
+  .p-price { align-self:flex-start; background:var(--red); color:#fff; font-weight:900; font-size:calc(8 * var(--u)); line-height:1; padding:calc(1.6 * var(--u)) calc(3 * var(--u)); border-radius:calc(1.4 * var(--u)); }
+  .p-note { font-size:calc(3 * var(--u)); color:var(--cream); line-height:1.4; word-break:keep-all; }
+  .p-note small { display:block; font-size:.8em; color:var(--muted); }
+  .portrait .p-side { gap:calc(3.4 * var(--u)); margin-top:calc(2 * var(--u)); }
+  .portrait .p-side .kj { font-size:calc(12 * var(--u)); }
+  .portrait .p-date { font-size:calc(6.6 * var(--u)); }
+  .portrait .p-price { font-size:calc(13 * var(--u)); }
+  .portrait .p-note { font-size:calc(4.2 * var(--u)); }
+  .portrait .pbox .w-title small { display:block; margin:.3em 0 0; }
+  .slide.pbox { flex-direction:column; align-items:stretch; justify-content:center; gap:calc(3 * var(--u)); }
+  .b-grid { display:flex; gap:calc(2.5 * var(--u)); }
+  .b-grid figure { flex:1 1 0; min-width:0; margin:0; background:rgba(255,255,255,.07); border-radius:calc(1.6 * var(--u)); overflow:hidden; }
+  .b-grid figcaption { padding:calc(1.6 * var(--u)) calc(2 * var(--u)); display:flex; align-items:baseline; flex-wrap:wrap; }
+  .b-grid b { font-size:calc(4.6 * var(--u)); font-weight:900; margin-right:calc(1.2 * var(--u)); }
+  .b-grid i { font-style:normal; font-size:calc(2.4 * var(--u)); color:var(--muted); }
+  .b-grid span { margin-left:auto; font-size:calc(4.6 * var(--u)); font-weight:900; color:var(--gold); }
+  .b-grid small { flex:0 0 100%; font-size:calc(2.3 * var(--u)); color:var(--muted); margin-top:calc(.6 * var(--u)); }
+  .portrait .b-grid { flex-direction:column; }
+  .portrait .b-grid figure { flex:0 0 auto; display:flex; align-items:center; }
+  .portrait .b-grid .ph43 { flex:0 0 56%; width:56%; padding-top:42%; }
+  .portrait .b-grid figcaption { flex:1; flex-direction:column; align-items:flex-start; padding-left:calc(3 * var(--u)); }
+  .portrait .b-grid b { font-size:calc(6 * var(--u)); }
+  .portrait .b-grid span { margin-left:0; font-size:calc(6 * var(--u)); }
   .n-foot { font-size:calc(1.9 * var(--u)); color:var(--muted); line-height:1.45; word-break:keep-all; }
   .portrait .n-grid { grid-template-columns:auto 1fr 1fr 1fr; }
   .portrait .n-grid .v { font-size:calc(4 * var(--u)); }
@@ -343,11 +375,32 @@
   function postJson(action, body) {
     return call(action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), credentials: 'same-origin' });
   }
+  // 날짜별 사진 (식판 · 도시락): 서버가 state와 함께 내려 준다. 끊겼을 때를 위해 따로 저장해 둔다
+  var dailyPh = [], PH_KEY = 'annangol-display-photos';
+  try { dailyPh = JSON.parse(localStorage.getItem(PH_KEY)) || []; } catch (e) { dailyPh = []; }
+  function phUrl(v) { v = String(v || ''); return v.indexOf('up:') === 0 ? API + '?a=file&f=' + encodeURIComponent(v.slice(3)) : '../' + v.replace(/^\/+/, ''); }
+  // 가장 최근 날짜의 사진 (오늘부터 이틀 전까지만: 오래된 사진을 오늘 것처럼 보여주지 않는다)
+  function latestPh(kind) {
+    var t = ymd(new Date()), lim = ymd(addDays(new Date(), -2)), date = '', list = [];
+    dailyPh.forEach(function (p) {
+      if (!p || p.kind !== kind || !p.src || !p.date || p.date < lim || p.date > t) return;
+      if (p.date > date) { date = p.date; list = []; }
+      if (p.date === date) list.push(p);
+    });
+    return { date: date, list: list, today: date === t };
+  }
   function pull() {
     return call('state', { cache: 'no-store' }).then(function (r) {
       online = r.ok;
       if (!r.ok) return false;
       // 페이지 자체가 새 버전으로 바뀌면, 켜져 있는 화면이 스스로 새로고침한다
+      if (r.data.photos && r.data.photos.length !== undefined) {
+        var old = JSON.stringify(dailyPh); dailyPh = r.data.photos.slice(0, 40);
+        if (JSON.stringify(dailyPh) !== old) {
+          try { localStorage.setItem(PH_KEY, JSON.stringify(dailyPh)); } catch (e) {}
+          ['tray', 'box'].forEach(function (k) { latestPh(k).list.forEach(function (p) { new Image().src = phUrl(p.src); }); });   // 미리 받아 둔다
+        }
+      }
       if (r.data.app) { if (appVer === null) appVer = r.data.app; else if (appVer !== r.data.app) stale = true; }
       if (r.data.version !== version) {
         version = r.data.version;
@@ -436,6 +489,8 @@
     if (item.until && ymd(new Date()) > item.until) return false;
     if (item.type === 'youtube') { var y = ytParse(item.src); return !!(y.video || y.list); }
     if (item.type === 'image' || item.type === 'video') return !!item.src;
+    if (item.type === 'menu' && item.view === 'phtray') return latestPh('tray').list.length > 0;   // 사진이 없으면 건너뛴다
+    if (item.type === 'menu' && item.view === 'phbox') return latestPh('box').list.length > 0;
     return true;
   }
   function eligible(kind) {
@@ -746,9 +801,37 @@
     var t = ymd(new Date());
     return (state.menu.offers || []).filter(function (o) { return o && o.on !== false && String(o.name || '').trim() && String(o.price || '').trim() && (!o.until || t <= o.until); });
   }
+  var DR_PRICE = { S: '$8.99', M: '$10.99', L: '$12.99' }, DR_KO = { S: '소', M: '중', L: '대' }, DR_EN = { S: 'Small', M: 'Medium', L: 'Large' };
+  function phWhen(lp) {
+    var p = lp.date.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return { ko: (lp.today ? '오늘 ' : '') + (+p[1]) + '/' + (+p[2]) + ' (' + DAY_KO[d.getDay()] + ')', en: (lp.today ? 'Today, ' : '') + DAY_EN[d.getDay()] + ' ' + (+p[1]) + '/' + (+p[2]) };
+  }
+  function phTrayHtml() {
+    var lp = latestPh('tray'), w = phWhen(lp), m = state.menu, dl = deal(), price = dl ? dl.price : (m.price || '');
+    if (price && price.charAt(0) !== '$') price = '$' + price;
+    return '<div class="slide photo"><div class="p-img"><div class="ph43"><img alt="" src="' + esc(phUrl(lp.list[0].src)) + '"></div></div>' +
+      '<div class="p-side"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
+      '<div class="p-date">' + w.ko + ' 아침 식판<small>' + w.en + ' · breakfast tray</small></div>' +
+      (price ? '<div class="p-price">' + esc(price) + '</div>' : '') +
+      '<div class="p-note">' + esc(m.note || '매일 아침 7–10 AM') + ' · NO TIP<small>실제로 나간 식판 사진입니다 · A photo of the tray we served</small></div></div></div>';
+  }
+  function phBoxHtml() {
+    var lp = latestPh('box'), w = phWhen(lp), by = {};
+    lp.list.forEach(function (p) { if (!by[p.size || 'M']) by[p.size || 'M'] = p; });
+    var figs = ['S', 'M', 'L'].filter(function (k) { return by[k]; }).map(function (k) {
+      return '<figure><div class="ph43"><img alt="" src="' + esc(phUrl(by[k].src)) + '"></div><figcaption><b>' + DR_KO[k] + '</b><i>' + DR_EN[k] + '</i><span>' + DR_PRICE[k] + '</span>' +
+        '<small>' + (k === 'S' ? '밥 · 계란후라이 · 메인 · 반찬' : '+ 국 · 김 (soup, gim)') + '</small></figcaption></figure>';
+    }).join('');
+    return '<div class="slide pbox"><div class="w-head"><div class="kj">K-Dosi<span class="k">Rock</span></div>' +
+      '<div class="w-title">' + w.ko + ' 도시락 · 포장<small>' + w.en + ' · lunch boxes to go</small></div></div>' +
+      '<div class="b-grid">' + figs + '</div>' +
+      '<div class="n-foot">그날의 K-짬밥 메뉴를 그대로 담은 도시락입니다. 매장에서 받아 가세요 · (703) 914-4600<br>Packed from the day\'s K-JjamBab menu. Pick up at the store.</div></div>';
+  }
   function menuHtml(view) {
     var m = state.menu, today = new Date(), tkey = ymd(today), mon, i, d, e, h, dl = deal();
     if (view === 'nutri') { var av = weekAvg(); if (av) return nutriHtml(av); view = 'today'; }
+    if (view === 'phtray') { if (latestPh('tray').list.length) return phTrayHtml(); view = 'today'; }
+    if (view === 'phbox') { if (latestPh('box').list.length) return phBoxHtml(); view = 'today'; }
     if (view === 'week' || view === 'next') {
       mon = addDays(mondayOf(today), view === 'next' ? 7 : 0);
       h = '<div class="slide week"><div class="w-head"><div class="kj"><span class="k">K</span>-JjamBab</div>' +
@@ -982,7 +1065,7 @@
       h += '<label class="c6">큰 제목<input type="text" data-f="title" value="' + esc(it.title) + '"></label>';
       h += '<label class="c12">내용 (줄바꿈 가능)<textarea data-f="body">' + esc(it.body) + '</textarea></label>';
     } else if (it.type === 'menu') {
-      h += '<label class="c6">보여줄 내용<select data-f="view">' + opt('today', '오늘의 메뉴', it.view || 'today') + opt('week', '이번 주 메뉴표', it.view || 'today') + opt('next', '다음 주 메뉴표', it.view || 'today') + opt('nutri', '영양 비교표 (맥도날드·IHOP 평균)', it.view || 'today') + '</select></label>';
+      h += '<label class="c6">보여줄 내용<select data-f="view">' + opt('today', '오늘의 메뉴', it.view || 'today') + opt('week', '이번 주 메뉴표', it.view || 'today') + opt('next', '다음 주 메뉴표', it.view || 'today') + opt('nutri', '영양 비교표 (맥도날드·IHOP 평균)', it.view || 'today') + opt('phtray', '오늘의 식판 사진 (날짜별 사진에서 자동)', it.view || 'today') + opt('phbox', '오늘의 도시락 사진 · K-DosiRock 소/중/대', it.view || 'today') + '</select></label>';
     }
     if (it.type === 'youtube' || it.type === 'video') h += '<label class="c4">사이사이 끼워 넣기 (다른 항목 몇 개마다 · 비우면 목록 순서대로)<input type="number" min="0" data-f="every" placeholder="예: 3" value="' + esc(it.every || '') + '"></label>';
     else h += '<label class="c4">표시 시간 (초)<input type="number" min="3" data-f="seconds" value="' + esc(it.seconds) + '"></label>';
