@@ -300,6 +300,46 @@
    "th": "img/daily/2026-11-22-box-l-th.jpg",
    "cap": "",
    "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-23-tray",
+   "date": "2026-11-23",
+   "kind": "tray",
+   "size": "",
+   "src": "img/daily/2026-11-23-tray.jpg",
+   "th": "img/daily/2026-11-23-tray-th.jpg",
+   "cap": "",
+   "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-23-box-s",
+   "date": "2026-11-23",
+   "kind": "box",
+   "size": "S",
+   "src": "img/daily/2026-11-23-box-s.jpg",
+   "th": "img/daily/2026-11-23-box-s-th.jpg",
+   "cap": "",
+   "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-23-box-m",
+   "date": "2026-11-23",
+   "kind": "box",
+   "size": "M",
+   "src": "img/daily/2026-11-23-box-m.jpg",
+   "th": "img/daily/2026-11-23-box-m-th.jpg",
+   "cap": "",
+   "capEn": ""
+  },
+  {
+   "id": "seed-2026-11-23-box-l",
+   "date": "2026-11-23",
+   "kind": "box",
+   "size": "L",
+   "src": "img/daily/2026-11-23-box-l.jpg",
+   "th": "img/daily/2026-11-23-box-l-th.jpg",
+   "cap": "",
+   "capEn": ""
   }
  ]
 }
