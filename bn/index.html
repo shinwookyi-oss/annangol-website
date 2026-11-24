@@ -794,11 +794,21 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
       roll.addEventListener('pointerout',ev=>{const b=ev.target.closest('button'); if(b&&!b.contains(ev.relatedTarget)) popHide()});
       roll.addEventListener('scroll',popHide,{passive:true});
       if(!seen) new IntersectionObserver(es=>{seen=es[0].isIntersecting},{threshold:.4}).observe(roll);
+      // an endless loop in one direction: the set is laid out twice, and once the first copy has passed, the position jumps back by one set (the picture on screen is the same, so nothing is seen to move)
+      let period=0;
+      const loop=()=>{
+        const one=rest.map((p,i)=>tile(p,i+pinN)).join(''), base=rest.length%2?one+one:one;   // an even count keeps the two-row layout in step
+        roll.innerHTML=base+base;
+        const ts=roll.querySelectorAll('.ph-tile'), half=ts.length/2;
+        for(let i=half;i<ts.length;i++){ts[i].setAttribute('aria-hidden','true'); ts[i].querySelector('button').tabIndex=-1}
+        period=Math.abs(ts[half].offsetLeft-ts[0].offsetLeft);
+      };
       if(!calm) setInterval(()=>{
-        if(hold||!seen||document.hidden||Date.now()<until||(dlg&&dlg.open)||roll.scrollWidth<=roll.clientWidth+4) return;
-        const w=roll.querySelector('.ph-tile').getBoundingClientRect().width+14, rtl=getComputedStyle(roll).direction==='rtl';
-        const end=Math.abs(roll.scrollLeft)+roll.clientWidth>=roll.scrollWidth-4;
-        roll.scrollTo({left:end?0:roll.scrollLeft+(rtl?-w:w),behavior:'smooth'});
+        if(hold||!seen||document.hidden||Date.now()<until||(dlg&&dlg.open)) return;
+        if(!period){ if(roll.scrollWidth<=roll.clientWidth+4) return; loop(); if(!period) return }
+        const w=roll.querySelector('.ph-tile').getBoundingClientRect().width+14, sg=getComputedStyle(roll).direction==='rtl'?-1:1;
+        if(Math.abs(roll.scrollLeft)>=period-2) roll.scrollLeft-=sg*period;
+        roll.scrollTo({left:roll.scrollLeft+sg*w,behavior:'smooth'});
       },3500);
     };
     const trays=photos.filter(p=>p.kind==='tray').slice(0,10), boxes=photos.filter(p=>p.kind==='box').slice(0,12);
