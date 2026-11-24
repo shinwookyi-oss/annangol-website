@@ -265,6 +265,18 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .ph-tile figcaption b{display:block;font-weight:800}
 .ph-tile figcaption b em{font-style:normal;color:var(--ember);font-size:12px;margin-inline-start:6px}
 .ph-tile figcaption span{color:var(--muted)}
+/* newest photo pinned large; the earlier days roll past beside it (below it on a phone) */
+.ph-show{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:18px;align-items:start}
+.ph-show.multi,.ph-show.solo{grid-template-columns:minmax(0,1fr)}
+.ph-show.solo .ph-pin{max-width:560px}
+.ph-pin{display:grid;grid-template-columns:repeat(var(--n,1),minmax(0,1fr));gap:14px;min-width:0}
+.ph-pin .ph-tile figcaption{font-size:16px}
+.ph-pin .ph-tile button:hover img{transform:scale(1.08)}
+.ph-roll{min-width:0}
+.ph-show:not(.multi) .ph-strip{grid-template-rows:repeat(2,auto);grid-auto-columns:minmax(150px,calc((100% - 28px)/3));row-gap:12px}
+.ph-pop{position:fixed;z-index:60;pointer-events:none;border-radius:14px;overflow:hidden;background:var(--steel);box-shadow:0 24px 50px -12px rgba(0,0,0,.6);opacity:0;transform:scale(.92);transition:opacity .15s,transform .15s}
+.ph-pop.on{opacity:1;transform:none}
+.ph-pop img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
 .dr-photos{margin-top:40px}
 .dr-photos h3{font:800 24px/1.2 var(--f-sans);letter-spacing:-.01em;margin-bottom:14px}
 .dr-photos .ph-sub{margin-top:-8px}
@@ -283,9 +295,16 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
   .wk-list.has-ph .wk-row>.wk-ph{grid-column:2;grid-row:1/span 4;align-self:start;width:92px}
   .wk-list.has-ph .wk-row>span.wk-ph{display:none}
   .ph-strip{grid-auto-columns:68%}
+  .ph-show{grid-template-columns:minmax(0,1fr)}
+  .ph-show:not(.multi) .ph-strip{grid-template-rows:auto;grid-auto-columns:44%}
+  .ph-show.multi .ph-strip{grid-auto-columns:38%}
+  .ph-pin{gap:10px}
+  .ph-show.multi .ph-pin{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ph-show.multi .ph-pin .ph-tile:first-child:nth-last-child(odd){grid-column:1/-1}
+  .ph-show.multi .ph-pin .ph-tile figcaption{font-size:14px}
   .ph-view .pv,.ph-view .nx{top:auto;bottom:14px;transform:none}
 }
-@media (prefers-reduced-motion:reduce){.ph-tile img{transition:none}}
+@media (prefers-reduced-motion:reduce){.ph-tile img,.ph-pop{transition:none}}
 
 /* room */
 .room{margin-top:36px;display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:auto auto;gap:16px}
@@ -552,7 +571,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
      <div class="wk-card">
       <div class="wk-head"><h3>每日 K-JjamBab 餐盘</h3></div>
       <p class="ph-sub">每天早上实际供应的餐盘照片。</p>
-      <div class="ph-strip" id="phTray" tabindex="0" role="group" aria-label="每日 K-JjamBab 餐盘"></div>
+      <div class="ph-show" id="phTray" data-label="每日 K-JjamBab 餐盘"></div>
      </div>
     </div>
     <!-- Private suggestion box: messages go to the display admin, never shown on the site. -->
@@ -592,7 +611,7 @@ html:lang(ko) body,.kr,[lang=ko]{word-break:keep-all}
       <div class="dr-photos" id="boxPhotos" hidden>
         <h3>每日 K-DosiRock 便当</h3>
         <p class="ph-sub">每天实际装好的便当照片。</p>
-        <div class="ph-strip" id="phBox" tabindex="0" role="group" aria-label="每日 K-DosiRock 便当"></div>
+        <div class="ph-show" id="phBox" data-label="每日 K-DosiRock 便当"></div>
       </div>
       <div class="dr-note"><span>菜单每天更换。请到AnnanGol店内取餐。</span><a class="btn" href="tel:+17039144600">致电 (703) 914-4600</a></div>
     </div>
@@ -743,15 +762,48 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
       dlg.addEventListener('click',ev=>{const b=ev.target.closest('button'); if(b){b.dataset.pv==='x'?dlg.close():step(+b.dataset.pv)} else if(ev.target===dlg) dlg.close()});
       dlg.addEventListener('keydown',ev=>{if(ev.key==='ArrowLeft')step(-1); else if(ev.key==='ArrowRight')step(1)});
     }
-    const strip=(boxId,listId,list)=>{
+    // a larger preview floats over a small photo while the mouse rests on it (mouse only; a tap opens the full view)
+    const calm=matchMedia('(prefers-reduced-motion:reduce)').matches; let pop=null, popT=0;
+    const popHide=()=>{clearTimeout(popT); if(pop) pop.classList.remove('on')};
+    const popShow=(btn,p)=>{
+      if(!pop){pop=document.createElement('div'); pop.className='ph-pop'; pop.setAttribute('aria-hidden','true'); pop.appendChild(new Image()); document.body.appendChild(pop)}
+      const r=btn.getBoundingClientRect(), w=Math.min(r.width*2,440,innerWidth-24), h=w*.75, im=pop.firstChild;
+      pop.dataset.k=p.full; im.src=p.th;
+      const big=new Image(); big.onload=()=>{if(pop.dataset.k===p.full) im.src=p.full}; big.src=p.full;
+      let top=r.top-h-10; if(top<8) top=Math.min(r.bottom+10,innerHeight-h-8);
+      pop.style.width=w+'px'; pop.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w/2))+'px'; pop.style.top=top+'px';
+      pop.classList.add('on')};
+    const tile=(p,i,big)=>'<figure class="ph-tile"><button type="button" data-i="'+i+'" aria-label="'+esc(T.ph_view+': '+p.alt)+'"><img src="'+esc(big?p.full:p.th)+'" loading="lazy" alt="'+esc(p.alt)+'"></button>'+
+      '<figcaption><b>'+esc(p.day)+(p.date===today?'<em>'+esc(T.wk_today)+'</em>':'')+'</b>'+(p.sub?'<span>'+esc(p.sub)+'</span>':'')+'</figcaption></figure>';
+    // the first pinN photos (the newest day) stay in place; the rest roll past, one step every few seconds
+    const strip=(boxId,listId,list,pinN)=>{
       const el=document.getElementById(listId); if(!el||!list.length) return;
-      el.innerHTML=list.map((p,i)=>'<figure class="ph-tile"><button type="button" data-i="'+i+'" aria-label="'+esc(T.ph_view+': '+p.alt)+'"><img src="'+esc(p.th)+'" loading="lazy" alt="'+esc(p.alt)+'"></button>'+
-        '<figcaption><b>'+esc(p.day)+(p.date===today?'<em>'+esc(T.wk_today)+'</em>':'')+'</b>'+(p.sub?'<span>'+esc(p.sub)+'</span>':'')+'</figcaption></figure>').join('');
-      el.addEventListener('click',ev=>{const b=ev.target.closest('button'); if(b) view(list,+b.dataset.i)});
+      pinN=Math.max(1,Math.min(pinN||1,list.length)); const rest=list.slice(pinN);
+      el.classList.toggle('multi',pinN>1); el.classList.toggle('solo',pinN===1&&!rest.length);
+      el.innerHTML='<div class="ph-pin" style="--n:'+pinN+'">'+list.slice(0,pinN).map((p,i)=>tile(p,i,1)).join('')+'</div>'+
+        (rest.length?'<div class="ph-roll"><div class="ph-strip" tabindex="0" role="group" aria-label="'+esc(el.dataset.label||'')+'">'+rest.map((p,i)=>tile(p,i+pinN)).join('')+'</div></div>':'');
+      el.addEventListener('click',ev=>{const b=ev.target.closest('button'); if(b){popHide(); view(list,+b.dataset.i)}});
       document.getElementById(boxId).hidden=false;
+      const roll=el.querySelector('.ph-strip'); if(!roll) return;
+      let hold=false, seen=!('IntersectionObserver' in window), until=0;
+      roll.addEventListener('pointerenter',()=>{hold=true}); roll.addEventListener('pointerleave',()=>{hold=false; popHide()});
+      roll.addEventListener('focusin',()=>{hold=true}); roll.addEventListener('focusout',()=>{hold=false});
+      ['pointerdown','wheel','touchstart','keydown'].forEach(t=>roll.addEventListener(t,()=>{until=Date.now()+8000},{passive:true}));
+      roll.addEventListener('pointerover',ev=>{const b=ev.target.closest('button'); if(!b||ev.pointerType!=='mouse'||b.contains(ev.relatedTarget)) return;
+        clearTimeout(popT); popT=setTimeout(()=>popShow(b,list[+b.dataset.i]),200)});
+      roll.addEventListener('pointerout',ev=>{const b=ev.target.closest('button'); if(b&&!b.contains(ev.relatedTarget)) popHide()});
+      roll.addEventListener('scroll',popHide,{passive:true});
+      if(!seen) new IntersectionObserver(es=>{seen=es[0].isIntersecting},{threshold:.4}).observe(roll);
+      if(!calm) setInterval(()=>{
+        if(hold||!seen||document.hidden||Date.now()<until||(dlg&&dlg.open)||roll.scrollWidth<=roll.clientWidth+4) return;
+        const w=roll.querySelector('.ph-tile').getBoundingClientRect().width+14, rtl=getComputedStyle(roll).direction==='rtl';
+        const end=Math.abs(roll.scrollLeft)+roll.clientWidth>=roll.scrollWidth-4;
+        roll.scrollTo({left:end?0:roll.scrollLeft+(rtl?-w:w),behavior:'smooth'});
+      },3500);
     };
-    strip('trayPhotos','phTray',photos.filter(p=>p.kind==='tray').slice(0,10));
-    strip('boxPhotos','phBox',photos.filter(p=>p.kind==='box').slice(0,12));
+    const trays=photos.filter(p=>p.kind==='tray').slice(0,10), boxes=photos.filter(p=>p.kind==='box').slice(0,12);
+    strip('trayPhotos','phTray',trays,1);
+    strip('boxPhotos','phBox',boxes,Math.min(3,boxes.filter(p=>p.date===boxes[0].date).length));   // the newest day's boxes (S, M, L) are pinned together
     let mine=[]; try{mine=JSON.parse(localStorage.getItem('ag_likes'))||[]}catch(e){}
     // event banner: text and dates come from the display admin; until it has been saved there, the built-in event below is used
     const EVD={evText:'11월 16일 – 30일 · 매일 선착순 10명 K-짬밥 아침 무료',evTextEn:'Nov 16 – 30 · Free K-JjamBab breakfast for the first 10 guests daily',evTitle:'K-짬밥 아침 무료 체험',evTitleEn:'Free K-JjamBab breakfast trial',evBody:'11월 16일 – 30일, 매일 아침 7:00에 5명, 8:30에 5명. K-짬밥을 처음 드시는 분, 매장 식사, 1인 1회. 식사 후 설문을 작성하시면 다음 방문 $2 할인권을 드립니다.',evBodyEn:'Nov 16 – 30. Every morning, 5 guests at 7:00 AM and 5 guests at 8:30 AM. First-time guests, dine-in, once per person. Fill out a short survey after your meal and get $2 off your next visit.',evStart:'2026-11-15',evEnd:'2026-11-30'};
